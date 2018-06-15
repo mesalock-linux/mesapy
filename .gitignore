@@ -30,3 +30,14 @@ release/
 !pypy/tool/release/
 rpython/_cache/
 .cache/
+lib_pypy/**/*.c
+lib_pypy/**/*.o
+lib_pypy/**/*.so
+site-packages
+rpython/rlib/rvmprof/src/shared/libbacktrace/Makefile
+rpython/rlib/rvmprof/src/shared/libbacktrace/config.guess
+rpython/rlib/rvmprof/src/shared/libbacktrace/config.h
+rpython/rlib/rvmprof/src/shared/libbacktrace/config.log
+rpython/rlib/rvmprof/src/shared/libbacktrace/config.status
+bin
+include/_numpypy
