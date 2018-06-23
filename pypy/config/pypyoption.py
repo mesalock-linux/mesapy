@@ -31,10 +31,10 @@ default_modules.update([
 working_modules = default_modules.copy()
 working_modules.update([
     "_socket", "unicodedata", "mmap", "fcntl", "_locale", "pwd",
-    "select", "zipimport", "_lsprof", "crypt", "signal", "_rawffi", "termios",
-    "zlib", "bz2", "struct", "_hashlib", "_md5", "_sha", "_minimal_curses",
-    "cStringIO", "thread", "itertools", "pyexpat", "_ssl", "cpyext", "array",
-    "binascii", "_multiprocessing", '_warnings', "_collections",
+    "select", "_lsprof", "signal", "_rawffi", "termios",
+    "struct", "_md5", "_sha",
+    "cStringIO", "thread", "itertools", "cpyext", "array",
+    "_multiprocessing", '_warnings', "_collections",
     "_multibytecodec", "micronumpy", "_continuation", "_cffi_backend",
     "_csv", "_cppyy", "_pypyjson", "_jitlog"
 ])
