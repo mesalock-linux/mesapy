@@ -2,5 +2,5 @@ pipeline:
   build:
     image: pypy:2
     commands:
-      - cd pypy/goal && pypy ../../rpython/bin/rpython --opt=jit targetpypystandalone.py --withoutmod-_cffi_backend --withoutmod-_rawffi --withoutmod-_cppyy
+      - cd pypy/goal && pypy ../../rpython/bin/rpython --opt=jit --make-jobs=$(nproc) targetpypystandalone.py --withoutmod-_cffi_backend --withoutmod-_rawffi --withoutmod-_cppyy
       - pypy pypy/tool/release/package.py --archive-name mesapy --targetdir . --without-cffi
