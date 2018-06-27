@@ -41,3 +41,4 @@ rpython/rlib/rvmprof/src/shared/libbacktrace/config.log
 rpython/rlib/rvmprof/src/shared/libbacktrace/config.status
 bin
 include/_numpypy
+pypy_usession_dir
