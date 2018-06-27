@@ -1,4 +1,4 @@
 [submodule "lib_rust/miniz_oxide"]
 	path = lib_rust/miniz_oxide
-	url = git@github.com:mesalock-linux/miniz_oxide.git
+	url = https://github.com/mesalock-linux/miniz_oxide.git
 	branch = mesapy
