@@ -1,9 +1,10 @@
 pipeline:
   build:
-    image: pypy:2
+    image: mesalocklinux/build-mesalock-linux
+    pull: true
     commands:
       - make pypy-c
   package:
-    image: pypy:2
+    image: mesalocklinux/build-mesalock-linux
     commands:
       - pypy pypy/tool/release/package.py --archive-name mesapy --targetdir . --without-cffi
