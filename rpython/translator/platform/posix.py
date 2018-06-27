@@ -16,7 +16,7 @@ class BasePosix(Platform):
     relevant_environ = ('CPATH', 'LIBRARY_PATH', 'C_INCLUDE_PATH')
 
     DEFAULT_CC = 'gcc'
-    rpath_flags = ['-Wl,-rpath=\"$$ORIGIN/\"']
+    rpath_flags = ['-Wl,-rpath=\'$$ORIGIN/\'']
 
     def __init__(self, cc=None):
         self.cc = cc or os.environ.get('CC', self.DEFAULT_CC)
