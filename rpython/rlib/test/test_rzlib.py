@@ -1,10 +1,10 @@
 
 """
-Tests for the rzlib module.
+Tests for the rminiz_oxide module.
 """
 
 import py, sys
-from rpython.rlib import rzlib
+from rpython.rlib import rminiz_oxide
 from rpython.rlib.rarithmetic import r_uint
 from rpython.rlib import clibffi # for side effect of testing lib_c_name on win32
 import zlib
@@ -15,12 +15,12 @@ compressed = zlib.compress(expanded)
 
 def test_crc32():
     """
-    When called with a string, rzlib.crc32 should compute its CRC32 and
+    When called with a string, rminiz_oxide.crc32 should compute its CRC32 and
     return it as a unsigned 32 bit integer.
     """
-    assert rzlib.crc32('') == r_uint(0)
-    assert rzlib.crc32('\0') == r_uint(3523407757)
-    assert rzlib.crc32('hello, world.') == r_uint(3358036098)
+    assert rminiz_oxide.crc32('') == r_uint(0)
+    assert rminiz_oxide.crc32('\0') == r_uint(3523407757)
+    assert rminiz_oxide.crc32('hello, world.') == r_uint(3358036098)
 
 
 def test_crc32_start_value():
@@ -28,14 +28,14 @@ def test_crc32_start_value():
     When called with a string and an integer, zlib.crc32 should compute the
     CRC32 of the string using the integer as the starting value.
     """
-    assert rzlib.crc32('', 42) == r_uint(42)
-    assert rzlib.crc32('\0', 42) == r_uint(163128923)
-    assert rzlib.crc32('hello, world.', 42) == r_uint(1090960721)
+    assert rminiz_oxide.crc32('', 42) == r_uint(42)
+    assert rminiz_oxide.crc32('\0', 42) == r_uint(163128923)
+    assert rminiz_oxide.crc32('hello, world.', 42) == r_uint(1090960721)
     hello = 'hello, '
-    hellocrc = rzlib.crc32(hello)
+    hellocrc = rminiz_oxide.crc32(hello)
     world = 'world.'
-    helloworldcrc = rzlib.crc32(world, hellocrc)
-    assert helloworldcrc == rzlib.crc32(hello + world)
+    helloworldcrc = rminiz_oxide.crc32(world, hellocrc)
+    assert helloworldcrc == rminiz_oxide.crc32(hello + world)
 
 
 def test_adler32():
@@ -43,10 +43,10 @@ def test_adler32():
     When called with a string, zlib.crc32 should compute its adler 32
     checksum and return it as an unsigned 32 bit integer.
     """
-    assert rzlib.adler32('') == r_uint(1)
-    assert rzlib.adler32('\0') == r_uint(65537)
-    assert rzlib.adler32('hello, world.') == r_uint(571147447)
-    assert rzlib.adler32('x' * 23) == r_uint(2172062409)
+    assert rminiz_oxide.adler32('') == r_uint(1)
+    assert rminiz_oxide.adler32('\0') == r_uint(65537)
+    assert rminiz_oxide.adler32('hello, world.') == r_uint(571147447)
+    assert rminiz_oxide.adler32('x' * 23) == r_uint(2172062409)
 
 
 def test_adler32_start_value():
@@ -55,15 +55,15 @@ def test_adler32_start_value():
     the adler 32 checksum of the string using the integer as the starting
     value.
     """
-    assert rzlib.adler32('', 42) == r_uint(42)
-    assert rzlib.adler32('\0', 42) == r_uint(2752554)
-    assert rzlib.adler32('hello, world.', 42) == r_uint(606078176)
-    assert rzlib.adler32('x' * 23, 42) == r_uint(2233862898)
+    assert rminiz_oxide.adler32('', 42) == r_uint(42)
+    assert rminiz_oxide.adler32('\0', 42) == r_uint(2752554)
+    assert rminiz_oxide.adler32('hello, world.', 42) == r_uint(606078176)
+    assert rminiz_oxide.adler32('x' * 23, 42) == r_uint(2233862898)
     hello = 'hello, '
-    hellosum = rzlib.adler32(hello)
+    hellosum = rminiz_oxide.adler32(hello)
     world = 'world.'
-    helloworldsum = rzlib.adler32(world, hellosum)
-    assert helloworldsum == rzlib.adler32(hello + world)
+    helloworldsum = rminiz_oxide.adler32(world, hellosum)
+    assert helloworldsum == rminiz_oxide.adler32(hello + world)
 
 
 def test_invalidLevel():
@@ -71,60 +71,62 @@ def test_invalidLevel():
     deflateInit() should raise ValueError when an out of bounds level is
     passed to it.
     """
-    py.test.raises(ValueError, rzlib.deflateInit, -2)
-    py.test.raises(ValueError, rzlib.deflateInit, 10)
+    py.test.raises(ValueError, rminiz_oxide.deflateInit, -2)
+    py.test.raises(ValueError, rminiz_oxide.deflateInit, 10)
 
 
 def test_deflate_init_end():
     """
     deflateInit() followed by deflateEnd() should work and do nothing.
     """
-    stream = rzlib.deflateInit()
-    rzlib.deflateEnd(stream)
+    stream = rminiz_oxide.deflateInit()
+    rminiz_oxide.deflateEnd(stream)
 
 
-def test_deflate_set_dictionary():
-    text = 'abcabc'
-    zdict = 'abc'
-    stream = rzlib.deflateInit()
-    rzlib.deflateSetDictionary(stream, zdict)
-    bytes = rzlib.compress(stream, text, rzlib.Z_FINISH)
-    rzlib.deflateEnd(stream)
-    
-    stream2 = rzlib.inflateInit()
-
-    from rpython.rtyper.lltypesystem import lltype, rffi, rstr
-    from rpython.rtyper.annlowlevel import llstr
-    from rpython.rlib.rstring import StringBuilder
-    with lltype.scoped_alloc(rffi.CCHARP.TO, len(bytes)) as inbuf:
-        rstr.copy_string_to_raw(llstr(bytes), inbuf, 0, len(bytes))
-        stream2.c_next_in = rffi.cast(rzlib.Bytefp, inbuf)
-        rffi.setintfield(stream2, 'c_avail_in', len(bytes))
-        with lltype.scoped_alloc(rffi.CCHARP.TO, 100) as outbuf:
-            stream2.c_next_out = rffi.cast(rzlib.Bytefp, outbuf)
-            bufsize = 100
-            rffi.setintfield(stream2, 'c_avail_out', bufsize)
-            err = rzlib._inflate(stream2, rzlib.Z_SYNC_FLUSH)
-            assert err == rzlib.Z_NEED_DICT
-            rzlib.inflateSetDictionary(stream2, zdict)
-            rzlib._inflate(stream2, rzlib.Z_SYNC_FLUSH)
-            avail_out = rffi.cast(lltype.Signed, stream2.c_avail_out)
-            result = StringBuilder()
-            result.append_charpsize(outbuf, bufsize - avail_out)
-
-    rzlib.inflateEnd(stream2)
-    assert result.build() == text
+# miniz_oxide currently does not support setting dictionary
+#
+# def test_deflate_set_dictionary():
+#     text = 'abcabc'
+#     zdict = 'abc'
+#     stream = rminiz_oxide.deflateInit()
+#     rminiz_oxide.deflateSetDictionary(stream, zdict)
+#     bytes = rminiz_oxide.compress(stream, text, rminiz_oxide.Z_FINISH)
+#     rminiz_oxide.deflateEnd(stream)
+#     
+#     stream2 = rminiz_oxide.inflateInit()
+# 
+#     from rpython.rtyper.lltypesystem import lltype, rffi, rstr
+#     from rpython.rtyper.annlowlevel import llstr
+#     from rpython.rlib.rstring import StringBuilder
+#     with lltype.scoped_alloc(rffi.CCHARP.TO, len(bytes)) as inbuf:
+#         rstr.copy_string_to_raw(llstr(bytes), inbuf, 0, len(bytes))
+#         stream2.c_next_in = rffi.cast(rminiz_oxide.Bytefp, inbuf)
+#         rffi.setintfield(stream2, 'c_avail_in', len(bytes))
+#         with lltype.scoped_alloc(rffi.CCHARP.TO, 100) as outbuf:
+#             stream2.c_next_out = rffi.cast(rminiz_oxide.Bytefp, outbuf)
+#             bufsize = 100
+#             rffi.setintfield(stream2, 'c_avail_out', bufsize)
+#             err = rminiz_oxide._inflate(stream2, rminiz_oxide.Z_SYNC_FLUSH)
+#             assert err == rminiz_oxide.Z_NEED_DICT
+#             rminiz_oxide.inflateSetDictionary(stream2, zdict)
+#             rminiz_oxide._inflate(stream2, rminiz_oxide.Z_SYNC_FLUSH)
+#             avail_out = rffi.cast(lltype.Signed, stream2.c_avail_out)
+#             result = StringBuilder()
+#             result.append_charpsize(outbuf, bufsize - avail_out)
+# 
+#     rminiz_oxide.inflateEnd(stream2)
+#     assert result.build() == text
 
 
 def test_compression():
     """
-    Once we have got a deflate stream, rzlib.compress() 
+    Once we have got a deflate stream, rminiz_oxide.compress() 
     should allow us to compress bytes.
     """
-    stream = rzlib.deflateInit()
-    bytes = rzlib.compress(stream, expanded)
-    bytes += rzlib.compress(stream, "", rzlib.Z_FINISH)
-    rzlib.deflateEnd(stream)
+    stream = rminiz_oxide.deflateInit()
+    bytes = rminiz_oxide.compress(stream, expanded)
+    bytes += rminiz_oxide.compress(stream, "", rminiz_oxide.Z_FINISH)
+    rminiz_oxide.deflateEnd(stream)
     assert bytes == compressed
 
 
@@ -135,9 +137,9 @@ def test_compression_lots_of_data():
     expanded = repr(range(20000))
     compressed = zlib.compress(expanded)
     print len(expanded), '=>', len(compressed)
-    stream = rzlib.deflateInit()
-    bytes = rzlib.compress(stream, expanded, rzlib.Z_FINISH)
-    rzlib.deflateEnd(stream)
+    stream = rminiz_oxide.deflateInit()
+    bytes = rminiz_oxide.compress(stream, expanded, rminiz_oxide.Z_FINISH)
+    rminiz_oxide.deflateEnd(stream)
     assert bytes == compressed
 
 
@@ -145,19 +147,19 @@ def test_inflate_init_end():
     """
     inflateInit() followed by inflateEnd() should work and do nothing.
     """
-    stream = rzlib.inflateInit()
-    rzlib.inflateEnd(stream)
+    stream = rminiz_oxide.inflateInit()
+    rminiz_oxide.inflateEnd(stream)
 
 
 def test_decompression():
     """
-    Once we have got a inflate stream, rzlib.decompress()
+    Once we have got a inflate stream, rminiz_oxide.decompress()
     should allow us to decompress bytes.
     """
-    stream = rzlib.inflateInit()
-    bytes1, finished1, unused1 = rzlib.decompress(stream, compressed)
-    bytes2, finished2, unused2 = rzlib.decompress(stream, "", rzlib.Z_FINISH)
-    rzlib.inflateEnd(stream)
+    stream = rminiz_oxide.inflateInit()
+    bytes1, finished1, unused1 = rminiz_oxide.decompress(stream, compressed)
+    bytes2, finished2, unused2 = rminiz_oxide.decompress(stream, "", rminiz_oxide.Z_FINISH)
+    rminiz_oxide.inflateEnd(stream)
     assert bytes1 + bytes2 == expanded
     assert finished1 is True
     assert finished2 is True
@@ -172,10 +174,10 @@ def test_decompression_lots_of_data():
     expanded = repr(range(20000))
     compressed = zlib.compress(expanded)
     print len(compressed), '=>', len(expanded)
-    stream = rzlib.inflateInit()
-    bytes, finished, unused = rzlib.decompress(stream, compressed,
-                                               rzlib.Z_FINISH)
-    rzlib.inflateEnd(stream)
+    stream = rminiz_oxide.inflateInit()
+    bytes, finished, unused = rminiz_oxide.decompress(stream, compressed,
+                                               rminiz_oxide.Z_FINISH)
+    rminiz_oxide.inflateEnd(stream)
     assert bytes == expanded
     assert finished is True
     assert unused == 0
@@ -189,91 +191,93 @@ def test_decompression_truncated_input():
     expanded = repr(range(20000))
     compressed = zlib.compress(expanded)
     print len(compressed), '=>', len(expanded)
-    stream = rzlib.inflateInit()
-    data, finished1, unused1 = rzlib.decompress(stream, compressed[:1000])
+    stream = rminiz_oxide.inflateInit()
+    data, finished1, unused1 = rminiz_oxide.decompress(stream, compressed[:1000])
     assert expanded.startswith(data)
     assert finished1 is False
     assert unused1 == 0
-    data2, finished2, unused2 = rzlib.decompress(stream, compressed[1000:2000])
+    data2, finished2, unused2 = rminiz_oxide.decompress(stream, compressed[1000:2000])
     data += data2
     assert finished2 is False
     assert unused2 == 0
     assert expanded.startswith(data)
     exc = py.test.raises(
-        rzlib.RZlibError,
-        rzlib.decompress, stream, compressed[2000:-500], rzlib.Z_FINISH)
+        rminiz_oxide.RZlibError,
+        rminiz_oxide.decompress, stream, compressed[2000:-500], rminiz_oxide.Z_FINISH)
     msg = "Error -5 while decompressing data: incomplete or truncated stream"
     assert str(exc.value) == msg
-    rzlib.inflateEnd(stream)
+    rminiz_oxide.inflateEnd(stream)
 
 
 def test_decompression_too_much_input():
     """
     Check the case where we feed extra data to decompress().
     """
-    stream = rzlib.inflateInit()
-    data1, finished1, unused1 = rzlib.decompress(stream, compressed[:-5])
+    stream = rminiz_oxide.inflateInit()
+    data1, finished1, unused1 = rminiz_oxide.decompress(stream, compressed[:-5])
     assert finished1 is False
     assert unused1 == 0
-    data2, finished2, unused2 = rzlib.decompress(stream,
+    data2, finished2, unused2 = rminiz_oxide.decompress(stream,
                                                  compressed[-5:] + 'garbage')
     assert finished2 is True
     assert unused2 == len('garbage')
     assert data1 + data2 == expanded
-    data3, finished3, unused3 = rzlib.decompress(stream, 'more_garbage')
+    data3, finished3, unused3 = rminiz_oxide.decompress(stream, 'more_garbage')
     assert finished3 is True
     assert unused3 == len('more_garbage')
     assert data3 == ''
 
-    rzlib.deflateEnd(stream)
+    rminiz_oxide.inflateEnd(stream)
 
 
 def test_decompress_max_length():
     """
     Test the max_length argument of decompress().
     """
-    stream = rzlib.inflateInit()
-    data1, finished1, unused1 = rzlib.decompress(stream, compressed,
+    stream = rminiz_oxide.inflateInit()
+    data1, finished1, unused1 = rminiz_oxide.decompress(stream, compressed,
                                                  max_length = 17)
     assert data1 == expanded[:17]
     assert finished1 is False
     assert unused1 > 0
-    data2, finished2, unused2 = rzlib.decompress(stream, compressed[-unused1:])
+    data2, finished2, unused2 = rminiz_oxide.decompress(stream, compressed[-unused1:])
     assert data2 == expanded[17:]
     assert finished2 is True
     assert unused2 == 0
 
-    rzlib.deflateEnd(stream)
+    rminiz_oxide.inflateEnd(stream)
 
 
 def test_cornercases():
     """
     Test degenerate arguments.
     """
-    stream = rzlib.deflateInit()
-    bytes = rzlib.compress(stream, "")
-    bytes += rzlib.compress(stream, "")
-    bytes += rzlib.compress(stream, "", rzlib.Z_FINISH)
+    stream = rminiz_oxide.deflateInit()
+    bytes = rminiz_oxide.compress(stream, "")
+    bytes += rminiz_oxide.compress(stream, "")
+    bytes += rminiz_oxide.compress(stream, "", rminiz_oxide.Z_FINISH)
     assert zlib.decompress(bytes) == ""
-    rzlib.deflateEnd(stream)
+    rminiz_oxide.deflateEnd(stream)
 
-    stream = rzlib.inflateInit()
-    data, finished, unused = rzlib.decompress(stream, "")
+    stream = rminiz_oxide.inflateInit()
+    data, finished, unused = rminiz_oxide.decompress(stream, "")
     assert data == ""
     assert finished is False
     assert unused == 0
     buf = compressed
     for i in range(10):
-        data, finished, unused = rzlib.decompress(stream, buf, max_length=0)
+        data, finished, unused = rminiz_oxide.decompress(stream, buf, max_length=0)
         assert data == ""
         assert finished is False
         assert unused > 0
         buf = buf[-unused:]
-    rzlib.deflateEnd(stream)
+    rminiz_oxide.inflateEnd(stream)
 
-def test_zlibVersion():
-    runtime_version = rzlib.zlibVersion()
-    assert runtime_version[0] == rzlib.ZLIB_VERSION[0]
+# rminiz_oxide doesn't provide this API right now.
+#
+# def test_zlibVersion():
+#     runtime_version = rminiz_oxide.zlibVersion()
+#     assert runtime_version[0] == rminiz_oxide.ZLIB_VERSION[0]
 
 def test_translate_and_large_input():
     from rpython.translator.c.test.test_genc import compile
@@ -282,14 +286,14 @@ def test_translate_and_large_input():
         bytes = "s" * i
         if check == 1:
             for j in range(3):
-                stream = rzlib.deflateInit()
-                bytes = rzlib.compress(stream, bytes, rzlib.Z_FINISH)
-                rzlib.deflateEnd(stream)
+                stream = rminiz_oxide.deflateInit()
+                bytes = rminiz_oxide.compress(stream, bytes, rminiz_oxide.Z_FINISH)
+                rminiz_oxide.deflateEnd(stream)
             return bytes
         if check == 2:
-            return str(rzlib.adler32(bytes))
+            return str(rminiz_oxide.adler32(bytes))
         if check == 3:
-            return str(rzlib.crc32(bytes))
+            return str(rminiz_oxide.crc32(bytes))
         return '?'
 
     fc = compile(f, [int, int])

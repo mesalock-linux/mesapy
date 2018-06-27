@@ -32,7 +32,7 @@ working_modules = default_modules.copy()
 working_modules.update([
     "_socket", "unicodedata", "mmap", "fcntl", "_locale", "pwd",
     "select", "_lsprof", "signal", "_rawffi", "termios",
-    "struct", "_md5", "_sha",
+    "zlib", "struct", "_md5", "_sha",
     "cStringIO", "thread", "itertools", "cpyext", "array",
     "_multiprocessing", '_warnings', "_collections",
     "_multibytecodec", "micronumpy", "_continuation", "_cffi_backend",
@@ -114,7 +114,7 @@ module_import_dependencies = {
     # or CompilationError or py.test.skip.Exception
     "_rawffi"   : ["rpython.rlib.clibffi"],
 
-    "zlib"      : ["rpython.rlib.rzlib"],
+    "zlib"      : ["rpython.rlib.rminiz_oxide"],
     "bz2"       : ["pypy.module.bz2.interp_bz2"],
     "pyexpat"   : ["pypy.module.pyexpat.interp_pyexpat"],
     "_ssl"      : ["pypy.module._ssl.interp_ssl"],
