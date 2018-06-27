@@ -2,7 +2,7 @@ pipeline:
   build:
     image: pypy:2
     commands:
-      - cd pypy/goal && pypy ../../rpython/bin/rpython --opt=jit --make-jobs=$(nproc) targetpypystandalone.py --withoutmod-_cffi_backend --withoutmod-_rawffi --withoutmod-_cppyy
+      - make pypy-c
   package:
     image: pypy:2
     commands:

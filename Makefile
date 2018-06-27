@@ -12,7 +12,10 @@ endif
 
 .PHONY: pypy-c cffi_imports
 
-pypy-c:
+miniz_oxide:
+	cd lib_rust/miniz_oxide && cargo build --release
+
+pypy-c: miniz_oxide
 	@echo
 	@echo "===================================================================="
 ifeq ($(PYPY_EXECUTABLE),)
@@ -32,7 +35,10 @@ endif
 	@echo "===================================================================="
 	@echo
 	@sleep 5
-	cd pypy/goal && $(RUNINTERP) ../../rpython/bin/rpython -Ojit targetpypystandalone.py
+	cd pypy/goal && $(RUNINTERP) ../../rpython/bin/rpython -Ojit targetpypystandalone.py --withoutmod-_cffi_backend --withoutmod-_rawffi --withoutmod-_cppyy
+
+pypy-zlib-only:
+	cd pypy/goal && $(RUNINTERP) ../../rpython/bin/rpython -Ojit targetpypystandalone.py --no-allworkingmodules --withmod-zlib
 
 # Note: the -jN option, or MAKEFLAGS=-jN, are not usable.  They are
 # replaced with an opaque --jobserver option by the time this Makefile
