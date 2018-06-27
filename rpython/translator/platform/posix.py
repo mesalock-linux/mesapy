@@ -16,7 +16,7 @@ class BasePosix(Platform):
     relevant_environ = ('CPATH', 'LIBRARY_PATH', 'C_INCLUDE_PATH')
 
     DEFAULT_CC = 'gcc'
-    rpath_flags = ['-Wl,-rpath=\'$$ORIGIN/\'']
+    rpath_flags = ['-Wl,-rpath=\"$$ORIGIN/\"']
 
     def __init__(self, cc=None):
         self.cc = cc or os.environ.get('CC', self.DEFAULT_CC)
@@ -93,7 +93,7 @@ class BasePosix(Platform):
 
     def get_rpath_flags(self, rel_libdirs):
         # needed for cross-compilation i.e. ARM
-        return self.rpath_flags + ['-Wl,-rpath-link=\'%s\'' % ldir
+        return self.rpath_flags + ['-Wl,-rpath-link=\"%s\"' % ldir
                                     for ldir in rel_libdirs]
 
     def get_shared_only_compile_flags(self):
