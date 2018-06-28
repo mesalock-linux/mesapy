@@ -43,3 +43,4 @@ bin
 include/_numpypy
 pypy_usession_dir
 libminiz_oxide_c_api.so
+mesapy.tar.bz2
