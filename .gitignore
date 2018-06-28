@@ -42,3 +42,4 @@ rpython/rlib/rvmprof/src/shared/libbacktrace/config.status
 bin
 include/_numpypy
 pypy_usession_dir
+libminiz_oxide_c_api.so
