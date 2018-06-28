@@ -109,6 +109,8 @@ def create_package(basedir, options, _fake=False):
             raise PyPyCNotFound('Expected pypy to be mostly in %r, but did '
                                 'not find it' % (str(libpypy_c),))
         binaries.append((libpypy_c, libpypy_name))
+    libminiz_oxide_name = "libminiz_oxide_c_api.so"
+    binaries.append((pypy_c.new(basename=libminiz_oxide_name), libminiz_oxide_name))
     #
     builddir = py.path.local(options.builddir)
     pypydir = builddir.ensure(name, dir=True)

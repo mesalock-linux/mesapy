@@ -14,6 +14,7 @@ endif
 
 miniz_oxide:
 	cd lib_rust/miniz_oxide && cargo build --release
+	cd lib_rust/miniz_oxide && cp target/release/libminiz_oxide_c_api.so ../../pypy/goal/
 
 pypy-c: miniz_oxide
 	@echo
