@@ -119,14 +119,12 @@ static void _cffi_init_once(void)
 else:
 
     do_includes = r"""
-#include <pthread.h>
 
 static void _cffi_init(void);
 
 static void _cffi_init_once(void)
 {
-    static pthread_once_t once_control = PTHREAD_ONCE_INIT;
-    pthread_once(&once_control, _cffi_init);
+    _cffi_init();
 }
 """
 
@@ -137,20 +135,11 @@ RPY_EXPORTED int pypy_setup_home(char *, int);
 static unsigned char _cffi_ready = 0;
 static const char *volatile _cffi_module_name;
 
-static void _cffi_init_error(const char *msg, const char *extra)
-{
-    fprintf(stderr,
-            "\nPyPy initialization failure when loading module '%s':\n%s%s\n",
-            _cffi_module_name, msg, extra);
-}
-
 static void _cffi_init(void)
 {
     rpython_startup_code();
-    RPyGilAllocate();
 
     if (pypy_setup_home(NULL, 1) != 0) {
-        _cffi_init_error("pypy_setup_home() failed", "");
         return;
     }
     _cffi_ready = 1;
