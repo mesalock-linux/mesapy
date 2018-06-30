@@ -321,7 +321,57 @@ class PyPyTarget(object):
                 raise Exception("The 'cpyext' module requires the 'incminimark'"
                     " or 'boehm' GC.  You need either 'targetpypystandalone.py"
                     " --withoutmod-cpyext', or use one of these two GCs.")
-
+	
+	config.objspace.usemodules._cffi_backend = True
+	config.objspace.usemodules._collections = False
+        config.objspace.usemodules._cppyy = False
+        config.objspace.usemodules._csv = False
+        config.objspace.usemodules._hashlib = False
+        config.objspace.usemodules._io = False
+        config.objspace.usemodules._jitlog = False
+        config.objspace.usemodules._locale = False
+        config.objspace.usemodules._lsprof = False
+        config.objspace.usemodules._md5 = False
+        config.objspace.usemodules._minimal_curses = False
+        config.objspace.usemodules._multibytecodec = False
+        config.objspace.usemodules._multiprocessing = False
+        config.objspace.usemodules._pickle_support = False
+        config.objspace.usemodules._random = False
+        config.objspace.usemodules._sha = False
+	config.objspace.usemodules._socket = False
+	config.objspace.usemodules._ssl = False
+        config.objspace.usemodules._testing = False
+        config.objspace.usemodules._warnings = False
+        config.objspace.usemodules._winreg = False
+        config.objspace.usemodules.binascii = False
+        config.objspace.usemodules.bz2 = False
+        config.objspace.usemodules.cStringIO = False
+        config.objspace.usemodules.cmath = False
+        config.objspace.usemodules.crypt = False
+        config.objspace.usemodules.faulthandler = False
+        config.objspace.usemodules.fcntl = False
+        config.objspace.usemodules.gc = False
+        config.objspace.usemodules.imp = False
+        config.objspace.usemodules.math = False
+        config.objspace.usemodules.micronumpy = False
+        config.objspace.usemodules.mmap = False
+        config.objspace.usemodules.parser = False
+	config.objspace.usemodules.pyexpat = False
+        config.objspace.usemodules.select = False
+        config.objspace.usemodules.signal = False
+        config.objspace.usemodules.struct = False
+        config.objspace.usemodules.symbol = False
+        config.objspace.usemodules.termios = False
+        config.objspace.usemodules.token = False
+        config.objspace.usemodules.unicodedata = False
+        config.objspace.usemodules.zipimport = False
+        config.objspace.usemodules.zlib = False
+        config.objspace.usemodules.itertools = False
+        config.objspace.usemodules.__builtin__ = False
+	config.objspace.usemodules.sys = False
+        config.objspace.usemodules.time = False
+        config.objspace.usemodules.cpyext = False
+	
         config.translating = True
 
         import translate
