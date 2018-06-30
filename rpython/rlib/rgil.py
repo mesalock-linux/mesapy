@@ -18,26 +18,6 @@ eci = ExternalCompilationInfo(
 llexternal = rffi.llexternal
 
 
-_gil_allocate = llexternal('RPyGilAllocate', [], lltype.Void,
-                           _nowrapper=True, sandboxsafe=True,
-                           compilation_info=eci)
-
-_gil_yield_thread = llexternal('RPyGilYieldThread', [], lltype.Signed,
-                               _nowrapper=True, sandboxsafe=True,
-                               compilation_info=eci)
-
-_gil_release      = llexternal('RPyGilRelease', [], lltype.Void,
-                               _nowrapper=True, sandboxsafe=True,
-                               compilation_info=eci)
-
-_gil_acquire      = llexternal('RPyGilAcquire', [], lltype.Void,
-                              _nowrapper=True, sandboxsafe=True,
-                              compilation_info=eci)
-
-gil_fetch_fastgil = llexternal('RPyFetchFastGil', [], llmemory.Address,
-                               _nowrapper=True, sandboxsafe=True,
-                               compilation_info=eci)
-
 # ____________________________________________________________
 
 
@@ -105,20 +85,14 @@ class Entry(ExtRegistryEntry):
 
 
 def allocate():
-    _gil_allocate()
-
+    pass
 def release():
     # this function must not raise, in such a way that the exception
     # transformer knows that it cannot raise!
-    _gil_release()
-release._gctransformer_hint_cannot_collect_ = True
-release._dont_reach_me_in_del_ = True
+    pass
 
 def acquire():
-    from rpython.rlib import rthread
-    _gil_acquire()
-    rthread.gc_thread_run()
-    _after_thread_switch()
+    pass
 acquire._gctransformer_hint_cannot_collect_ = True
 acquire._dont_reach_me_in_del_ = True
 
@@ -133,10 +107,7 @@ def yield_thread():
     # explicitly release the gil, in a way that tries to give more
     # priority to other threads (as opposed to continuing to run in
     # the same thread).
-    if _gil_yield_thread():
-        from rpython.rlib import rthread
-        rthread.gc_thread_run()
-        _after_thread_switch()
+    pass
 yield_thread._gctransformer_hint_close_stack_ = True
 yield_thread._dont_reach_me_in_del_ = True
 yield_thread._dont_inline_ = True
