@@ -278,12 +278,10 @@ static int _cffi_carefully_make_gil(void)
     while (1) {    /* spin loop */
         old_value = *lock;
         if (old_value[0] == 'E') {
-            assert(old_value[1] == 'N');
             if (cffi_compare_and_swap(lock, old_value, old_value + 1))
                 break;
         }
         else {
-            assert(old_value[0] == 'N');
             /* should ideally do a spin loop instruction here, but
                hard to do it portably and doesn't really matter I
                think: PyEval_InitThreads() should be very fast, and
@@ -391,7 +389,6 @@ static _cffi_call_python_fnptr _cffi_start_python(void)
     if (_cffi_carefully_make_gil() != 0)
         return NULL;
 
-    _cffi_acquire_reentrant_mutex();
 
     /* Here the GIL exists, but we don't have it.  We're only protected
        from concurrency by the reentrant mutex. */
@@ -418,7 +415,6 @@ static _cffi_call_python_fnptr _cffi_start_python(void)
                done here before the write barrier.
             */
 
-            assert(_cffi_call_python_org != NULL);
             _cffi_call_python = (_cffi_call_python_fnptr)_cffi_call_python_org;
         }
         else {
@@ -430,7 +426,6 @@ static _cffi_call_python_fnptr _cffi_start_python(void)
         }
     }
 
-    _cffi_release_reentrant_mutex();
 
     return (_cffi_call_python_fnptr)_cffi_call_python_org;
 }
@@ -445,8 +440,6 @@ void _cffi_start_and_call_python(struct _cffi_externpy_s *externpy, char *args)
 #endif
     fnptr = _cffi_start_python();
     if (fnptr == NULL) {
-        fprintf(stderr, "function %s() called, but initialization code "
-                        "failed.  Returning 0.\n", externpy->name);
         memset(args, 0, externpy->size_of_result);
     }
 #ifdef _MSC_VER
