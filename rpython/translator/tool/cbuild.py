@@ -254,6 +254,26 @@ class ExternalCompilationInfo(object):
             print >> fileobj, '#include <%s>' % (path,)
         for piece in self.post_include_bits:
             print >> fileobj, piece
+    
+    def write_c_header_sgx(self, fileobj):
+        strings = ['unistd.h', 'sys/types.h', 'errno.h', 'limits.h', 'ctype.h', 'parse_c_type.h', 'tscmp.h', 'string.h', 'assert.h', 'ffi.h', 'stdint.h']
+        header = ['#include <sys/socket.h>', '#include <sys/un.h>', '#include <poll.h>', '#include <sys/select.h>', '#include <netinet/in.h>', '#include <netinet/tcp.h>', '#include <fcntl.h>', '#include <stdio.h>', '#include <netdb.h>', '#include <arpa/inet.h>', '#include <netpacket/packet.h>', '#include <sys/ioctl.h>', '#include <net/if.h>', '#include <linux/netlink.h>']
+        f = open(os.path.join(cdir, 'src', 'precommondefs.h'))
+        fileobj.write(f.read())
+        f.close()
+        print >> fileobj
+        for piece in self.pre_include_bits:
+            print >> fileobj, piece
+        for path in self.includes:
+            if any(s in str(path) for s in strings):
+                print >> fileobj, '#include <%s>' % (path,)
+        for piece in self.post_include_bits:
+            if piece.find('#include') !=-1:
+                for element in header:
+                        i = piece.find(element)
+                        piece = piece[:i] + '//' + piece[i:]
+            print >> fileobj, piece
+
 
     def _copy_attributes(self):
         d = {}
@@ -275,7 +295,10 @@ class ExternalCompilationInfo(object):
                 if not filename.check():
                     break
             f = filename.open("w")
-            self.write_c_header(f)
+	    if num < 21:
+                self.write_c_header(f)
+            else:
+                self.write_c_header_sgx(f)
             source = str(source)
             f.write(source)
             if not source.endswith('\n'):
