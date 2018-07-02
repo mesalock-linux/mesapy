@@ -40,7 +40,6 @@ ffi_type ffi_type_longdouble = { sizeof(long double), LONGDOUBLE_ALIGN, FFI_TYPE
 ffi_type ffi_type_pointer = { sizeof(void *), VOID_P_ALIGN, FFI_TYPE_POINTER };
 
 void ffi_fatalerror(const char* msg) {
-  fprintf(stderr, "%s\\n", msg);
   abort();
 }
         
