@@ -33,10 +33,10 @@
 #define PYPY_DEBUG_FILE           pypy_debug_file
 #define PYPY_DEBUG_START(cat, ts) pypy_debug_start(cat, ts)
 #define PYPY_DEBUG_STOP(cat, ts)  pypy_debug_stop(cat, ts)
-#define OP_DEBUG_OFFSET(res)      res = pypy_debug_offset()
-#define OP_DEBUG_FORKED(ofs, _)   pypy_debug_forked(ofs)
+#define OP_DEBUG_OFFSET(res)      
+#define OP_DEBUG_FORKED(ofs, _) 
 #define OP_HAVE_DEBUG_PRINTS(r)   r = (pypy_have_debug_prints & 1)
-#define OP_DEBUG_FLUSH() fflush(pypy_debug_file)
+#define OP_DEBUG_FLUSH() 
 
 /************************************************************/
 
