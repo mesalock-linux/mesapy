@@ -779,6 +779,7 @@ def gen_structdef(f, database):
     print >> f, '/***********************************************************/'
     print >> f, '/***  Structure definitions                              ***/'
     print >> f
+    print >> f, '#include "/opt/intel/sgxsdk/include/tlibc/stdio.h"'
     print >> f, "#ifndef _PYPY_STRUCTDEF_H"
     print >> f, "#define _PYPY_STRUCTDEF_H"
     for node in structdeflist:
@@ -819,6 +820,7 @@ def gen_forwarddecl(f, database):
     print >> f, '/***********************************************************/'
     print >> f, '/***  Forward declarations                               ***/'
     print >> f
+    print >> f, '#include <extralib.h>'
     print >> f, "#ifndef _PYPY_FORWARDDECL_H"
     print >> f, "#define _PYPY_FORWARDDECL_H"
     for node in database.globalcontainers():
@@ -841,8 +843,6 @@ def gen_startupcode(f, database):
     print >> f, 'void RPython_StartupCode(void) {'
 
     bk = database.translator.annotator.bookkeeper
-    if bk.thread_local_fields:
-        print >> f, '\tRPython_ThreadLocals_ProgramInit();'
 
     for line in database.gcpolicy.gc_startup_code():
         print >> f,"\t" + line
@@ -876,9 +876,6 @@ def add_extra_files(eci):
         srcdir / 'exception.c',
         srcdir / 'rtyper.c',           # ifdef HAVE_RTYPER
         srcdir / 'support.c',
-        srcdir / 'profiling.c',
-        srcdir / 'debug_print.c',
-        srcdir / 'debug_traceback.c',  # ifdef HAVE_RTYPER
         srcdir / 'asm.c',
         srcdir / 'instrument.c',
         srcdir / 'int.c',
@@ -910,8 +907,8 @@ def gen_source(database, modulename, targetdir,
     for key, value in defines.items():
         print >> fi, '#define %s %s' % (key, value)
 
-    eci.write_c_header(fi)
-    print >> fi, '#include "src/g_prerequisite.h"'
+    eci.write_c_header_sgx(fi)
+    print >> fi, '#include <src/g_prerequisite.h>'
     fi.write('#endif /* _PY_COMMON_HEADER_H*/\n')
 
     fi.close()
