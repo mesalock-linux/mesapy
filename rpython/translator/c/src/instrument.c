@@ -37,7 +37,6 @@ void instrument_setup() {
             buf = mmap(NULL, sz, PROT_WRITE|PROT_READ, MAP_SHARED,
                        fd, 0);
             if (buf == MAP_FAILED) {
-                fprintf(stderr, "mapping instrument counters file failed\n");
                 abort();
             }
 #else
@@ -46,7 +45,6 @@ void instrument_setup() {
                                            0, sz, "");
             buf = MapViewOfFile(map_handle, FILE_MAP_WRITE, 0, 0, 0);
             if (buf == 0) {
-                fprintf(stderr, "mapping instrument counters file failed\n");
                 abort();
             }
 #endif

@@ -51,19 +51,6 @@ void pypy_debug_alloc_results(void)
   struct pypy_debug_alloc_s *p;
   for (p = pypy_debug_alloc_list; p; p = p->next)
     count++;
-  if (count > 0)
-    {
-      char *env = getenv("PYPY_ALLOC");
-      fprintf(stderr, "mem.c: %ld mallocs left", count);
-      if (env && *env)
-        {
-          fprintf(stderr, " (most recent first):\n");
-          for (p = pypy_debug_alloc_list; p; p = p->next)
-            fprintf(stderr, "    %p  %s\n", p->addr, p->funcname);
-        }
-      else
-        fprintf(stderr, " (use PYPY_ALLOC=1 to see the list)\n");
-    }
 }
 
 #endif /* RPY_ASSERT */
