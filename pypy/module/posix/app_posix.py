@@ -206,29 +206,6 @@ if osname == 'posix':
             try_close(read_end)
             raise e     # bare 'raise' does not work here :-(
 
-    def wait():
-        """ wait() -> (pid, status)
-
-        Wait for completion of a child process.
-        """
-        return posix.waitpid(-1, 0)
-
-    def wait3(options):
-        """ wait3(options) -> (pid, status, rusage)
-
-        Wait for completion of a child process and provides resource usage information
-        """
-        from _pypy_wait import wait3
-        return wait3(options)
-
-    def wait4(pid, options):
-        """ wait4(pid, options) -> (pid, status, rusage)
-
-        Wait for completion of the child process "pid" and provides resource usage information
-        """
-        from _pypy_wait import wait4
-        return wait4(pid, options)
-
 else:
     # Windows implementations
 
