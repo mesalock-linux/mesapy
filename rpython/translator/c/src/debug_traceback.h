@@ -33,9 +33,9 @@
   pypy_debug_tracebacks[pypydtcount].exctype = etype;   \
   pypydtcount = (pypydtcount + 1) & (PYPY_DEBUG_TRACEBACK_DEPTH-1)
 
-#define OP_DEBUG_START_TRACEBACK(etype, _)  PYPYDTSTORE(NULL, etype)
-#define OP_DEBUG_RERAISE_TRACEBACK(etp, _)  PYPYDTSTORE(PYPYDTPOS_RERAISE, etp)
-#define OP_DEBUG_PRINT_TRACEBACK()          pypy_debug_traceback_print()
+#define OP_DEBUG_START_TRACEBACK(etype, _)  
+#define OP_DEBUG_RERAISE_TRACEBACK(etp, _)  
+#define OP_DEBUG_PRINT_TRACEBACK()        
 
 #define PYPY_DEBUG_RECORD_TRACEBACK(funcname)   {       \
     static struct pypydtpos_s loc = {                   \
