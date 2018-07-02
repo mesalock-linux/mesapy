@@ -522,7 +522,6 @@ class TranslationDriver(SimpleTaskEngine):
 
         if self.standalone:
             self.c_entryp = cbuilder.executable_name
-            self.create_exe()
         else:
             self.c_entryp = cbuilder.get_entry_point()
 
