@@ -218,25 +218,24 @@ char *_pypy_init_home(void)
 else:
 
     _source_code = r"""
-#include <dlfcn.h>
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <extralib.h>
 
 RPY_EXPORTED
 char *_pypy_init_home(void)
 {
-    Dl_info info;
-    dlerror();   /* reset */
-    if (dladdr(&_pypy_init_home, &info) == 0) {
-        fprintf(stderr, "PyPy initialization: dladdr() failed: %s\n",
-                dlerror());
-        return NULL;
-    }
-    char *p = realpath(info.dli_fname, NULL);
-    if (p == NULL) {
-        p = strdup(info.dli_fname);
-    }
+    struct Dl_info info;
+    char buf[256];
+    int size = 256;
+    char* ret = getcwd(buf, size);
+    char* path = malloc(strlen(ret)+strlen("enclave.so") +1);
+    strcpy(path, ret);
+    strcat(path, "enclave.so");
+    info.dli_fname=strdup(path);
+    info.dli_sname=strdup("_pypy_init_home");
+    char *p = strdup(info.dli_fname);
     return p;
 }
 """
