@@ -165,8 +165,8 @@ class BasePosix(Platform):
         rel_ofiles = [rel_cfile[:rel_cfile.rfind('.')]+'.o' for rel_cfile in rel_cfiles]
         m.cfiles = rel_cfiles
 	
-	cwd = "/home/melody/sgx_pypy_cffi"
-        curpath = os.path.join(cwd, "Enclave")
+	cwd = getcwd()
+        curpath = os.path.join(cwd, "../../sgx")
 
         rel_includedirs = [rpyrel(incldir) for incldir in
                            self.preprocess_include_dirs(eci.include_dirs)] + ["/opt/intel/sgxsdk/include/tlibc", curpath]
