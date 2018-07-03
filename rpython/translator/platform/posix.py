@@ -169,8 +169,7 @@ class BasePosix(Platform):
         curpath = os.path.join(cwd, "Enclave")
 
         rel_includedirs = [rpyrel(incldir) for incldir in
-                           self.preprocess_include_dirs(eci.include_dirs)] + ["/opt/intel/sgxsdk/include/tlibc", curpath, "/home/melody/sgx_pypy_cffi/Enclave/libffi-3.0.13/x86_64-unknown-linux-gnu/include"]
-	rel_includedirs.remove('/usr/local/lib/libffi-3.0.13/include')
+                           self.preprocess_include_dirs(eci.include_dirs)] + ["/opt/intel/sgxsdk/include/tlibc", curpath]
         rel_libdirs = [rpyrel(libdir) for libdir in
                        self.preprocess_library_dirs(eci.library_dirs)]
 
