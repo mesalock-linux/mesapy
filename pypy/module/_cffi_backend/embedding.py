@@ -119,6 +119,7 @@ static void _cffi_init_once(void)
 else:
 
     do_includes = r"""
+#include <extralib.h>
 
 static void _cffi_init(void);
 
@@ -135,11 +136,17 @@ RPY_EXPORTED int pypy_setup_home(char *, int);
 static unsigned char _cffi_ready = 0;
 static const char *volatile _cffi_module_name;
 
+static void _cffi_init_error(const char *msg, const char *extra)
+{
+        fprintf();
+}
+
 static void _cffi_init(void)
 {
     rpython_startup_code();
 
     if (pypy_setup_home(NULL, 1) != 0) {
+	_cffi_init_error("pypy_setup_home() failed", "");
         return;
     }
     _cffi_ready = 1;

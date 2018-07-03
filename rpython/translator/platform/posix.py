@@ -188,7 +188,7 @@ class BasePosix(Platform):
             ('LIBDIRS', self._libdirs(rel_libdirs)),
             ('INCLUDEDIRS', self._includedirs(rel_includedirs)),
             ('CFLAGS', cflags),
-            ('CFLAGSEXTRA', '-nostdinc'),
+	    ('CFLAGSEXTRA', list(eci.compile_extra).append('-nostdinc'))
             ('LDFLAGS', linkflags),
             ('LDFLAGS_LINK', list(self.link_flags)),
             ('LDFLAGSEXTRA', list(eci.link_extra)),

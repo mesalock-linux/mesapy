@@ -6,7 +6,7 @@
 #include "ffi.h"
 #include <stdio.h>
 #include <stdlib.h>
-
+#include <extralib.h>
 typedef struct { char c; long long x; } s_long_long;
 typedef struct { char c; float x; } s_float;
 typedef struct { char c; double x; } s_double;
@@ -40,6 +40,7 @@ ffi_type ffi_type_longdouble = { sizeof(long double), LONGDOUBLE_ALIGN, FFI_TYPE
 ffi_type ffi_type_pointer = { sizeof(void *), VOID_P_ALIGN, FFI_TYPE_POINTER };
 
 void ffi_fatalerror(const char* msg) {
+  fprintf();
   abort();
 }
         

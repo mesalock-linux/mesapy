@@ -117,15 +117,15 @@ if os.name == 'nt':
         RPY_EXTERN void* enter_suppress_iph(void)
         {
             void* ret = _set_thread_local_invalid_parameter_handler(_Py_silent_invalid_parameter_handler);
-            /*fprintf(stdout, "setting %p returning %p\\n", (void*)_Py_silent_invalid_parameter_handler, ret);*/
-            return ret;
+            fprintf();
+	    return ret;
         }
         RPY_EXTERN void exit_suppress_iph(void*  old_handler)
         {
             void * ret;
             _invalid_parameter_handler _handler = (_invalid_parameter_handler)old_handler;
             ret = _set_thread_local_invalid_parameter_handler(_handler);
-            /*fprintf(stdout, "exiting, setting %p returning %p\\n", old_handler, ret);*/
+	    fprintf();
         }
 
         #else

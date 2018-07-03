@@ -91,6 +91,7 @@ int pypy_main_function(int argc, char *argv[])
  memory_out:
     errmsg = "out of memory";
  error:
+    fprintf();
     abort();
     return 1;
 }

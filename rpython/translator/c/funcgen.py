@@ -809,9 +809,7 @@ class FunctionCodeGenerator(object):
                 raise Exception("don't know how to debug_print %r" % (T,))
             argv.append(self.expr(arg))
         argv.insert(0, c_string_constant(' '.join(format) + '\n'))
-        return (
-            "/*if (PYPY_HAVE_DEBUG_PRINTS) { fprintf(PYPY_DEBUG_FILE, %s); %s}*/"
-            % (', '.join(argv), free_line))
+        return
 
     def _op_debug(self, macro, op):
         v_cat, v_timestamp = op.args
@@ -860,7 +858,7 @@ class FunctionCodeGenerator(object):
         else:
             msg = 'RPyString_AsCharP(%s)' % self.expr(msg)
 
-        return '/*fprintf(stderr, "%%s\\n", %s); abort();*/' % msg
+        return 'fprintf(); abort();'
 
     def OP_DEBUG_LLINTERPCALL(self, op):
         result = 'abort();  /* debug_llinterpcall should be unreachable */'
@@ -943,8 +941,7 @@ class FunctionCodeGenerator(object):
         exprs = []
         for c_limited_type in op.args[1:]:
             exprs.append('%s == %s' % (gottype, self.expr(c_limited_type)))
-        return '/*PYPY_DEBUG_CATCH_EXCEPTION("%s", %s, %s);*/' % (
-            self.getdebugfunctionname(), gottype, ' || '.join(exprs))
+        return
 
     def OP_INT_BETWEEN(self, op):
         if (isinstance(op.args[0], Constant) and

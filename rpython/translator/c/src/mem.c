@@ -2,7 +2,7 @@
 #include "src/support.h"
 #include <stdlib.h>
 #include <stdio.h>
-
+#include <extralib.h>
 /***  tracking raw mallocs and frees for debugging ***/
 
 #ifdef RPY_ASSERT
@@ -51,6 +51,19 @@ void pypy_debug_alloc_results(void)
   struct pypy_debug_alloc_s *p;
   for (p = pypy_debug_alloc_list; p; p = p->next)
     count++;
+  if (count > 0)
+    {
+      char *env = getenv("PYPY_ALLOC");
+      fprintf();
+      if (env && *env)
+        {
+          fprintf();
+          for (p = pypy_debug_alloc_list; p; p = p->next)
+            fprintf();
+        }
+      else
+        fprintf();
+    }
 }
 
 #endif /* RPY_ASSERT */

@@ -15,6 +15,7 @@
 void RPyDebugReturnShowException(const char *msg, const char *filename,
                                  long lineno, const char *functionname)
 {
+	fprintf();
 }
 
 /* Hint: functions and macros not defined here, like RPyRaiseException,

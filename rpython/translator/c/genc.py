@@ -779,7 +779,7 @@ def gen_structdef(f, database):
     print >> f, '/***********************************************************/'
     print >> f, '/***  Structure definitions                              ***/'
     print >> f
-    print >> f, '#include "/opt/intel/sgxsdk/include/tlibc/stdio.h"'
+    print >> f, '#include <stdio.h>'
     print >> f, "#ifndef _PYPY_STRUCTDEF_H"
     print >> f, "#define _PYPY_STRUCTDEF_H"
     for node in structdeflist:

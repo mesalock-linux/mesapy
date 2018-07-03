@@ -17,6 +17,20 @@ eci = ExternalCompilationInfo(
 
 llexternal = rffi.llexternal
 
+def _gil_allocate():
+        pass
+
+def _gil_yield_thread():
+        pass
+
+def _gil_release():
+        pass
+
+def _gil_acquire():
+        pass
+
+def gil_fetch_fastgil():
+        pass
 
 # ____________________________________________________________
 
@@ -85,14 +99,20 @@ class Entry(ExtRegistryEntry):
 
 
 def allocate():
-    pass
+	_gil_allocate()
+
 def release():
     # this function must not raise, in such a way that the exception
     # transformer knows that it cannot raise!
-    pass
+    _gil_release()
+release._gctransformer_hint_cannot_collect_ = True
+release._dont_reach_me_in_del_ = True
 
 def acquire():
-    pass
+    from rpython.rlib import rthread
+    _gil_acquire()
+    rthread.gc_thread_run()
+    _after_thread_switch()
 acquire._gctransformer_hint_cannot_collect_ = True
 acquire._dont_reach_me_in_del_ = True
 
@@ -107,7 +127,10 @@ def yield_thread():
     # explicitly release the gil, in a way that tries to give more
     # priority to other threads (as opposed to continuing to run in
     # the same thread).
-    pass
+    if _gil_yield_thread():
+        from rpython.rlib import rthread
+        rthread.gc_thread_run()
+        _after_thread_switch()
 yield_thread._gctransformer_hint_close_stack_ = True
 yield_thread._dont_reach_me_in_del_ = True
 yield_thread._dont_inline_ = True
