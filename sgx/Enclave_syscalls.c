@@ -404,19 +404,6 @@ void ocall_printf(const char *fmt, ...)
     ocall_print_string(buf);
 }
 
-char ** environ =NULL;
-
-
-void run_pypy(int argc, char *argv[]){
-	ocall_environ(&environ);
-        int result = compute_num(12, 10);
-	ocall_printf("The result: %d\n", result);
-        my_helloworld();
-	char a[20] = "print \"hello world\"";
-	ocall_printf("string in a is %s", a);
-	testexec(a);
-}
-
 
 #if defined(__cplusplus)
 }
