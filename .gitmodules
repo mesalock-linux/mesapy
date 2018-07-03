@@ -2,3 +2,7 @@
 	path = lib_rust/miniz_oxide
 	url = https://github.com/mesalock-linux/miniz_oxide.git
 	branch = mesapy
+[submodule "lib_rust/mesalink"]
+	path = lib_rust/mesalink
+	url = https://github.com/mesalock-linux/mesalink.git
+	branch = v0.6.1

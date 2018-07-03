@@ -41,6 +41,13 @@ endif
 pypy-zlib-only:
 	cd pypy/goal && $(RUNINTERP) ../../rpython/bin/rpython -Ojit targetpypystandalone.py --no-allworkingmodules --withmod-zlib
 
+mesalink:
+	cd lib_rust/mesalink && ./autogen.sh && make
+	cd lib_rust/mesalink && cp .libs/libmesalink.so ../../pypy/goal/
+
+pypy-_ssl-only: mesalink
+	cd pypy/goal && $(RUNINTERP) ../../rpython/bin/rpython -Ojit targetpypystandalone.py --no-allworkingmodules --withmod-_ssl
+
 # Note: the -jN option, or MAKEFLAGS=-jN, are not usable.  They are
 # replaced with an opaque --jobserver option by the time this Makefile
 # runs.  We cannot get their original value either:
