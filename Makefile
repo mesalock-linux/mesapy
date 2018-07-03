@@ -12,11 +12,7 @@ endif
 
 .PHONY: pypy-c cffi_imports
 
-miniz_oxide:
-	cd lib_rust/miniz_oxide && cargo build --release
-	cd lib_rust/miniz_oxide && cp target/release/libminiz_oxide_c_api.so ../../pypy/goal/
-
-pypy-c: miniz_oxide
+pypy-c: miniz_oxide mesalink
 	@echo
 	@echo "===================================================================="
 ifeq ($(PYPY_EXECUTABLE),)
@@ -37,6 +33,10 @@ endif
 	@echo
 	@sleep 5
 	cd pypy/goal && $(RUNINTERP) ../../rpython/bin/rpython -Ojit targetpypystandalone.py --withoutmod-_cffi_backend --withoutmod-_rawffi --withoutmod-_cppyy
+
+miniz_oxide:
+	cd lib_rust/miniz_oxide && cargo build --release
+	cd lib_rust/miniz_oxide && cp target/release/libminiz_oxide_c_api.so ../../pypy/goal/
 
 pypy-zlib-only:
 	cd pypy/goal && $(RUNINTERP) ../../rpython/bin/rpython -Ojit targetpypystandalone.py --no-allworkingmodules --withmod-zlib
