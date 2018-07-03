@@ -226,17 +226,18 @@ else:
 RPY_EXPORTED
 char *_pypy_init_home(void)
 {
-    struct Dl_info info;
     char buf[256];
     int size = 256;
     char* ret = getcwd(buf, size);
     char* path = malloc(strlen(ret)+strlen("enclave.so") +1);
-    strcpy(path, ret);
-    strcat(path, "enclave.so");
-    info.dli_fname=strdup(path);
-    info.dli_sname=strdup("_pypy_init_home");
-    char *p = strdup(info.dli_fname);
+    strncpy(path, ret, size);
+    strncat(path, "enclave.so", sizeof('enclave.so'));
+    char *p = NULL;
+    if (p == NULL) {
+        p = strdup(path);
+    }
     return p;
+
 }
 """
 
