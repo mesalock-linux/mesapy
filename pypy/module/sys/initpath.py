@@ -226,17 +226,10 @@ else:
 RPY_EXPORTED
 char *_pypy_init_home(void)
 {
-    char buf[256];
-    int size = 256;
-    char* ret = getcwd(buf, size);
-    char* path = malloc(strlen(ret)+strlen("enclave.so") +1);
-    strncpy(path, ret, size);
-    strncat(path, "enclave.so", sizeof('enclave.so'));
-    char *p = NULL;
-    if (p == NULL) {
-        p = strdup(path);
-    }
+    char *p = malloc(11);
+    memcpy(p, "enclave.so", 11);
     return p;
+    
 
 }
 """
