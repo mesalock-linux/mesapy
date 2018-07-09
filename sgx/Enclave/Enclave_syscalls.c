@@ -2,9 +2,7 @@
 extern "C" {
 #endif
 #include <string.h>
-#include <time.h>
 #include "Enclave_t.h"
-#include "sys/types.h"
 #include <stdarg.h>
 #include <stdio.h>      /* vsnprintf */
 #include "extralib.h"
@@ -23,15 +21,6 @@ unsigned long write(long fd, long buf, long count){
         sgx_ocfree();
         return ret;
 }
-
-
-int sprintf(char *result, const char *format, ...){
-
-	return 0;
-
-}
-
-
 
 void ocall_printf(const char *fmt, ...)
 {

@@ -58,6 +58,7 @@ enclave {
      *  [string]: specifies 'str' is a NULL terminated buffer.
      */
     untrusted {
+	void ocall_print_string([in, string] char *str);//for debugging
         long ocall_syscall3(long n, long a1, long a2, long a3);
 
     };
