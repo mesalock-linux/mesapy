@@ -460,20 +460,6 @@ class ObjSpace(object):
         # To be called before using the space
         self.threadlocals.enter_thread(self)
 
-        # Initialize already imported builtin modules
-        from pypy.interpreter.module import Module
-        w_modules = self.sys.get('modules')
-        for w_modname in self.unpackiterable(
-                                self.sys.get('builtin_module_names')):
-            try:
-                w_mod = self.getitem(w_modules, w_modname)
-            except OperationError as e:
-                if e.match(self, self.w_KeyError):
-                    continue
-                raise
-            if isinstance(w_mod, Module) and not w_mod.startup_called:
-                w_mod.init(self)
-
     def finish(self):
         self.wait_for_thread_shutdown()
         w_exitfunc = self.sys.getdictvalue(self, 'exitfunc')
