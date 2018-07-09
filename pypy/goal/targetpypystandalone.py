@@ -104,6 +104,7 @@ def get_additional_entrypoints(space, w_initstdio):
                           c_name='pypy_setup_home')
     def pypy_setup_home(ll_home, verbose):
         space.startup()
+	return 0
 
     @entrypoint_highlevel('main', [rffi.CCHARP], c_name='pypy_execute_source')
     def pypy_execute_source(ll_source):
