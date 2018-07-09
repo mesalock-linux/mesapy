@@ -25,6 +25,4 @@ unsigned long mmap(long addr, long length, long port, long flags, long fd, long 
 int sprintf(char *result, const char *format, ...);
 void ocall_printf(const char *fmt, ...);
 
-//#define int fprintf_sgx(int stream, const char *format, ...)
 #define fprintf()
-#define stderr 2 
