@@ -26,7 +26,7 @@ features of MesaPy:
 - **Formal verification**: Some code in RPython's libraries and its
   interpreter/JIT backend are still written in C, which may contain potential
   memory bugs. To prove the memory safety of RPython, we aim to formally
-  verified its libraries and backend written in C using state-of-the-art
+  verify its libraries and backend written in C using state-of-the-art
   verification tools.
 
 - **SGX support**: With the memory safety of MesaPy, we also port it to
