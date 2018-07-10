@@ -1,4 +1,4 @@
-# MesaPy: A Memory-safe Python Implementation based on PyPy 
+# MesaPy: A Memory-Safe Python Implementation based on PyPy
 
 MesaPy is a memory-safe Python implementation based on PyPy. In addition to
 PyPy's distinct features -- speed, memory usage, compatibility and stackless,
@@ -34,6 +34,16 @@ features of MesaPy:
   confidentiality guarantees to security-sensitive computation. Developers now
   can easily use MesaPy to implement SGX applications without worrying about
   memory issues.
+
+# Building MesaPy from Source
+
+Building MesaPy from source is very simple, you can simply use the docker provided
+by MesaLock Linux and run `make pypy-c`. The detailed steps are explained in the
+[documentation](https://docs.mesapy.org/building-from-source.html).
+
+```
+$ docker run --rm -it -v$(pwd):/mesapy -w /mesapy mesalocklinux/build-mesalock-linux make pypy-c
+```
 
 # Maintainers
 
