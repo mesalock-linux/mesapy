@@ -35,6 +35,9 @@ features of MesaPy:
   can easily use MesaPy to implement SGX applications without worrying about
   memory issues.
 
+More details about each features, roadmap, building process can be found here:
+[https://docs.mesapy.org/](https://docs.mesapy.org/)
+
 # Building MesaPy from Source
 
 Building MesaPy from source is very simple, you can simply use the docker provided
@@ -58,4 +61,5 @@ $ docker run --rm -it -v$(pwd):/mesapy -w /mesapy mesalocklinux/build-mesalock-l
 
 # License
 
-MesaPy is provided under the 3-Clause BSD license. For a copy, see the LICENSE file.
+MesaPy is provided under the 3-Clause BSD license. MesaPy is built upon PyPy,
+for a detailed license, see the LICENSE file.
