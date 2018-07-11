@@ -295,7 +295,9 @@ class ExternalCompilationInfo(object):
                 if not filename.check():
                     break
             f = filename.open("w")
-	    if num < 21:
+	    # libnum is the threadshold number of module_%d.c compiled in the libpypy.a
+	    libnum = 21
+	    if num < libnum:
                 self.write_c_header(f)
             else:
                 self.write_c_header_sgx(f)
