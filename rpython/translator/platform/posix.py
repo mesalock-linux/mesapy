@@ -166,7 +166,7 @@ class BasePosix(Platform):
         m.cfiles = rel_cfiles
 	
 	cwd = getcwd()
-        curpath = os.path.join(cwd, "../../sgx")
+        curpath = os.path.join(cwd, "../../sgx/Sgx_App_Enclave/Enclave")
 
         rel_includedirs = [rpyrel(incldir) for incldir in
                            self.preprocess_include_dirs(eci.include_dirs)] + ["/opt/intel/sgxsdk/include/tlibc", curpath]
