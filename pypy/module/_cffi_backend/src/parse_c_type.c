@@ -294,6 +294,7 @@ static int parse_sequel(token_t *tok, int outer)
                                             tok->kind == TOK_OPEN_BRACKET)) {
             /* just parentheses for grouping.  Use a OP_NOOP to simplify */
             int x;
+	    assert(p_current == &result);
             x = tok->output_index;
             p_current = tok->output + x;
 
