@@ -13,7 +13,18 @@ static long pypy_threadlocal_lock = 0;
 
 static int check_valid(void);
 
-#ifdef _WIN32
+int _RPython_ThreadLocals_AcquireTimeout(int max_wait_iterations) {
+
+}
+
+Python_ThreadLocals_Acquire(void) {
+
+}
+void _RPython_ThreadLocals_Release(void) {
+
+}
+
+
 = TLS_OUT_OF_INDEXES
 #endif
 ;
@@ -53,6 +64,7 @@ static void cleanup_after_fork(void)
     else {
         linkedlist_head.next = linkedlist_head.prev = &linkedlist_head;
     }
+    _RPython_ThreadLocals_Release();
 }
 
 
@@ -91,12 +103,14 @@ static void _RPy_ThreadLocals_Init(void *p)
                   where it is not the case are rather old nowadays. */
 #    endif
 #endif
+    _RPython_ThreadLocals_Acquire();
     oldnext = linkedlist_head.next;
     tls->prev = &linkedlist_head;
     tls->next = oldnext;
     linkedlist_head.next = tls;
     oldnext->prev = tls;
     tls->ready = 42;
+    _RPython_ThreadLocals_Release();
 }
 
 static void threadloc_unlink(void *p)
@@ -104,12 +118,14 @@ static void threadloc_unlink(void *p)
     /* warning: this can be called at completely random times without
        the GIL. */
     struct pypy_threadlocal_s *tls = (struct pypy_threadlocal_s *)p;
+    _RPython_ThreadLocals_Acquire();
     if (tls->ready == 42) {
         tls->next->prev = tls->prev;
         tls->prev->next = tls->next;
         memset(tls, 0xDD, sizeof(struct pypy_threadlocal_s));  /* debug */
         tls->ready = 0;
     }
+    _RPython_ThreadLocals_Release();
 #ifndef USE___THREAD
     free(p);
 #endif
@@ -148,6 +164,10 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL,
 }
 #endif
 
+void RPython_ThreadLocals_ProgramInit(void)
+{
+
+}
 /* ------------------------------------------------------------ */
 #ifdef USE___THREAD
 /* ------------------------------------------------------------ */
@@ -159,18 +179,12 @@ __thread struct pypy_threadlocal_s pypy_threadlocal;
 
 char *_RPython_ThreadLocals_Build(void)
 {
-    RPyAssert(pypy_threadlocal.ready == 0, "unclean thread-local");
-    _RPy_ThreadLocals_Init(&pypy_threadlocal);
 
-    /* we also set up &pypy_threadlocal as a POSIX thread-local variable,
-       because we need the destructor behavior. */
-
-    return (char *)&pypy_threadlocal;
 }
 
 void RPython_ThreadLocals_ThreadDie(void)
 {
-    threadloc_unlink(&pypy_threadlocal);
+
 }
 
 
