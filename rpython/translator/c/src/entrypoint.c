@@ -91,7 +91,7 @@ int pypy_main_function(int argc, char *argv[])
  memory_out:
     errmsg = "out of memory";
  error:
-    fprintf();
+    fprintf(stderr, "Fatal error during initialization: %s\n", errmsg);
     abort();
     return 1;
 }

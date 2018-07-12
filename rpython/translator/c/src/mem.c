@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <extralib.h>
+#include <typedefine.h>
 /***  tracking raw mallocs and frees for debugging ***/
 
 #ifdef RPY_ASSERT
@@ -54,15 +55,15 @@ void pypy_debug_alloc_results(void)
   if (count > 0)
     {
       char *env = getenv("PYPY_ALLOC");
-      fprintf();
+      fprintf(stderr, "mem.c: %ld mallocs left", count);
       if (env && *env)
         {
-          fprintf();
+	  fprintf(stderr, " (most recent first):\n");	
           for (p = pypy_debug_alloc_list; p; p = p->next)
-            fprintf();
+          	fprintf(stderr, "    %p  %s\n", p->addr, p->funcname);
         }
       else
-        fprintf();
+        fprintf(stderr, " (use PYPY_ALLOC=1 to see the list)\n");
     }
 }
 

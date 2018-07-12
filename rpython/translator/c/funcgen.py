@@ -858,7 +858,7 @@ class FunctionCodeGenerator(object):
         else:
             msg = 'RPyString_AsCharP(%s)' % self.expr(msg)
 
-        return 'fprintf(); abort();'
+	return 'fprintf(stderr, "%%s\\n", %s); abort();' % msg
 
     def OP_DEBUG_LLINTERPCALL(self, op):
         result = 'abort();  /* debug_llinterpcall should be unreachable */'

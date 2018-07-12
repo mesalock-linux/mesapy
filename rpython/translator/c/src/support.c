@@ -2,6 +2,7 @@
 #include <src/support.h>
 #include <src/exception.h>
 #include <extralib.h>
+#include <typedefine.h>
 /************************************************************/
 /***  C header subsection: support functions              ***/
 
@@ -13,12 +14,16 @@
 RPY_EXTERN
 void RPyAssertFailed(const char* filename, long lineno,
                      const char* function, const char *msg) {
-  fprintf();
+  fprintf(stderr,
+          "PyPy assertion failed at %s:%ld:\n"
+          "in %s: %s\n",
+          filename, lineno, function, msg);
+
   abort();
 }
 
 RPY_EXTERN
 void RPyAbort(void) {
-  fprintf();
+  fprintf(stderr, "Invalid RPython operation (NULL ptr or bad array index)\n");
   abort();
 }
