@@ -31,6 +31,9 @@ extern "C" {
 #endif
 #include <stddef.h>
 #include "parse_c_type.h"
+#include <assert.h>
+#include <typedefine.h>
+
 
 /* this block of #ifs should be kept exactly identical between
    c/_cffi_backend.c, cffi/vengine_cpy.py, cffi/vengine_gen.py

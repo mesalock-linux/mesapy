@@ -257,7 +257,8 @@ int SGX_CDECL main(int argc, char *argv[])
     ecall_libc_functions();
     ecall_libcxx_functions();
     ecall_thread_functions();
-    
+
+    my_helloworld(global_eid);
     /* Destroy the enclave */
     sgx_destroy_enclave(global_eid);
     

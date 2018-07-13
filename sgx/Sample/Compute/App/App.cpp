@@ -257,7 +257,12 @@ int SGX_CDECL main(int argc, char *argv[])
     ecall_libc_functions();
     ecall_libcxx_functions();
     ecall_thread_functions();
-    
+
+    int ret_compute=0;
+    int a0= 16;
+    int a1 =10;
+    compute_num(global_eid, &ret_compute, a0, a1);
+    printf("ret_compute is %d\n", ret_compute);	
     /* Destroy the enclave */
     sgx_destroy_enclave(global_eid);
     

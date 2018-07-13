@@ -165,7 +165,7 @@ class BasePosix(Platform):
         rel_ofiles = [rel_cfile[:rel_cfile.rfind('.')]+'.o' for rel_cfile in rel_cfiles]
         m.cfiles = rel_cfiles
 	
-	cwd = getcwd()
+	cwd = os.getcwd()
         curpath = os.path.join(cwd, "../../sgx/Sgx_App_Enclave/Enclave")
 
         rel_includedirs = [rpyrel(incldir) for incldir in
@@ -187,7 +187,7 @@ class BasePosix(Platform):
             ('LIBDIRS', self._libdirs(rel_libdirs)),
             ('INCLUDEDIRS', self._includedirs(rel_includedirs)),
             ('CFLAGS', cflags),
-	    ('CFLAGSEXTRA', list(eci.compile_extra).append('-nostdinc'))
+	    ('CFLAGSEXTRA', list(eci.compile_extra).append('-nostdinc')),
             ('LDFLAGS', linkflags),
             ('LDFLAGS_LINK', list(self.link_flags)),
             ('LDFLAGSEXTRA', list(eci.link_extra)),

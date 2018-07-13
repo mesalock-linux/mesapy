@@ -50,7 +50,7 @@ enclave {
     from "TrustedLibrary/Libcxx.edl" import ecall_exception, ecall_map;
     from "TrustedLibrary/Thread.edl" import *;
     trusted{
-
+		public int compute_num(int a0, int a1);
 	};
     /* 
      * ocall_print_string - invokes OCALL to display string buffer inside the enclave.

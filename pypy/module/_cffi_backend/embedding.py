@@ -119,7 +119,7 @@ static void _cffi_init_once(void)
 else:
 
     do_includes = r"""
-#include <extralib.h>
+#include <typedefine.h>
 
 static void _cffi_init(void);
 
@@ -138,7 +138,10 @@ static const char *volatile _cffi_module_name;
 
 static void _cffi_init_error(const char *msg, const char *extra)
 {
-        fprintf();
+	fprintf(stderr,
+            "\nPyPy initialization failure when loading module '%s':\n%s%s\n",
+            _cffi_module_name, msg, extra);
+
 }
 
 static void _cffi_init(void)

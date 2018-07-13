@@ -257,7 +257,9 @@ int SGX_CDECL main(int argc, char *argv[])
     ecall_libc_functions();
     ecall_libcxx_functions();
     ecall_thread_functions();
-    
+
+    char a[20] = "print \"string in a is hello world \"";
+    testexec(a);
     /* Destroy the enclave */
     sgx_destroy_enclave(global_eid);
     

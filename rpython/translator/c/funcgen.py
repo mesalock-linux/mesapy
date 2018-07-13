@@ -809,7 +809,9 @@ class FunctionCodeGenerator(object):
                 raise Exception("don't know how to debug_print %r" % (T,))
             argv.append(self.expr(arg))
         argv.insert(0, c_string_constant(' '.join(format) + '\n'))
-        return
+	return (
+	    "if (PYPY_HAVE_DEBUG_PRINTS) { fprintf(PYPY_DEBUG_FILE, %s); %s}"
+	    % (', '.join(argv), free_line))
 
     def _op_debug(self, macro, op):
         v_cat, v_timestamp = op.args
@@ -828,10 +830,10 @@ class FunctionCodeGenerator(object):
             return x
 
     def OP_DEBUG_START(self, op):
-        return self._op_debug('//PYPY_DEBUG_START', op)
+        return self._op_debug('PYPY_DEBUG_START', op)
 
     def OP_DEBUG_STOP(self, op):
-        return self._op_debug('//PYPY_DEBUG_STOP', op)
+        return self._op_debug('PYPY_DEBUG_STOP', op)
 
     def OP_HAVE_DEBUG_PRINTS_FOR(self, op):
         arg = op.args[0]
@@ -941,7 +943,8 @@ class FunctionCodeGenerator(object):
         exprs = []
         for c_limited_type in op.args[1:]:
             exprs.append('%s == %s' % (gottype, self.expr(c_limited_type)))
-        return
+	return 'PYPY_DEBUG_CATCH_EXCEPTION("%s", %s, %s);' % (
+            self.getdebugfunctionname(), gottype, ' || '.join(exprs))
 
     def OP_INT_BETWEEN(self, op):
         if (isinstance(op.args[0], Constant) and

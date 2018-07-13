@@ -24,7 +24,7 @@ void _RPython_ThreadLocals_Release(void) {
 
 }
 
-
+#ifdef _WIN32
 = TLS_OUT_OF_INDEXES
 #endif
 ;

@@ -765,6 +765,7 @@ class SourceGenerator:
                     print >> fc, '#include "preimpl.h"'
                     print >> fc, '#define PYPY_FILE_NAME "%s"' % name
                     print >> fc, '#include "src/g_include.h"'
+                    print >> fc, '#include <typedefine.h>'
                     print >> fc
                 print >> fc, MARKER
                 for node, impl in nodeiter:

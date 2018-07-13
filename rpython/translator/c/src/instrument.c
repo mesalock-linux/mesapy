@@ -1,5 +1,6 @@
 #include "common_header.h"
 #include <src/instrument.h>
+#include <typedefine.h>
 
 #ifdef  PYPY_INSTRUMENT
 
@@ -37,7 +38,7 @@ void instrument_setup() {
             buf = mmap(NULL, sz, PROT_WRITE|PROT_READ, MAP_SHARED,
                        fd, 0);
             if (buf == MAP_FAILED) {
-		fprintf();
+		fprintf(stderr, "mapping instrument counters file failed\n");
                 abort();
             }
 #else
