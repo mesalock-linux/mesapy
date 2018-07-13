@@ -780,7 +780,7 @@ def gen_structdef(f, database):
     print >> f, '/***********************************************************/'
     print >> f, '/***  Structure definitions                              ***/'
     print >> f
-    print >> f, '#include <stdio.h>'
+    print >> f, '#include <typedefine.h>'
     print >> f, "#ifndef _PYPY_STRUCTDEF_H"
     print >> f, "#define _PYPY_STRUCTDEF_H"
     for node in structdeflist:
@@ -822,6 +822,7 @@ def gen_forwarddecl(f, database):
     print >> f, '/***  Forward declarations                               ***/'
     print >> f
     print >> f, '#include <extralib.h>'
+    print >> f, '#include <typedefine.h>'
     print >> f, "#ifndef _PYPY_FORWARDDECL_H"
     print >> f, "#define _PYPY_FORWARDDECL_H"
     for node in database.globalcontainers():
