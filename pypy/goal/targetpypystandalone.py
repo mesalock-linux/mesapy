@@ -397,7 +397,6 @@ class PyPyTarget(object):
                      'jitpolicy', 'get_entry_point',
                      'get_additional_config_options']:
             ns[name] = getattr(self, name)
-#        ns['get_gchooks'] = self.get_gchooks
 
 PyPyTarget().interface(globals())
 
