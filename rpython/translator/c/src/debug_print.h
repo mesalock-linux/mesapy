@@ -57,7 +57,7 @@ RPY_EXPORTED FILE *pypy_debug_file;
 #define TIMESTAMP_UNIT_NS 1
 #define TIMESTAMP_UNIT_QUERY_PERFORMANCE_COUNTER 2
 
-#define OP_LL_READ_TIMESTAMP(val) READ_TIMESTAMP(val)
+#define OP_LL_READ_TIMESTAMP(val)
 
 #include "src/asm.h"
 

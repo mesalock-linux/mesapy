@@ -17,7 +17,7 @@ int _RPython_ThreadLocals_AcquireTimeout(int max_wait_iterations) {
 
 }
 
-Python_ThreadLocals_Acquire(void) {
+void _RPython_ThreadLocals_Acquire(void) {
 
 }
 void _RPython_ThreadLocals_Release(void) {
