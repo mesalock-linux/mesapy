@@ -29,39 +29,70 @@
  *
  */
 
-/* Enclave.edl - Top EDL file. */
 
-enclave {
+#include <thread>
+#include <stdio.h>
+using namespace std;
+
+#include "../App.h"
+#include "Enclave_u.h"
+
+static size_t counter = 0;
+
+void increase_counter(void)
+{
+    size_t cnr = 0;
+    sgx_status_t ret = SGX_ERROR_UNEXPECTED;
+    ret = ecall_increase_counter(global_eid, &cnr);
+    if (cnr != 0) counter = cnr; 
+    if (ret != SGX_SUCCESS)
+        abort();
+}
+
+void data_producer(void)
+{
+    sgx_status_t ret = SGX_ERROR_UNEXPECTED;
+    ret = ecall_producer(global_eid);
+    if (ret != SGX_SUCCESS)
+        abort();
+}
+
+void data_consumer(void)
+{
+    sgx_status_t ret = SGX_ERROR_UNEXPECTED;
+    ret = ecall_consumer(global_eid);
+    if (ret != SGX_SUCCESS)
+        abort();
+}
+
+/* ecall_thread_functions:
+ *   Invokes thread functions including mutex, condition variable, etc.
+ */
+void ecall_thread_functions(void)
+{
+    thread adder1(increase_counter);
+    thread adder2(increase_counter);
+    thread adder3(increase_counter);
+    thread adder4(increase_counter);
+
+    adder1.join();
+    adder2.join();
+    adder3.join();
+    adder4.join();
+
+    assert(counter == 4*LOOPS_PER_THREAD);
+
+    printf("Info: executing thread synchronization, please wait...  \n");
+    /* condition variable */
+    thread consumer1(data_consumer);
+    thread producer0(data_producer);
+    thread consumer2(data_consumer);
+    thread consumer3(data_consumer);
+    thread consumer4(data_consumer);
     
-    include "user_types.h" /* buffer_t */
-    
-    /* Import ECALL/OCALL from sub-directory EDLs.
-     *  [from]: specifies the location of EDL file. 
-     *  [import]: specifies the functions to import, 
-     *  [*]: implies to import all functions.
-     */
-    
-    from "Edger8rSyntax/Types.edl" import *;
-    from "Edger8rSyntax/Pointers.edl" import *;
-    from "Edger8rSyntax/Arrays.edl" import *;
-    from "Edger8rSyntax/Functions.edl" import *;
-
-    from "TrustedLibrary/Libc.edl" import *;
-    from "TrustedLibrary/Libcxx.edl" import ecall_exception, ecall_map;
-    from "TrustedLibrary/Thread.edl" import *;
-    trusted{
-
-    public int compute_num(int a0, int a1);
-	};
-    /* 
-     * ocall_print_string - invokes OCALL to display string buffer inside the enclave.
-     *  [in]: copy the string buffer to App outside.
-     *  [string]: specifies 'str' is a NULL terminated buffer.
-     */
-    untrusted {
-        void ocall_print_string([in, string] char *str);
-        long ocall_syscall3(long n, long a1, long a2, long a3);
-
-    };
-
-};
+    consumer1.join();
+    consumer2.join();
+    consumer3.join();
+    consumer4.join();
+    producer0.join();
+}

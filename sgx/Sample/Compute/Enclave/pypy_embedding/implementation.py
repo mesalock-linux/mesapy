@@ -1,4 +1,4 @@
-from my_library import ffi, lib
+from cm_library import ffi, lib
 
 @ffi.def_extern()
 def compute_num(first, second):

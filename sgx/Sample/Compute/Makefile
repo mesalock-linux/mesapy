@@ -250,7 +250,7 @@ Enclave/%.o: Enclave/%.cpp
 	@$(CXX) $(Enclave_Cpp_Flags) -c $< -o $@
 	@echo "CXX  <=  $<"
 
-$(Enclave_Name): Enclave/Enclave_t.o Enclave/libcompute/cm_library.o $(Enclave_Cpp_Objects) Enclave/Enclave_syscalls.o Enclave/Enclave_unused_sys.o
+$(Enclave_Name): Enclave/Enclave_t.o Enclave/pypy_embedding/cm_library.o $(Enclave_Cpp_Objects) Enclave/Enclave_syscalls.o Enclave/Enclave_unused_sys.o
 	@$(CXX) $^ Enclave/usession/testing_1/main.o Enclave/usession/testing_1/libpypy-c.a Enclave/libffi-3.0.13/x86_64-unknown-linux-gnu/.libs/libffi.a -o $@ $(Enclave_Link_Flags)
 	@echo "LINK =>  $@"
 
@@ -261,4 +261,4 @@ $(Signed_Enclave_Name): $(Enclave_Name)
 .PHONY: clean
 
 clean:
-	@rm -f .config_* $(App_Name) $(Enclave_Name) $(Signed_Enclave_Name) $(App_Cpp_Objects) App/Enclave_u.* $(Enclave_Cpp_Objects) Enclave/Enclave_t.*
+	@rm -f .config_* $(App_Name) $(Enclave_Name) $(Signed_Enclave_Name) $(App_Cpp_Objects) App/Enclave_u.* $(Enclave_Cpp_Objects) Enclave/Enclave_t.* Enclave/Enclave_syscalls.o Enclave/Enclave_unused_sys.o App/App_syscalls.o

@@ -29,39 +29,21 @@
  *
  */
 
-/* Enclave.edl - Top EDL file. */
 
-enclave {
-    
-    include "user_types.h" /* buffer_t */
-    
-    /* Import ECALL/OCALL from sub-directory EDLs.
-     *  [from]: specifies the location of EDL file. 
-     *  [import]: specifies the functions to import, 
-     *  [*]: implies to import all functions.
-     */
-    
-    from "Edger8rSyntax/Types.edl" import *;
-    from "Edger8rSyntax/Pointers.edl" import *;
-    from "Edger8rSyntax/Arrays.edl" import *;
-    from "Edger8rSyntax/Functions.edl" import *;
+#ifndef _ENCLAVE_H_
+#define _ENCLAVE_H_
 
-    from "TrustedLibrary/Libc.edl" import *;
-    from "TrustedLibrary/Libcxx.edl" import ecall_exception, ecall_map;
-    from "TrustedLibrary/Thread.edl" import *;
-    trusted{
+#include <stdlib.h>
+#include <assert.h>
 
-    public int compute_num(int a0, int a1);
-	};
-    /* 
-     * ocall_print_string - invokes OCALL to display string buffer inside the enclave.
-     *  [in]: copy the string buffer to App outside.
-     *  [string]: specifies 'str' is a NULL terminated buffer.
-     */
-    untrusted {
-        void ocall_print_string([in, string] char *str);
-        long ocall_syscall3(long n, long a1, long a2, long a3);
+#if defined(__cplusplus)
+extern "C" {
+#endif
 
-    };
+void printf(const char *fmt, ...);
+int puts_wrapper(const char *str);
+#if defined(__cplusplus)
+}
+#endif
 
-};
+#endif /* !_ENCLAVE_H_ */

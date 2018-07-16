@@ -29,39 +29,59 @@
  *
  */
 
-/* Enclave.edl - Top EDL file. */
+/* Types.edl - Samples for basic types. */
 
 enclave {
-    
-    include "user_types.h" /* buffer_t */
-    
-    /* Import ECALL/OCALL from sub-directory EDLs.
-     *  [from]: specifies the location of EDL file. 
-     *  [import]: specifies the functions to import, 
-     *  [*]: implies to import all functions.
-     */
-    
-    from "Edger8rSyntax/Types.edl" import *;
-    from "Edger8rSyntax/Pointers.edl" import *;
-    from "Edger8rSyntax/Arrays.edl" import *;
-    from "Edger8rSyntax/Functions.edl" import *;
 
-    from "TrustedLibrary/Libc.edl" import *;
-    from "TrustedLibrary/Libcxx.edl" import ecall_exception, ecall_map;
-    from "TrustedLibrary/Thread.edl" import *;
-    trusted{
-
-    public int compute_num(int a0, int a1);
-	};
     /* 
-     * ocall_print_string - invokes OCALL to display string buffer inside the enclave.
-     *  [in]: copy the string buffer to App outside.
-     *  [string]: specifies 'str' is a NULL terminated buffer.
+     * Following types can be supported in Edger8r: 
+     *      char, short, int, float, double, void, 
+     *      int8_t, int16_t, int32_t, int64_t,
+     *      size_t, wchar_t, 
+     *      uint8_t, uint16_t, uint32_t, uint64_t, 
+     *      unsigned, struct, enum, union.
      */
-    untrusted {
-        void ocall_print_string([in, string] char *str);
-        long ocall_syscall3(long n, long a1, long a2, long a3);
 
+    /*
+     * We will demo few types in ECALL functions, data 
+     * types in OCALL functions can be handled either.
+     */
+
+     /* structure definition */
+    struct struct_foo_t {
+        /* Basic types can be used in structure. */
+        uint32_t struct_foo_0;
+        uint64_t struct_foo_1;
+    };
+
+    /* enum definition */
+    enum enum_foo_t {
+        ENUM_FOO_0 = 0,
+        ENUM_FOO_1 = 1
+    };
+
+    /* union definition */
+    union union_foo_t {
+        uint32_t union_foo_0;
+        uint32_t union_foo_1;
+        uint64_t union_foo_3;
+    };
+
+    trusted {
+
+        public void ecall_type_char(char val);
+        public void ecall_type_int(int val);
+
+        public void ecall_type_float(float val);
+        public void ecall_type_double(double val);
+
+        public void ecall_type_size_t(size_t val);
+        public void ecall_type_wchar_t(wchar_t val);
+
+        public void ecall_type_struct(struct struct_foo_t val);
+        public void ecall_type_enum_union(enum enum_foo_t val1, [user_check] union union_foo_t *val2);
+        
+        /* for using user defined types, please refer to Pointers.edl, Arrays.edl. */
     };
 
 };
