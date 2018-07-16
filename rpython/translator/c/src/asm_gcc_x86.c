@@ -24,7 +24,6 @@ void pypy_x86_check_sse2(void)
         fprintf(stderr, "Old CPU with no SSE2 support, cannot continue.\n"
                         "You need to re-translate with "
                         "'--jit-backend=x86-without-sse2'\n");
-                                                                                
         abort();
     }
 }

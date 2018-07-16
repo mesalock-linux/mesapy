@@ -47,7 +47,7 @@ void instrument_setup() {
                                            0, sz, "");
             buf = MapViewOfFile(map_handle, FILE_MAP_WRITE, 0, 0, 0);
             if (buf == 0) {
-            fprintf(stderr, "mapping instrument counters file failed\n");
+                fprintf(stderr, "mapping instrument counters file failed\n");
                 abort();
             }
 #endif

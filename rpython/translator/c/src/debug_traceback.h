@@ -38,20 +38,7 @@
 #define OP_DEBUG_PRINT_TRACEBACK()        
 
 #define PYPY_DEBUG_RECORD_TRACEBACK(funcname)
-/*#define PYPY_DEBUG_RECORD_TRACEBACK(funcname)   {       \
-    static struct pypydtpos_s loc = {                   \
-      PYPY_FILE_NAME, funcname, __LINE__ };             \
-    PYPYDTSTORE(&loc, NULL);                            \
-  }
-*/
 #define PYPY_DEBUG_CATCH_EXCEPTION(funcname, etype, is_fatal) 
-/*#define PYPY_DEBUG_CATCH_EXCEPTION(funcname, etype, is_fatal)   {       \
-    static struct pypydtpos_s loc = {                                   \
-      PYPY_FILE_NAME, funcname, __LINE__ };                             \
-    PYPYDTSTORE(&loc, etype);                                           \
-    if (is_fatal) pypy_debug_catch_fatal_exception();                   \
-  }
-*/
 struct pypydtpos_s {
   const char *filename;
   const char *funcname;
