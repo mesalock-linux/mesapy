@@ -29,39 +29,44 @@
  *
  */
 
-/* Enclave.edl - Top EDL file. */
 
-enclave {
+#include "../App.h"
+#include "Enclave_u.h"
+
+/* No need to implement memccpy here! */
+
+/* edger8r_function_attributes:
+ *   Invokes ECALL declared with calling convention attributes.
+ *   Invokes ECALL declared with [public].
+ */
+void edger8r_function_attributes(void)
+{
+    sgx_status_t ret = SGX_ERROR_UNEXPECTED;
+
+    ret = ecall_function_calling_convs(global_eid);
+    if (ret != SGX_SUCCESS)
+        abort();
     
-    include "user_types.h" /* buffer_t */
+    ret = ecall_function_public(global_eid);
+    if (ret != SGX_SUCCESS)
+        abort();
     
-    /* Import ECALL/OCALL from sub-directory EDLs.
-     *  [from]: specifies the location of EDL file. 
-     *  [import]: specifies the functions to import, 
-     *  [*]: implies to import all functions.
-     */
+    /* user shall not invoke private function here */
+    int runned = 0;
+    ret = ecall_function_private(global_eid, &runned);
+    if (ret != SGX_ERROR_ECALL_NOT_ALLOWED || runned != 0)
+        abort();
+}
+
+/* ocall_function_allow:
+ *   The OCALL invokes the [allow]ed ECALL 'edger8r_private'.
+ */
+void ocall_function_allow(void)
+{
+    int runned = 0;
+    sgx_status_t ret = SGX_ERROR_UNEXPECTED;
     
-    from "Edger8rSyntax/Types.edl" import *;
-    from "Edger8rSyntax/Pointers.edl" import *;
-    from "Edger8rSyntax/Arrays.edl" import *;
-    from "Edger8rSyntax/Functions.edl" import *;
-
-    from "TrustedLibrary/Libc.edl" import *;
-    from "TrustedLibrary/Libcxx.edl" import ecall_exception, ecall_map;
-    from "TrustedLibrary/Thread.edl" import *;
-    trusted{
-
-    public int compute_num(int a0, int a1);
-	};
-    /* 
-     * ocall_print_string - invokes OCALL to display string buffer inside the enclave.
-     *  [in]: copy the string buffer to App outside.
-     *  [string]: specifies 'str' is a NULL terminated buffer.
-     */
-    untrusted {
-        void ocall_print_string([in, string] char *str);
-        long ocall_syscall3(long n, long a1, long a2, long a3);
-
-    };
-
-};
+    ret = ecall_function_private(global_eid, &runned);
+    if (ret != SGX_SUCCESS || runned != 1)
+        abort();
+}

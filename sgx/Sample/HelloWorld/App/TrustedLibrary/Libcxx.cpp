@@ -29,39 +29,23 @@
  *
  */
 
-/* Enclave.edl - Top EDL file. */
+#include <stdio.h>
 
-enclave {
-    
-    include "user_types.h" /* buffer_t */
-    
-    /* Import ECALL/OCALL from sub-directory EDLs.
-     *  [from]: specifies the location of EDL file. 
-     *  [import]: specifies the functions to import, 
-     *  [*]: implies to import all functions.
-     */
-    
-    from "Edger8rSyntax/Types.edl" import *;
-    from "Edger8rSyntax/Pointers.edl" import *;
-    from "Edger8rSyntax/Arrays.edl" import *;
-    from "Edger8rSyntax/Functions.edl" import *;
+#include "../App.h"
+#include "Enclave_u.h"
 
-    from "TrustedLibrary/Libc.edl" import *;
-    from "TrustedLibrary/Libcxx.edl" import ecall_exception, ecall_map;
-    from "TrustedLibrary/Thread.edl" import *;
-    trusted{
+/* ecall_libcxx_functions:
+ *   Invokes standard C++ functions.
+ */
+void ecall_libcxx_functions(void)
+{
+    sgx_status_t ret = SGX_ERROR_UNEXPECTED;
 
-    public int compute_num(int a0, int a1);
-	};
-    /* 
-     * ocall_print_string - invokes OCALL to display string buffer inside the enclave.
-     *  [in]: copy the string buffer to App outside.
-     *  [string]: specifies 'str' is a NULL terminated buffer.
-     */
-    untrusted {
-        void ocall_print_string([in, string] char *str);
-        long ocall_syscall3(long n, long a1, long a2, long a3);
+    ret = ecall_exception(global_eid);
+    if (ret != SGX_SUCCESS)
+        abort();
 
-    };
-
-};
+    ret = ecall_map(global_eid);
+    if (ret != SGX_SUCCESS)
+        abort();
+}

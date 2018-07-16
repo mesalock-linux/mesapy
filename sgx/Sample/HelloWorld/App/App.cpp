@@ -41,15 +41,11 @@
 #include "sgx_urts.h"
 #include "App.h"
 #include "Enclave_u.h"
-#include <dlfcn.h>
 
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <time.h>
 #include <stdlib.h>
 /* Global EID shared by multiple threads */
 sgx_enclave_id_t global_eid = 0;
-extern char ** environ;
+
 typedef struct _sgx_errlist_t {
     sgx_status_t err;
     const char *msg;
@@ -224,13 +220,13 @@ int initialize_enclave(void)
 }
 
 /* OCall functions */
-void ocall_print_string(const char *str)
-{   
-     /* Proxy/Bridge will check the length and null-terminate 
-      * the input string to prevent buffer overflow. 
-      */
-     printf("%s", str);
- }
+void ocall_print_string(char *str)
+{
+    /* Proxy/Bridge will check the length and null-terminate 
+     * the input string to prevent buffer overflow. 
+     */
+    printf("%s\n", str);
+}
 
 
 /* Application entry */
@@ -257,8 +253,9 @@ int SGX_CDECL main(int argc, char *argv[])
     ecall_libc_functions();
     ecall_libcxx_functions();
     ecall_thread_functions();
-
+    
     my_helloworld(global_eid);
+  
     /* Destroy the enclave */
     sgx_destroy_enclave(global_eid);
     

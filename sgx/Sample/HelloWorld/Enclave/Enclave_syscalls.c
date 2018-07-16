@@ -32,7 +32,6 @@ void ocall_printf(const char *fmt, ...)
     ocall_print_string(buf);
 }
 
-
 #if defined(__cplusplus)
 }
 #endif
