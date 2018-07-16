@@ -29,39 +29,23 @@
  *
  */
 
-/* Enclave.edl - Top EDL file. */
 
-enclave {
+#include "../App.h"
+#include "Enclave_u.h"
+
+/* ecall_libc_functions:
+ *   Invokes standard C functions.
+ */
+void ecall_libc_functions(void)
+{
+    sgx_status_t ret = SGX_ERROR_UNEXPECTED;
+
+    ret = ecall_malloc_free(global_eid);
+    if (ret != SGX_SUCCESS)
+        abort();
     
-    include "user_types.h" /* buffer_t */
-    
-    /* Import ECALL/OCALL from sub-directory EDLs.
-     *  [from]: specifies the location of EDL file. 
-     *  [import]: specifies the functions to import, 
-     *  [*]: implies to import all functions.
-     */
-    
-    from "Edger8rSyntax/Types.edl" import *;
-    from "Edger8rSyntax/Pointers.edl" import *;
-    from "Edger8rSyntax/Arrays.edl" import *;
-    from "Edger8rSyntax/Functions.edl" import *;
-
-    from "TrustedLibrary/Libc.edl" import *;
-    from "TrustedLibrary/Libcxx.edl" import ecall_exception, ecall_map;
-    from "TrustedLibrary/Thread.edl" import *;
-    trusted{
-
-    public int compute_num(int a0, int a1);
-	};
-    /* 
-     * ocall_print_string - invokes OCALL to display string buffer inside the enclave.
-     *  [in]: copy the string buffer to App outside.
-     *  [string]: specifies 'str' is a NULL terminated buffer.
-     */
-    untrusted {
-        void ocall_print_string([in, string] char *str);
-        long ocall_syscall3(long n, long a1, long a2, long a3);
-
-    };
-
-};
+    int cpuid[4] = {0x1, 0x0, 0x0, 0x0};
+    ret = ecall_sgx_cpuid(global_eid, cpuid, 0x0);
+    if (ret != SGX_SUCCESS)
+        abort();
+}

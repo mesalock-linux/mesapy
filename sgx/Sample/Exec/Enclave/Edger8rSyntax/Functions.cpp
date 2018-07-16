@@ -29,39 +29,56 @@
  *
  */
 
-/* Enclave.edl - Top EDL file. */
 
-enclave {
+/* Test Calling Conventions */
+
+#include <string.h>
+#include <stdio.h>
+
+#include "../Enclave.h"
+#include "Enclave_t.h"
+
+/* ecall_function_calling_convs:
+ *   memccpy is defined in system C library.
+ */
+void ecall_function_calling_convs(void)
+{
+    sgx_status_t ret = SGX_ERROR_UNEXPECTED;
+
+    char s1[] = "1234567890";
+    char s2[] = "0987654321";
+
+    char buf[BUFSIZ] = {'\0'};
+    memcpy(buf, s1, strlen(s1));
+
+    ret = memccpy(NULL, s1, s2, '\0', strlen(s1));
     
-    include "user_types.h" /* buffer_t */
+    if (ret != SGX_SUCCESS)
+        abort();
+    assert(memcmp(s1, s2, strlen(s1)) == 0);
+
+    return;
+}
+
+/* ecall_function_public:
+ *   The public ECALL that invokes the OCALL 'ocall_function_allow'.
+ */
+void ecall_function_public(void)
+{
+    sgx_status_t ret = SGX_ERROR_UNEXPECTED;
+
+    ret = ocall_function_allow();
+    if (ret != SGX_SUCCESS)
+        abort();
     
-    /* Import ECALL/OCALL from sub-directory EDLs.
-     *  [from]: specifies the location of EDL file. 
-     *  [import]: specifies the functions to import, 
-     *  [*]: implies to import all functions.
-     */
-    
-    from "Edger8rSyntax/Types.edl" import *;
-    from "Edger8rSyntax/Pointers.edl" import *;
-    from "Edger8rSyntax/Arrays.edl" import *;
-    from "Edger8rSyntax/Functions.edl" import *;
+    return;
+}
 
-    from "TrustedLibrary/Libc.edl" import *;
-    from "TrustedLibrary/Libcxx.edl" import ecall_exception, ecall_map;
-    from "TrustedLibrary/Thread.edl" import *;
-    trusted{
+/* ecall_function_private:
+ *   The private ECALL that only can be invoked in the OCALL 'ocall_function_allow'.
+ */
+int ecall_function_private(void)
+{
+    return 1;
+}
 
-    public int compute_num(int a0, int a1);
-	};
-    /* 
-     * ocall_print_string - invokes OCALL to display string buffer inside the enclave.
-     *  [in]: copy the string buffer to App outside.
-     *  [string]: specifies 'str' is a NULL terminated buffer.
-     */
-    untrusted {
-        void ocall_print_string([in, string] char *str);
-        long ocall_syscall3(long n, long a1, long a2, long a3);
-
-    };
-
-};

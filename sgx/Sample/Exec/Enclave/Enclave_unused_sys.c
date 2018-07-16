@@ -10,7 +10,7 @@ extern "C" {
 #include "extralib.h"
 #include "Enclave.h"
 
-
+char ** environ = "";
 
 int dlclose(void * handle){
 

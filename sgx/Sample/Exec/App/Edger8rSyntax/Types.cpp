@@ -29,39 +29,49 @@
  *
  */
 
-/* Enclave.edl - Top EDL file. */
 
-enclave {
+#include "../App.h"
+#include "Enclave_u.h"
+
+/* edger8r_type_attributes:
+ *   Invokes ECALLs declared with basic types.
+ */
+void edger8r_type_attributes(void)
+{
+    sgx_status_t ret = SGX_ERROR_UNEXPECTED;
+
+    ret = ecall_type_char(global_eid, (char)0x12);
+    if (ret != SGX_SUCCESS)
+        abort();
+
+    ret = ecall_type_int(global_eid, (int)1234);
+    if (ret != SGX_SUCCESS)
+        abort();
+
+    ret = ecall_type_float(global_eid, (float)1234.0);
+    if (ret != SGX_SUCCESS)
+        abort();
+
+    ret = ecall_type_double(global_eid, (double)1234.5678);
+    if (ret != SGX_SUCCESS)
+        abort();
+
+    ret = ecall_type_size_t(global_eid, (size_t)12345678);
+    if (ret != SGX_SUCCESS)
+        abort();
+
+    ret = ecall_type_wchar_t(global_eid, (wchar_t)0x1234);
+    if (ret != SGX_SUCCESS)
+        abort();
+
+    struct struct_foo_t g = {1234, 5678};
+    ret = ecall_type_struct(global_eid, g);
+    if (ret != SGX_SUCCESS)
+        abort();
     
-    include "user_types.h" /* buffer_t */
-    
-    /* Import ECALL/OCALL from sub-directory EDLs.
-     *  [from]: specifies the location of EDL file. 
-     *  [import]: specifies the functions to import, 
-     *  [*]: implies to import all functions.
-     */
-    
-    from "Edger8rSyntax/Types.edl" import *;
-    from "Edger8rSyntax/Pointers.edl" import *;
-    from "Edger8rSyntax/Arrays.edl" import *;
-    from "Edger8rSyntax/Functions.edl" import *;
-
-    from "TrustedLibrary/Libc.edl" import *;
-    from "TrustedLibrary/Libcxx.edl" import ecall_exception, ecall_map;
-    from "TrustedLibrary/Thread.edl" import *;
-    trusted{
-
-    public int compute_num(int a0, int a1);
-	};
-    /* 
-     * ocall_print_string - invokes OCALL to display string buffer inside the enclave.
-     *  [in]: copy the string buffer to App outside.
-     *  [string]: specifies 'str' is a NULL terminated buffer.
-     */
-    untrusted {
-        void ocall_print_string([in, string] char *str);
-        long ocall_syscall3(long n, long a1, long a2, long a3);
-
-    };
-
-};
+    union union_foo_t val = {0};
+    ret = ecall_type_enum_union(global_eid, ENUM_FOO_0, &val);
+    if (ret != SGX_SUCCESS)
+        abort();
+    assert(val.union_foo_0 == 2);
+}

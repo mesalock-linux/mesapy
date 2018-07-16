@@ -29,39 +29,61 @@
  *
  */
 
-/* Enclave.edl - Top EDL file. */
 
-enclave {
+#include <cstdlib>
+#include <string>
+
+#include "../Enclave.h"
+#include "Enclave_t.h"
+
+/*
+ * ecall_exception:
+ *   throw/catch C++ exception inside the enclave.
+ */
+
+void ecall_exception(void)
+{
+    std::string foo = "foo";
+    try {
+        throw std::runtime_error(foo);
+    }
+    catch (std::runtime_error const& e) {
+        assert( foo == e.what() );
+        std::runtime_error clone("");
+        clone = e;
+        assert(foo == clone.what() );
+    }
+    catch (...) {
+        assert( false );
+    }
+}
+
+#include <map>
+#include <algorithm>
+
+using namespace std;
+
+/*
+ * ecall_map:
+ *   Utilize STL <map> in the enclave.
+ */
+void ecall_map(void)
+{
+    typedef map<char, int, less<char> > map_t;
+    typedef map_t::value_type map_value;
+    map_t m;
+
+    m.insert(map_value('a', 1));
+    m.insert(map_value('b', 2));
+    m.insert(map_value('c', 3));
+    m.insert(map_value('d', 4));
+
+    assert(m['a'] == 1);
+    assert(m['b'] == 2);
+    assert(m['c'] == 3);
+    assert(m['d'] == 4);
+
+    assert(m.find('e') == m.end());
     
-    include "user_types.h" /* buffer_t */
-    
-    /* Import ECALL/OCALL from sub-directory EDLs.
-     *  [from]: specifies the location of EDL file. 
-     *  [import]: specifies the functions to import, 
-     *  [*]: implies to import all functions.
-     */
-    
-    from "Edger8rSyntax/Types.edl" import *;
-    from "Edger8rSyntax/Pointers.edl" import *;
-    from "Edger8rSyntax/Arrays.edl" import *;
-    from "Edger8rSyntax/Functions.edl" import *;
-
-    from "TrustedLibrary/Libc.edl" import *;
-    from "TrustedLibrary/Libcxx.edl" import ecall_exception, ecall_map;
-    from "TrustedLibrary/Thread.edl" import *;
-    trusted{
-
-    public int compute_num(int a0, int a1);
-	};
-    /* 
-     * ocall_print_string - invokes OCALL to display string buffer inside the enclave.
-     *  [in]: copy the string buffer to App outside.
-     *  [string]: specifies 'str' is a NULL terminated buffer.
-     */
-    untrusted {
-        void ocall_print_string([in, string] char *str);
-        long ocall_syscall3(long n, long a1, long a2, long a3);
-
-    };
-
-};
+    return;
+}
