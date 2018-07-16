@@ -295,7 +295,7 @@ static int parse_sequel(token_t *tok, int outer)
                                             tok->kind == TOK_OPEN_BRACKET)) {
             /* just parentheses for grouping.  Use a OP_NOOP to simplify */
             int x;
-	    assert(p_current == &result);
+            assert(p_current == &result);
             x = tok->output_index;
             p_current = tok->output + x;
 
@@ -359,6 +359,7 @@ static int parse_sequel(token_t *tok, int outer)
                         oarg = _CFFI_OP(_CFFI_OP_NOOP, arg);
                         break;
                     }
+                    assert(arg_next - base_index <= arg_total);
                     tok->output[arg_next++] = oarg;
                     if (tok->kind != TOK_COMMA)
                         break;

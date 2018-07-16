@@ -32,7 +32,6 @@ extern "C" {
 #include <stddef.h>
 #include "parse_c_type.h"
 
-
 /* this block of #ifs should be kept exactly identical between
    c/_cffi_backend.c, cffi/vengine_cpy.py, cffi/vengine_gen.py
    and cffi/_cffi_include.h */

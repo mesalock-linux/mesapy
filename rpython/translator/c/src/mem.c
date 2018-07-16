@@ -58,9 +58,9 @@ void pypy_debug_alloc_results(void)
       fprintf(stderr, "mem.c: %ld mallocs left", count);
       if (env && *env)
         {
-	  fprintf(stderr, " (most recent first):\n");	
+          fprintf(stderr, " (most recent first):\n");	
           for (p = pypy_debug_alloc_list; p; p = p->next)
-          	fprintf(stderr, "    %p  %s\n", p->addr, p->funcname);
+            fprintf(stderr, "    %p  %s\n", p->addr, p->funcname);
         }
       else
         fprintf(stderr, " (use PYPY_ALLOC=1 to see the list)\n");

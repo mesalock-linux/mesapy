@@ -18,7 +18,7 @@ void RPyAssertFailed(const char* filename, long lineno,
           "PyPy assertion failed at %s:%ld:\n"
           "in %s: %s\n",
           filename, lineno, function, msg);
-
+                                                                                                         
   abort();
 }
 

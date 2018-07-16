@@ -16,7 +16,6 @@ static int check_valid(void);
 int _RPython_ThreadLocals_AcquireTimeout(int max_wait_iterations) {
 
 }
-
 void _RPython_ThreadLocals_Acquire(void) {
 
 }

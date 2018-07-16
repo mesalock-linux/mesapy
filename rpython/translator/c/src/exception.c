@@ -15,10 +15,11 @@
 void RPyDebugReturnShowException(const char *msg, const char *filename,
                                  long lineno, const char *functionname)
 {
-	fprintf(stderr, "%s %.*s: %s:%ld %s\n", msg,
-          (int)(RPyFetchExceptionType()->ov_name->rs_chars.length),
+#ifdef DO_LOG_EXC
+  fprintf(stderr, "%s %.*s: %s:%ld %s\n", msg,                                                                                            (int)(RPyFetchExceptionType()->ov_name->rs_chars.length),
           RPyFetchExceptionType()->ov_name->rs_chars.items,
           filename, lineno, functionname);
+#endif
 }
 
 /* Hint: functions and macros not defined here, like RPyRaiseException,

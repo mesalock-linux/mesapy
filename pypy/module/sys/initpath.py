@@ -229,8 +229,8 @@ char *_pypy_init_home(void)
     char *p = malloc(11);
     memcpy(p, "enclave.so", 11);
     return p;
-    
-
+                                                                             
+                                      
 }
 """
 

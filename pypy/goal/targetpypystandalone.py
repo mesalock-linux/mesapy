@@ -281,8 +281,8 @@ class PyPyTarget(object):
                     " or 'boehm' GC.  You need either 'targetpypystandalone.py"
                     " --withoutmod-cpyext', or use one of these two GCs.")
 	
-	config.objspace.usemodules._cffi_backend = True
-	config.objspace.usemodules._collections = False
+        config.objspace.usemodules._cffi_backend = True
+        config.objspace.usemodules._collections = False
         config.objspace.usemodules._cppyy = False
         config.objspace.usemodules._csv = False
         config.objspace.usemodules._hashlib = False
@@ -297,8 +297,8 @@ class PyPyTarget(object):
         config.objspace.usemodules._pickle_support = False
         config.objspace.usemodules._random = False
         config.objspace.usemodules._sha = False
-	config.objspace.usemodules._socket = False
-	config.objspace.usemodules._ssl = False
+        config.objspace.usemodules._socket = False
+        config.objspace.usemodules._ssl = False
         config.objspace.usemodules._testing = False
         config.objspace.usemodules._warnings = False
         config.objspace.usemodules._winreg = False
@@ -315,7 +315,7 @@ class PyPyTarget(object):
         config.objspace.usemodules.micronumpy = False
         config.objspace.usemodules.mmap = False
         config.objspace.usemodules.parser = False
-	config.objspace.usemodules.pyexpat = False
+        config.objspace.usemodules.pyexpat = False
         config.objspace.usemodules.select = False
         config.objspace.usemodules.signal = False
         config.objspace.usemodules.struct = False
@@ -327,7 +327,7 @@ class PyPyTarget(object):
         config.objspace.usemodules.zlib = False
         config.objspace.usemodules.itertools = False
         config.objspace.usemodules.__builtin__ = False
-	config.objspace.usemodules.sys = False
+        config.objspace.usemodules.sys = False
         config.objspace.usemodules.time = False
         config.objspace.usemodules.cpyext = False
 	

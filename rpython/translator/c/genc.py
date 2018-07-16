@@ -846,7 +846,7 @@ def gen_startupcode(f, database):
 
     bk = database.translator.annotator.bookkeeper
     if bk.thread_local_fields:
-	print >> f, '\tRPython_ThreadLocals_ProgramInit();'
+        print >> f, '\tRPython_ThreadLocals_ProgramInit();'
 
     for line in database.gcpolicy.gc_startup_code():
         print >> f,"\t" + line
