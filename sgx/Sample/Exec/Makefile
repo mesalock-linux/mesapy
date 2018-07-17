@@ -74,7 +74,7 @@ else
 	Urts_Library_Name := sgx_urts
 endif
 
-App_Cpp_Files := App/App.cpp $(wildcard App/Edger8rSyntax/*.cpp) $(wildcard App/TrustedLibrary/*.cpp)
+App_Cpp_Files := App/App.cpp
 App_Include_Paths := -IInclude -IApp -I$(SGX_SDK)/include
 
 App_C_Flags := $(SGX_COMMON_CFLAGS) -fPIC -Wno-attributes $(App_Include_Paths)
@@ -115,7 +115,7 @@ else
 endif
 Crypto_Library_Name := sgx_tcrypto
 
-Enclave_Cpp_Files := Enclave/Enclave.cpp $(wildcard Enclave/Edger8rSyntax/*.cpp) $(wildcard Enclave/TrustedLibrary/*.cpp)
+Enclave_Cpp_Files := Enclave/Enclave.cpp
 Enclave_Include_Paths := -IInclude -IEnclave -I$(SGX_SDK)/include -I$(SGX_SDK)/include/tlibc -I$(SGX_SDK)/include/libcxx
 
 CC_BELOW_4_9 := $(shell expr "`$(CC) -dumpversion`" \< "4.9")
@@ -250,7 +250,7 @@ Enclave/%.o: Enclave/%.cpp
 	@$(CXX) $(Enclave_Cpp_Flags) -c $< -o $@
 	@echo "CXX  <=  $<"
 
-$(Enclave_Name): Enclave/Enclave_t.o Enclave/pypy_embedding/exec_library.o $(Enclave_Cpp_Objects) Enclave/Enclave_syscalls.o Enclave/Enclave_unused_sys.o
+$(Enclave_Name): Enclave/Enclave_t.o Enclave/pypy_embedding/exec_library.o Enclave/Enclave_syscalls.o Enclave/Enclave_unused_sys.o
 	@$(CXX) $^ Enclave/usession/testing_1/main.o Enclave/usession/testing_1/libpypy-c.a Enclave/libffi-3.0.13/x86_64-unknown-linux-gnu/.libs/libffi.a -o $@ $(Enclave_Link_Flags)
 	@echo "LINK =>  $@"
 
