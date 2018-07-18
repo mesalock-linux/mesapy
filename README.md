@@ -112,9 +112,12 @@ for help.
 
 # Maintainers
 
-  - **Memory-safety and security hardening**: Mingshen Sun
-  - **Formal verification**: Qian Feng
-  - **SGX support**: Huibo Wang and Yu Ding
+Thanks to our maintainers to contribute this projects. Feel free to submit issue
+on GitHub or send us email. We are very glad to help out.
+
+  - **Memory-safety, security hardening, and all about MesaPy**: Mingshen Sun (`@mssun`)
+  - **Formal verification**: Qian Feng (`@qian-feng`)
+  - **SGX support**: Huibo Wang (`@MelodyHuibo`)and Yu Ding (`@dingelish`)
 
 # Steering Committee
 
