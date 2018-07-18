@@ -50,17 +50,36 @@ by MesaLock Linux and run `make pypy-c`. The detailed steps are explained in the
 $ docker run --rm -it -v$(pwd):/mesapy -w /mesapy mesalocklinux/build-mesalock-linux make pypy-c
 ```
 
+## Using MesaPy in SGX
+
+One unique feature of MesaPy is to support Intel trusted execution environment
+-- SGX. Developers now can use Python to implement security-sensitive
+applications. The ultimate goal of MesaPy is to have SGX as a platform (just
+like x86 and arm in MesaPy). Right now, the MesaPy with SGX is under the `sgx`
+branch, so please checkout the branch first.
+
+To run Python app in SGX is very simple:
+  - checkout and build MesaPy with SGX
+  - write Python embeddings
+  - use MesaPy to translate and generate SGX enclave
+
+We also provide some sample code (under the `/sgx` directory )to quickly start
+using MesaPy with SGX. You can also read details in our documentations.
+
 # Contributing
 
 We still have some working-in-progress sub-projects. We are very happy if you
 are interested to help out. Here are several topics you can get involved:
-  - porting Rust libraries into MesaPy and replacing previous external C libraries
-  - helping to verifying "unsafe" components using current the state-of-art
+  - porting Rust libraries into MesaPy and replacing previous external C
+    libraries
+  - helping to verifying "unsafe" components using current state-of-the-art
     verification tools
-  - improving MesaPy in SGX (bringing in useful libraries in normal world into SGX)
+  - improving MesaPy in SGX (bringing in useful libraries in normal world into
+    SGX)
 For each topic, we provided detailed instructions to get started. Feel free to
-pick an interesting one and improve MesaPy and send us pull requests on the GitHub.
-If you find it a little difficult, you can also talk to our maintainers for help.
+pick an interesting one and improve MesaPy and send us pull requests on the
+GitHub. If you find it a little difficult, you can also talk to our maintainers
+for help.
 
 # Maintainers
 
