@@ -59,6 +59,7 @@ like x86 and arm in MesaPy). Right now, the MesaPy with SGX is under the `sgx`
 branch, so please checkout the branch first.
 
 To run Python app in SGX is very simple:
+
   - checkout and build MesaPy with SGX
   - write Python embeddings
   - use MesaPy to translate and generate SGX enclave
@@ -66,16 +67,37 @@ To run Python app in SGX is very simple:
 We also provide some sample code (under the `/sgx` directory )to quickly start
 using MesaPy with SGX. You can also read details in our documentations.
 
+## Formal Verification
+
+There are still few lines of C code in RPython translator/JIT and its libraries
+which are difficult to eliminate. For these code, we still want to guarantee its
+memory safety, by utilizing formal verification method. We utilize three
+state-of-the-art verification tools, Seahorn, Smack, and TIS to prove
+conclusively that the memory safety issues can never occur, which includes:
+
+  - Buffer overflow
+  - Buffer over-read
+  - Null pointer dereference
+  - Memory leak
+  
+We have verified code in RPython translator, and the results are in the
+verification directory. The detailed instructions and additional mocks are also
+included in each tool's separate directory. You can easily reproduce the
+verification process. You are welcome to contribute mocks and help us to verify
+files in the todo list.
+
 # Contributing
 
 We still have some working-in-progress sub-projects. We are very happy if you
 are interested to help out. Here are several topics you can get involved:
+
   - porting Rust libraries into MesaPy and replacing previous external C
     libraries
   - helping to verifying "unsafe" components using current state-of-the-art
     verification tools
   - improving MesaPy in SGX (bringing in useful libraries in normal world into
     SGX)
+
 For each topic, we provided detailed instructions to get started. Feel free to
 pick an interesting one and improve MesaPy and send us pull requests on the
 GitHub. If you find it a little difficult, you can also talk to our maintainers
