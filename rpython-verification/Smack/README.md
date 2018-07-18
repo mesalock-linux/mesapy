@@ -30,7 +30,7 @@ Rpython C backend verification depends on the following projects:
 
 ### Verification Scripts
 
-Smack can work on C program and LLVM bitcode. To facilitate the Rpython verification, we provide an automated [build.sh][] script in `bin/build.sh`. However, we do not expect this script to work out of the box on all configurations. Instead, it can be used as reference guidelines for manual installation.
+Smack can work on C program and LLVM bitcode. To facilitate the Rpython verification, we provide a Makefile to automatically generate bc for C files under /pypy/rpython/traslator/c/src. However, we do not expect this script to work out of the box on all configurations. Instead, it can be used as reference guidelines for manual installation.
 
 
 ### Verification Steps
@@ -56,7 +56,7 @@ export LLVM_COMPILER=clang
 extract-bc int.o
 smack -memory-safety int.o.bc
 ````
-Please notice that smack relies on entry point for verification. We will write the smock for each func in Rpython C. ./mock provides all mocks we have wrote. 
+Please notice that smack relies on entry point for verification. We will write the mock for each func in Rpython C. ./mock provides all mocks we have wrote. 
 
 ### Verification results 
 
