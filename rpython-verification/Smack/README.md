@@ -13,8 +13,6 @@ Just download Smack (https://github.com/smackers/smack) and build from source, o
 We follow the following two commands to start the preconfigured virtual machine with Smack in SMACK.s root directory (that which contains `Vagrantfile`):
 ````Shell
 vagrant up
-````
-````Shell
 vagrant ssh
 ````
 
