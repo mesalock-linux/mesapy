@@ -90,7 +90,6 @@ Below records remaining C files to be verified:
 ````shell
 pypy/rpython/translator/c/src
 
-
 ./c/src/libffi_msvc/pypy_ffi.c
 ./c/src/libffi_msvc/prep_cif.c
 ./c/src/libffi_msvc/win32.c
