@@ -50,7 +50,7 @@ $ docker run --rm -it -v$(pwd):/mesapy -w /mesapy mesalocklinux/build-mesalock-l
 
 # Maintainers
 
-  - **Memory-safety and security hardening**: Mingshen Sun `<mssun@mesalock-linux.org>`
+  - **Memory-safety and security hardening**: Mingshen Sun
   - **Formal verification**: Qian Feng
   - **SGX support**: Huibo Wang and Yu Ding
 
