@@ -1,9 +1,9 @@
 # MesaPy: A Memory-Safe Python Implementation based on PyPy
 
-MesaPy is a memory-safe Python implementation based on PyPy. In addition to
+MesaPy is a *memory-safe* Python implementation based on PyPy. In addition to
 PyPy's distinct features -- speed, memory usage, compatibility and stackless,
-MesaPy mainly focuses on improving its security and memory safety. On top of
-the enhancements, we also bring MesaPy into Intel SGX to write memory-safe
+MesaPy mainly focuses on improving its *security* and *memory safety*. On top of
+the enhancements, we also bring MesaPy into **Intel SGX** to write memory-safe
 applications running in the trusted execution environment.
 
 We achieve the memory-safety promise through various methods: hardening
