@@ -40,6 +40,13 @@ More details about each features, roadmap, building process can be found here:
 
 # Getting started
 
+Basically, you can use MesaPy as any other Python implementations (e.g., CPython
+and PyPy). There are many ways to experience MesaPy:
+
+  - the pre-built binary of MesaPy
+  - use MesaLock Linux docker to try MesaPy
+  - build MesaPy by yourself from source
+
 ## Building MesaPy from source
 
 Building MesaPy from source is very simple, you can simply use the docker provided
