@@ -87,9 +87,9 @@ Please notice that smack relies on entry point for verification. We will write t
 ### To Do List
 
 Below records remaining C files to be verified:
-````shell
-pypy/rpython/translator/c/src
 
+pypy/rpython/translator/c/src
+sudo apt-get update && \
 ./c/src/libffi_msvc/pypy_ffi.c
 ./c/src/libffi_msvc/prep_cif.c
 ./c/src/libffi_msvc/win32.c
