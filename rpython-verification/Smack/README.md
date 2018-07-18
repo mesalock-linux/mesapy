@@ -22,14 +22,14 @@ vagrant ssh
 
 Rpython C backend verification depends on the following projects:
 
-* [LLVM][] version [3.9.1][LLVM-3.9.1]
-* [Clang][] version [3.9.1][Clang-3.9.1]
-* [Python][] version 2.7 or greater
-* [Mono][] version 5.0.0 or greater (except on Windows)
-* [Z3][] or compatible SMT-format theorem prover
-* [Boogie][] or [Corral][] or compatible Boogie-format verifier
-* [PyPy][] version 2.7 or greater
-* [wllvm][] pip version 
+* [LLVM] version [3.9.1][LLVM-3.9.1]
+* [Clang] version [3.9.1][Clang-3.9.1]
+* [Python] version 2.7 or greater
+* [Mono] version 5.0.0 or greater (except on Windows)
+* [Z3] or compatible SMT-format theorem prover
+* [Boogie] or [Corral] or compatible Boogie-format verifier
+* [PyPy] version 2.7 or greater
+* [wllvm] pip version 
 
 ### Installation on Linux
 
