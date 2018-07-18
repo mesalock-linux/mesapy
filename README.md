@@ -76,22 +76,26 @@ using MesaPy with SGX. You can also read details in our documentations.
 
 ## Formal Verification
 
-There are still few lines of C code in RPython translator/JIT and its libraries
-which are difficult to eliminate. For these code, we still want to guarantee its
-memory safety, by utilizing formal verification method. We utilize three
-state-of-the-art verification tools, Seahorn, Smack, and TIS to prove
-conclusively that the memory safety issues can never occur, which includes:
+There are still few lines of C code left in RPython translator/JIT and its
+libraries which are difficult to eliminate. For these code, we still want to
+guarantee its memory safety, by utilizing formal verification methods. We
+use three state-of-the-art verification tools, Seahorn, Smack, and TIS
+(TrustInSoft) to prove conclusively that the memory safety issues can never
+occur, which includes:
 
   - Buffer overflow
   - Buffer over-read
   - Null pointer dereference
   - Memory leak
   
-We have verified code in RPython translator, and the results are in the
-verification directory. The detailed instructions and additional mocks are also
-included in each tool's separate directory. You can easily reproduce the
-verification process. You are welcome to contribute mocks and help us to verify
-files in the todo list.
+We have verified code in RPython translator, and the verification results are
+illustrated in the verification directory. We are also working on a technical
+report to present our findings. The draft (which is still WIP) can be found
+here.
+
+The detailed instructions and additional mocks are also included in each tool's
+separate directory. You can easily reproduce the verification process. You are
+welcome to contribute mocks and help us to verify files in the todo list.
 
 # Contributing
 
