@@ -75,7 +75,7 @@ Please notice that smack relies on entry point for verification. We will write t
 | instrument.c  |     unsat         | 76   |
 | int.c         |     unsat         | 48   |
 | ll_strtod.c   |     sat           | 145  |
-| mem.c         |     sat           | 178  |
+| mem.c         |     unsat         | 178  |
 | profiling.c   |     sat           | 73   |
 | rtyper.c      |     sat           | 38   |
 | signals.c     |     sat           | 206  |
@@ -86,49 +86,26 @@ Please notice that smack relies on entry point for verification. We will write t
 
 ### To Do List
 
-Below records remaining C files to be verified:
-
-pypy/rpython/translator/c/src
+The remaining C files to be verified are included as following:
 ````shell
-./c/src/libffi_msvc/pypy_ffi.c
-./c/src/libffi_msvc/prep_cif.c
-./c/src/libffi_msvc/win32.c
-./c/src/libffi_msvc/ffi.c
-./c/src/libffi_msvc/types.c
+/pypy/rpython/translator/c/src/libffi_msvc/pypy_ffi.c
+/pypy/rpython/translator/c/src/libffi_msvc/prep_cif.c
+/pypy/rpython/translator/c/src/libffi_msvc/win32.c
+/pypy/rpython/translator/c/src/libffi_msvc/ffi.c
+/pypy/rpython/translator/c/src/libffi_msvc/types.c
+/pypy/rpython/jit/backend/llsupport/src/codemap.c
+/pypy/rpython/jit/backend/llsupport/src/skiplist.c
+/pypy/rpython/rlib/module_cache/module_22.c
+/pypy/rpython/rlib/module_cache/module_23.c
+/pypy/rpython/rlib/module_cache/module_24.c 
+/pypy/rpython/rlib/module_cache/module_25.c 
+/pypy/rpython/rlib/module_cache/module_26.c 
+/pypy/rpython/rlib/module_cache/module_27.c 
+/pypy/rpython/rlib/module_cache/module_28.c 
+/pypy/rpython/rlib/module_cache/module_29.c 
+/pypy/rpython/rlib/module_cache/module_30.c 
+/pypy/rpython/rlib/module_cache/module_31.c 
+/pypy/rpython/rlib/module_cache/module_32.c 
+/pypy/rpython/rlib/module_cache/module_33.c 
+/pypy/rpython/rlib/module_cache/module_34.c
 ````
-
-pypy/rpython/jit
-````shell
-./backend/llsupport/src/codemap.c
-./backend/llsupport/src/skiplist.c
-````
-
-pypy/rpython/rlib
-````shell
-../module_cache/module_22.c
-../module_cache/module_23.c
-../module_cache/module_24.c 
-../module_cache/module_25.c 
-../module_cache/module_26.c 
-../module_cache/module_27.c 
-../module_cache/module_28.c 
-../module_cache/module_29.c 
-../module_cache/module_30.c 
-../module_cache/module_31.c 
-../module_cache/module_32.c 
-../module_cache/module_33.c 
-../module_cache/module_34.c
-````
-
-[Vagrant]: https://www.vagrantup.com
-[VirtualBox]: https://www.virtualbox.org
-[Python]: http://www.python.org
-[LLVM]: http://llvm.org
-[Clang]: http://clang.llvm.org
-[LLVM-3.9.1]: http://llvm.org/releases/download.html#3.9.1
-[Clang-3.9.1]: http://llvm.org/releases/download.html#3.9.1
-[Boogie]: https://github.com/boogie-org/boogie
-[Corral]: https://corral.codeplex.com/
-[Z3]: https://github.com/Z3Prover/z3/
-[wllvm]: https://github.com/travitch/whole-program-llvm
-[PyPy]: https://bitbucket.org/pypy/pypy/src
