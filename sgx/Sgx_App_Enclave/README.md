@@ -2,7 +2,7 @@
 How to Build/Execute your own Python Code
 -----------------------------------------
 #### 1. Install Intel(R) SGX SDK for Linux* OS.
-* Download SGX driver, SGX PSW, SGX SDK from https://download.01.org/intel-sgx/linux-2.2/***, Install them. 
+* Download SGX driver, SGX PSW, SGX SDK from https://download.01.org/intel-sgx/linux-2.2/ubuntu64-server/, Install them. 
 #### 2. Install pypy and libffi for your machine.
 * Download pypy using sudo apt-get install command in Linux machine.
 * Download libffi from https://github.com/libffi/libffi, Build libffi.a following the instructions. You will find library under libffi/x86_64-unknown-linux-gnu/.libs/libffi.a 
@@ -25,8 +25,8 @@ How to Build/Execute your own Python Code
 
 * Write your own edl for your ecall function, see sample in Sample directory.
 
-* Write your own Makefile. Based on Makefile provided by Sample code, you can modify the directories for libffi.a and libpypy-c.a
-    
+* Write your own Makefile, link libpypy-c.a, libffi.a and Python C interface function's object file in Enclave.so, you can do these by referring Makefile provided by Sample code. 
+
 * Run "make" to generate sgx binary app.
 	
 * Run ./app. Here you go!
