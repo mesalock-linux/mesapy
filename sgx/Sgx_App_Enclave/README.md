@@ -23,6 +23,8 @@ How to Build/Execute your own Python Code
 >>* Write your function's C interface defition in api.h
 >* Run pypy ./embed.py for generating the corresponed object file.
 
+* Write your own edl for your ecall function, see sample in Sample directory.
+
 * Write your own Makefile. Based on Makefile provided by Sample code, you can modify the directories for libffi.a and libpypy-c.a
     
 * Run "make" to generate sgx binary app.
