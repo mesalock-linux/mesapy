@@ -31,5 +31,5 @@ How to Build/Execute your own Python Code
 	
 * Run ./app. Here you go!
 
-#### NOTICE: While running pypy embed.py, make sure the typedefine.h and include directory are in the same directory as the command running, and import the cffi module from the lib_pypy we provide.
+#### NOTICE: While running pypy embed.py, make sure the typedefine.h and PyPy header include directory are in the same directory as the command running, and import the cffi module from the lib_pypy we provide.
 
