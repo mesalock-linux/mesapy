@@ -17,7 +17,9 @@ How to Build/Execute the Sample Code
 
 * Build Python functions' C interfaces using CFFI.
 >* The example code is under /Enclave/pypy_embedding, there are files, implementation.py, embed.py, api.h
+>* Add the lib-pypy and lib_python directory in PYTHONPATH, which let "import cffi" use lib_pypy and lib-python we provide.
 >* run pypy ./embed.py for generating the corresponed object file.
+#### NOTICE: pypy you install on your machine needs to have the same version as mesapy.
 
 * Copy whole ussesion folder content from step 1 to usession folder under directory Enclave, Copy libffi to libffi-3.0.13 folder under directory Enclave.
 
