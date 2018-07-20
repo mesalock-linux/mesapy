@@ -499,8 +499,9 @@ class build_ext (Command):
         macros = ext.define_macros[:]
         for undef in ext.undef_macros:
             macros.append((undef,))
-        cwd = os.getcwd()
-        ext.include_dirs = ext.include_dirs + [cwd] + ["/opt/intel/sgxsdk/include/tlibc"]
+        par_dir = os.path.dirname(os.getcwd())
+        include_dir = os.path.join(par_dir, "include")
+        ext.include_dirs = ext.include_dirs + [par_dir] + [include_dir] + ["/opt/intel/sgxsdk/include/tlibc"]
         objects = self.compiler.compile(sources,
                                          output_dir=self.build_temp,
                                          macros=macros,
