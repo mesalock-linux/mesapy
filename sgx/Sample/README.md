@@ -3,13 +3,15 @@
 How to Build/Execute the Sample Code
 ------------------------------------
 #### 1. Install Intel(R) SGX SDK for Linux* OS.
-* Download SGX driver, SGX PSW, SGX SDK from https://download.01.org/intel-sgx/linux-2.2/ubuntu64-server/, Install them. 
+* Download SGX Driver, SGX PSW, SGX SDK from https://download.01.org/intel-sgx/linux-2.2/ubuntu64-server/, Install them. 
 #### 2. Install pypy and libffi for your machine.
-* Download pypy using sudo apt-get install command in Linux machine
-* Download libffi from https://github.com/libffi/libffi, Build libffi.a by following the instruction in libffi, You will find library under libffi/x86_64-unknown-linux-gnu/.libs/libffi.a.
+* Download pypy by using "sudo apt-get install" command in Linux machine
+* Download libffi from https://github.com/libffi/libffi, Build libffi.a by following the instruction in libffi.
+####Notice:You will find library under libffi/x86_64-unknown-linux-gnu/.libs/libffi.a.
 #### 3. Download pypy package provided by us.
 * Download MesaPy from our github MesaPy, Choose sgx branch.
-#### 4. Build project as the detail instruction we provide in the following:
+* Download MesaPy from our github MesaPy, Choose mesapy2.7.
+#### 4. Build project as the detail instructions we provide in the following:
 * Build libpypy-c.a by using the pypy source code in MesaPy sgx branch.
 >* Go into pypy/pypy/goal directory
 >* Run command "../../rpython/bin/rpython --opt=2 targetstandaloned.py --no-allworkingmodules"
@@ -17,7 +19,7 @@ How to Build/Execute the Sample Code
 
 * Build Python functions' C interfaces using CFFI.
 >* The example code is under /Enclave/pypy_embedding, there are files, implementation.py, embed.py, api.h
->* Download MesaPy, replace lib-pypy and lib_python folders with provided by sgx-wip, which let "import cffi" use lib_pypy and lib-python we provide.
+>* Download mesapy2.7,  Build exectutive pypy, replace lib-pypy and lib_python folders with provided by sgx-wip, which let "import cffi" use lib_pypy and lib-python we provide.
 >* run mesapy/bin/pypy ./embed.py for generating the corresponed object file.
 
 * Copy whole ussesion folder content from step 1 to usession folder under directory Enclave, Copy libffi to libffi-3.0.13 folder under directory Enclave.
