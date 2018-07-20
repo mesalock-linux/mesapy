@@ -8,7 +8,7 @@ How to Build/Execute the Sample Code
 * Download pypy using sudo apt-get install command in Linux machine
 * Download libffi from https://github.com/libffi/libffi, Build libffi.a by following the instruction in libffi, You will find library under libffi/x86_64-unknown-linux-gnu/.libs/libffi.a.
 #### 3. Download pypy package provided by us.
-* Download MesaPy from our github MesaPy, choose sgx branch.
+* Download MesaPy from our github MesaPy, Choose sgx branch.
 #### 4. Build project as the detail instruction we provide in the following:
 * Build libpypy-c.a by using the pypy source code in MesaPy sgx branch.
 >* Go into pypy/pypy/goal directory
@@ -17,9 +17,8 @@ How to Build/Execute the Sample Code
 
 * Build Python functions' C interfaces using CFFI.
 >* The example code is under /Enclave/pypy_embedding, there are files, implementation.py, embed.py, api.h
->* Add the lib-pypy and lib_python directory in PYTHONPATH, which let "import cffi" use lib_pypy and lib-python we provide.
->* run pypy ./embed.py for generating the corresponed object file.
-#### NOTICE: pypy you install on your machine needs to have the same version as mesapy.
+>* Download MesaPy, replace lib-pypy and lib_python folders with provided by sgx-wip, which let "import cffi" use lib_pypy and lib-python we provide.
+>* run mesapy/bin/pypy ./embed.py for generating the corresponed object file.
 
 * Copy whole ussesion folder content from step 1 to usession folder under directory Enclave, Copy libffi to libffi-3.0.13 folder under directory Enclave.
 
