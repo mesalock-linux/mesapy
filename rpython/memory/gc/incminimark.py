@@ -223,7 +223,7 @@ class IncrementalMiniMarkGC(MovingGCBase):
         # Automatically adjust the size of the nursery and the
         # 'major_collection_threshold' from the environment.
         # See docstring at the start of the file.
-        "read_from_env": True,
+        "read_from_env": False,
 
         # The size of the nursery.  Note that this is only used as a
         # fall-back number.
