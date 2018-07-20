@@ -30,6 +30,8 @@ How to Build/Execute your own Python Code
 * Write your own Makefile, link libpypy-c.a, libffi.a and Python C interface function's object file in Enclave.so, you can do these by referring Makefile provided by Sample code. 
 
 * Run "make" to generate sgx binary app.
+
+* Make sure SGX service is started on your machine.
 	
 * Run ./app. Here you go!
 
