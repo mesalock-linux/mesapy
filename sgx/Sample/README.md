@@ -27,6 +27,6 @@ How to Build/Execute the Sample Code
 
 * Run ./app. Here you go!
 
-#### NOTICE: While running pypy embed.py, make sure the typedefine.h and include directory are in the same directory as the command running, and import the cffi module from the lib_pypy we provide.
+#### NOTICE: While running pypy embed.py, make sure the typedefine.h and include directory are in the parent directory as the command running, and import the cffi module from the lib_pypy we provide.
 
 
