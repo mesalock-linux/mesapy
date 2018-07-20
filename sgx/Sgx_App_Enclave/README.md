@@ -17,10 +17,10 @@ How to Build/Execute your own Python Code
     
 * Build Python functions' C interfaces using CFFI.
 >* you can write your own code following the sample code. 
->>* Write your own Python function code you want to call in Enclave in 
-      implementation.py
+>>* Write your own Python function code you want to call in Enclave in implementation.py.
 >>* Write cffi interface generating part in embed.py. Notice: Import the CFFI library provided by us.
->>* Write your function's C interface defition in api.h
+>>* Write your function's C interface defition in api.h.
+>* Download MesaPy, replace lib-pypy and lib_python folders with provided by sgx-wip, which let "import cffi" use lib_pypy and lib-python we provid.
 >* Run pypy ./embed.py for generating the corresponed object file.
 
 * Write your own edl for your ecall function, see sample in Sample directory.
