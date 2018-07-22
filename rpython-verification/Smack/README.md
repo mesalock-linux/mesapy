@@ -5,7 +5,7 @@ We can run SMACK on standard Ubuntu. Below we outline system requirements and in
 
 ### Smack Installation
 
-Just download Smack (https://github.com/smackers/smack) and build from source, or you can use a preconfigured virtual environment using Vagrant and VirtualBox, which has been released in Smack website. Here we only show the instructions to evaluate rpython backend by using the preconfigured one. 
+Just download Smack (https://github.com/smackers/smack) and build from source, or you can use a preconfigured virtual environment using Vagrant and VirtualBox, which has been released in Smack website. Here we only show the instructions to evaluate RPython backend by using the preconfigured one. 
 
 
 ### Vagrant Development Environment
@@ -18,7 +18,7 @@ vagrant ssh
 
 ### General System Requirements
 
-Rpython C backend verification depends on the following projects:
+RPython C backend verification depends on the following projects:
 
 * [LLVM][] version [3.9.1][LLVM-3.9.1]
 * [Clang][] version [3.9.1][Clang-3.9.1]
@@ -30,7 +30,7 @@ Rpython C backend verification depends on the following projects:
 
 ### Verification Scripts
 
-Smack can work on C program and LLVM bitcode. To facilitate the Rpython verification, we provide a Makefile to automatically generate bc for C files under /pypy/rpython/traslator/c/src. However, we do not expect this script to work out of the box on all configurations. Instead, it can be used as reference guidelines for manual installation.
+Smack can work on C program and LLVM bitcode. To facilitate the RPython verification, we provide a Makefile to automatically generate bc for C files under /pypy/rpython/traslator/c/src. However, we do not expect this script to work out of the box on all configurations. Instead, it can be used as reference guidelines for manual installation.
 
 
 ### Verification Steps
@@ -56,7 +56,7 @@ export LLVM_COMPILER=clang
 extract-bc int.o
 smack -memory-safety int.o.bc
 ````
-Please notice that smack relies on entry point for verification. We will write the mock for each func in Rpython C. ./mock provides all mocks we have wrote. 
+Please notice that smack relies on entry point for verification. We will write the mock for each func in RPython C. ./mock provides all mocks we have wrote. 
 
 ### Verification results 
 
@@ -109,3 +109,16 @@ The remaining C files to be verified are included as following:
 /pypy/rpython/rlib/module_cache/module_33.c 
 /pypy/rpython/rlib/module_cache/module_34.c
 ````
+
+
+
+[Python]: http://www.python.org
+[LLVM]: http://llvm.org
+[LLVM-3.9.1]: http://llvm.org/releases/download.html#3.9.1
+[Clang]: http://clang.llvm.org
+[Clang-3.9.1]: http://llvm.org/releases/download.html#3.9.1
+[Boogie]: https://github.com/boogie-org/boogie
+[Z3]: https://github.com/Z3Prover/z3/
+[Xcode]: https://developer.apple.com/xcode/
+[PyPy]: https://bitbucket.org/pypy/pypy
+[wllvm]: https://github.com/travitch/whole-program-llvm

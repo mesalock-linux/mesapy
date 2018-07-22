@@ -1,4 +1,4 @@
-
+#!/bin/bash
 /usr/bin/seapp -o $1.pp.bc --strip-extern=false --promote-assumptions=false --kill-vaarg=true $1
 /usr/bin/seapp -o $0.pp1.bc --abc=global --abc-dsa-node=0 --abc-alloc-site=0 $1.pp.bc
 /usr/bin/seapp -o $1.pp1.bc2.bc --horn-mixed-sem --ms-reduce-main $1.pp1.bc
