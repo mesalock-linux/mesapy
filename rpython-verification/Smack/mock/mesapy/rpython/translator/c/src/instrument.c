@@ -69,8 +69,8 @@ void instrument_setup() {
 #endif
 
 int main(void){
-instrument_setup();
-long label = __VERIFIER_nondet_long();
-instrument_count(label);
+    instrument_setup();
+    long label = __VERIFIER_nondet_long();
+    instrument_count(label);
 
 }

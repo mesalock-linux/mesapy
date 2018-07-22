@@ -265,10 +265,10 @@ long pypy_have_debug_prints_for(const char *category_prefix)
 
 int main(void){
 	char * x = __VERIFIER_nondet_ptr();
-        int a = __VERIFIER_nondet_int();
-        pypy_have_debug_prints_for(x);
-    	pypy_debug_stop(x, a);
-        pypy_debug_start(x, a);
+  int a = __VERIFIER_nondet_int();
+  pypy_have_debug_prints_for(x);
+  pypy_debug_stop(x, a);
+  pypy_debug_start(x, a);
         
          
 }
