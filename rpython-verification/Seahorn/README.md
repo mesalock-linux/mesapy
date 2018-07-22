@@ -1,6 +1,6 @@
 ### Verification Environment Setup
 
-We provide the scripts to automatically evaluate Rpython C backend programs. Dockerfile is provided to setupt the environment for user to verify Rpython C program. Beside, users can also download Seahorn and build from the source. The shellscripts we provided can be used to automatically generate bc and provide the seahorn verification. The output will be the verification results for each C program under /pypy/rpython/translator/c/src.
+We provide the scripts to automatically evaluate RPython C backend programs. Dockerfile is provided to setupt the environment for user to verify Rpython C program. Beside, users can also download Seahorn and build from the source. The shellscripts we provided can be used to automatically generate bc and provide the seahorn verification. The output will be the verification results for each C program under /pypy/rpython/translator/c/src.
 
 First step is to generator the image from dockerfile:
 ````shell
@@ -15,7 +15,7 @@ cp sh.sh /pypy/rpython/translator/c/src/
 cd /pypy/rpython/translator/c/src/
 ./cmd.sh
 ````
-The verification results will be in /pypy/rpython/translator/c/src/seahorn.results.
+The verification results will be in /pypy/RPython/translator/c/src/seahorn.results.
 
 ### Verification results 
 
