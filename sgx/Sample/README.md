@@ -5,12 +5,15 @@ How to Build/Execute the Sample Code
 #### 1. Install Intel(R) SGX SDK for Linux* OS.
 * Download SGX Driver, SGX PSW, SGX SDK from https://download.01.org/intel-sgx/linux-2.2/ubuntu64-server/, Install them. 
 #### 2. Install pypy and libffi for your machine.
-* Download pypy by using "sudo apt-get install" command in Linux machine
-* Download libffi from https://github.com/libffi/libffi, Build libffi.a by following the instruction in libffi.
+* Install pypy by using "sudo apt-get install" command in Linux machine
+>* sudo apt-get install pypy
+* Download libffi from https://github.com/libffi/libffi, Build libffi.a and install libffi by following the instructions provided from the website.
 ####Notice:You will find library under libffi/x86_64-unknown-linux-gnu/.libs/libffi.a.
 #### 3. Download pypy package provided by us.
 * Download MesaPy from our github MesaPy, Choose sgx branch.
+>* git clone -b sgx git@github.com:mesalock-linux/mesapy.git
 * Download MesaPy from our github MesaPy, Choose mesapy2.7.
+>* git clone -b mesapy2.7 git@github.com:mesalock-linux/mesapy.git
 #### 4. Build project as the detail instructions we provide in the following:
 * Build libpypy-c.a by using the pypy source code in MesaPy sgx branch.
 >* Go into pypy/pypy/goal directory
