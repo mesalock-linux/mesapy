@@ -99,7 +99,7 @@ class Entry(ExtRegistryEntry):
 
 
 def allocate():
-	_gil_allocate()
+    _gil_allocate()
 
 def release():
     # this function must not raise, in such a way that the exception
