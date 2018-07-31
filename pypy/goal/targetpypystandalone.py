@@ -280,7 +280,7 @@ class PyPyTarget(object):
                 raise Exception("The 'cpyext' module requires the 'incminimark'"
                     " or 'boehm' GC.  You need either 'targetpypystandalone.py"
                     " --withoutmod-cpyext', or use one of these two GCs.")
-	
+        # The following is the temprory work around. because --no-allworkingmodules can not directly disable these modules absolutely, there are some dependencies we will fix it later.  
         config.objspace.usemodules._cffi_backend = True
         config.objspace.usemodules._collections = False
         config.objspace.usemodules._cppyy = False
