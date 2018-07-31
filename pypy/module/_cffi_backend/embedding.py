@@ -141,7 +141,6 @@ static void _cffi_init_error(const char *msg, const char *extra)
     fprintf(stderr,
             "\nPyPy initialization failure when loading module '%s':\n%s%s\n",
             _cffi_module_name, msg, extra);
-
 }
 
 static void _cffi_init(void)
