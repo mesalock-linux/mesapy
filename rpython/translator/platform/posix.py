@@ -178,7 +178,7 @@ class BasePosix(Platform):
             ('RPYDIR', '"%s"' % rpydir),
             ('TARGET', target_name),
             ('DEFAULT_TARGET', exe_name.basename),
-	    ('PYPY_A', 'libpypy-c.a'),
+            ('PYPY_A', 'libpypy-c.a'),
             ('AR', 'ar rcu'),
             ('RANLIB', 'ranlib'),
             ('SOURCES', rel_cfiles),
