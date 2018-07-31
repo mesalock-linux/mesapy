@@ -46,7 +46,6 @@ corresponding Unix manual entries for more information on calls."""
 
         'getcwd': 'interp_posix.getcwd',
         'getcwdu': 'interp_posix.getcwdu',
-#        'environ': 'interp_posix.get(space).w_environ',
         'strerror': 'interp_posix.strerror',
         '_statfields': 'interp_posix.getstatfields(space)',
         'urandom': 'interp_posix.urandom',
