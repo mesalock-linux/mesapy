@@ -2,8 +2,9 @@
 
 Since there are still several unavoidable C code in the MesaPy's codebase, we
 seek to formally verify these code to guarantee their memory safety. These C
-code are located in RPython's translator/JIT backends and its libraries. We
-utilize three state-of-the-art verification tools --
+code are located in RPython's translator/JIT backends and its libraries.
+To cross validate our verification results, We utilize three state-of-the-art
+verification tools --
 [Seahorn](http://seahorn.github.io/blog/),
 [Smack](https://github.com/smackers/smack), and
 [TIS](https://trust-in-soft.com/) to
