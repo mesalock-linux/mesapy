@@ -74,14 +74,17 @@ these C functions to make sure all possible C source code are verified.
 
   - `${PYPY_USESSION_DIR}/module_cache/module_22.c`
   - `${PYPY_USESSION_DIR}/module_cache/module_23.c`
-  - `${PYPY_USESSION_DIR}/module_cache/module_24.c `
-  - `${PYPY_USESSION_DIR}/module_cache/module_25.c `
-  - `${PYPY_USESSION_DIR}/module_cache/module_26.c `
-  - `${PYPY_USESSION_DIR}/module_cache/module_27.c `
-  - `${PYPY_USESSION_DIR}/module_cache/module_28.c `
-  - `${PYPY_USESSION_DIR}/module_cache/module_29.c `
-  - `${PYPY_USESSION_DIR}/module_cache/module_30.c `
-  - `${PYPY_USESSION_DIR}/module_cache/module_31.c `
-  - `${PYPY_USESSION_DIR}/module_cache/module_32.c `
-  - `${PYPY_USESSION_DIR}/module_cache/module_33.c `
+  - `${PYPY_USESSION_DIR}/module_cache/module_24.c`
+  - `${PYPY_USESSION_DIR}/module_cache/module_25.c`
+  - `${PYPY_USESSION_DIR}/module_cache/module_26.c`
+  - `${PYPY_USESSION_DIR}/module_cache/module_27.c`
+  - `${PYPY_USESSION_DIR}/module_cache/module_28.c`
+  - `${PYPY_USESSION_DIR}/module_cache/module_29.c`
+  - `${PYPY_USESSION_DIR}/module_cache/module_30.c`
+  - `${PYPY_USESSION_DIR}/module_cache/module_31.c`
+  - `${PYPY_USESSION_DIR}/module_cache/module_32.c`
+  - `${PYPY_USESSION_DIR}/module_cache/module_33.c`
   - `${PYPY_USESSION_DIR}/module_cache/module_34.c`
+
+In each directory of verification tools, we also list C sources and functions we
+have already verified.
