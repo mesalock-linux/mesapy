@@ -22,7 +22,7 @@ features of MesaPy:
 - **Security hardening**: PyPy is implemented with RPython, a statically-typed
   language with translation and support framework. We also enhanced
   memory-safety of RPython through hardening RPython's type system, i.e., the
-  RPython Typer. For example, we improve RPython's list with runtime index check
+  RPython typer. For example, we improve RPython's list with runtime index check
   to avoid arbitrarily list read/write during PyPy's implementation.
 
 - **Formal verification**: Some code in RPython's libraries and its
@@ -31,13 +31,13 @@ features of MesaPy:
   verify its libraries and backend written in C using state-of-the-art
   verification tools.
 
-- **SGX support**: With the memory safety of MesaPy, we also port it to
+- **SGX support** (WIP): With the memory safety of MesaPy, we also port it to
   Intel SGX, which is a trusted execution environment to provide integrity and
   confidentiality guarantees to security-sensitive computation. Developers now
   can easily use MesaPy to implement SGX applications without worrying about
   memory issues.
 
-More details about each features, roadmap, building process can be found here:
+More details about each features, roadmap, and building process can be found here:
 [https://docs.mesapy.org/](https://docs.mesapy.org/)
 
 # Getting started
@@ -59,7 +59,7 @@ by MesaLock Linux and run `make pypy-c`. The detailed steps are explained in the
 $ docker run --rm -it -v$(pwd):/mesapy -w /mesapy mesalocklinux/build-mesalock-linux make pypy-c
 ```
 
-## Using MesaPy in SGX
+## Using MesaPy in SGX (WIP)
 
 One unique feature of MesaPy is to support Intel trusted execution environment
 -- SGX. Developers now can use Python to implement security-sensitive
@@ -92,12 +92,11 @@ occur, which includes:
   
 We have verified code in RPython translator, and the verification results are
 illustrated in the verification directory. We are also working on a technical
-report to present our findings. The draft (which is still WIP) can be found
-here.
+report to present our findings.
 
 The detailed instructions and additional mocks are also included in each tool's
 separate directory. You can easily reproduce the verification process. You are
-welcome to contribute mocks and help us to verify files in the todo list.
+welcome to contribute mocks and help us to verify files in the TODO list.
 
 # Contributing
 
@@ -132,5 +131,5 @@ on GitHub or send us email. We are very glad to help out.
 
 # License
 
-MesaPy is provided under the 3-Clause BSD license. MesaPy is built upon PyPy,
-for a detailed license, see the LICENSE file.
+MesaPy is provided under the 3-Clause BSD license. MesaPy is built upon PyPy and
+other open source projects, see the LICENSE file for detailed licenses.
