@@ -3,7 +3,10 @@
 Since there are still several unavoidable C code in the MesaPy's codebase, we
 seek to formally verify these code to guarantee their memory safety. These C
 code are located in RPython's translator/JIT backends and its libraries. We
-utilize three state-of-the-art verification tools -- Seahorn, Smack, and TIS to
+utilize three state-of-the-art verification tools --
+[Seahorn](http://seahorn.github.io/blog/),
+[Smack](https://github.com/smackers/smack), and
+[TIS](https://trust-in-soft.com/) to
 prove conclusively that the memory safety issues can never occur.
 
 The memory safety issues in our current checks include
@@ -28,4 +31,3 @@ Here are three verification tools:
     different formal methods, TrustInSoft Analyzer can mathematically guarantee
     that a given flaw is not present in your source code.
     https://trust-in-soft.com/
-
