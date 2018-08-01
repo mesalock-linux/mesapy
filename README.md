@@ -1,3 +1,5 @@
+<p align="center"><img src="img/logo.png" height="86" /></p>
+
 # MesaPy: A Memory-Safe Python Implementation based on PyPy
 
 MesaPy is a *memory-safe* Python implementation based on PyPy. In addition to
