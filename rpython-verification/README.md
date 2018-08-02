@@ -47,7 +47,6 @@ We aim to formally verify all C code in MesaPy. Here is a list of all C sources
   - `rpython/translator/c/src/exception.c`
   - `rpython/translator/c/src/entrypoint.c`
   - `rpython/translator/c/src/signals.c`
-  - `rpython/translator/c/src/thread_gil.c`
   - `rpython/translator/c/src/stacklet/tests.c`
   - `rpython/translator/c/src/stacklet/stacklet.c`
   - `rpython/translator/c/src/mem.c`

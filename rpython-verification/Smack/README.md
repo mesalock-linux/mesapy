@@ -78,20 +78,19 @@ the mock for each func in RPython C. ./mock provides all mocks we have wrote.
 
 
 | Filename        | Verified Result     |   LOC |
-| -------------   | :-----------------: | ----: |
-| `asm.c`         | unsat               |    13 |
-| `asm_gcc_x86.c` | unsat               |    33 |
-| `cygwin_wait.c` | unsat               |    59 |
-| `asm_gcc_x86.c` | unsat               |    33 |
-| `asm_msvc.c`    | unsat               |    26 |
-| `debug_print.c` | sat                 |   274 |
-| `dtoa.c`        | unsat               |  3006 |
+| -------------   | :-----------------: | ----: | 
+| `dtoa.c`        | sat                 |  3006 |    
+| `asm_gcc_x86.c` | unsat               |    33 | 
+| `entrypoint.c`  | unsat               |   130 | 
+| `codemap.c`     | sat                 |   165 |
+| `skiplist.c`    | unsat               |   109 |
+| `debug_print.c` | unsat               |   274 |
 | `entrypoint.c`  | unsat               |   130 |
 | `exception.c`   | unsat               |    45 |
 | `instrument.c`  | unsat               |    76 |
 | `int.c`         | unsat               |    48 |
 | `ll_strtod.c`   | sat                 |   145 |
-| `mem.c`         | unsat               |   178 |
+| `mem.c`         | sat                 |   178 |
 | `profiling.c`   | sat                 |    73 |
 | `rtyper.c`      | sat                 |    38 |
 | `signals.c`     | sat                 |   206 |
@@ -105,13 +104,6 @@ the mock for each func in RPython C. ./mock provides all mocks we have wrote.
 The remaining C files to be verified are included as following:
 
 ```
-mesapy/rpython/translator/c/src/libffi_msvc/pypy_ffi.c
-mesapy/rpython/translator/c/src/libffi_msvc/prep_cif.c
-mesapy/rpython/translator/c/src/libffi_msvc/win32.c
-mesapy/rpython/translator/c/src/libffi_msvc/ffi.c
-mesapy/rpython/translator/c/src/libffi_msvc/types.c
-mesapy/rpython/jit/backend/llsupport/src/codemap.c
-mesapy/rpython/jit/backend/llsupport/src/skiplist.c
 ${USE_SESSION_DIR}/module_cache/module_22.c
 ${USE_SESSION_DIR}/module_cache/module_23.c
 ${USE_SESSION_DIR}/module_cache/module_24.c 
