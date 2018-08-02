@@ -87,3 +87,65 @@ these C functions to make sure all possible C source code are verified.
 
 In each directory of verification tools, we also list C sources and functions we
 have already verified.
+
+## Potential Vulnerabilites in RPython Backend
+
+```
+static Bigint *
+Balloc(int k)
+{
+    int x;
+    Bigint *rv;
+    unsigned int len;
+
+    if (0<=k <= Kmax && (rv = freelist[k]))
+        freelist[k] = rv->next;
+    else {
+        x = 1 << k;  -----------------------------> potential Integer Overflow
+        len = (sizeof(Bigint) + (x-1)*sizeof(ULong) + sizeof(double) - 1)
+            /sizeof(double);
+        if (k <= Kmax && pmem_next - private_mem + len <= PRIVATE_mem) {
+            rv = (Bigint*)pmem_next;
+            pmem_next += len;
+        }
+        else {
+            rv = (Bigint*)MALLOC(len*sizeof(double));
+            if (rv == NULL)
+                return NULL;
+        }
+        rv->k = k;
+        rv->maxwds = x;
+    }
+    rv->sign = rv->wds = 0;
+    return rv;
+}
+```
+
+Above example locates in dtoa.c, and it shows there could be a potential Integer Overflow at labeled line. K could be any value including these greater than 32. In such case, x will be overflowed.
+
+```
+RPY_EXTERN
+long *pypy_jit_codemap_del(unsigned long addr, unsigned int size)
+{
+    unsigned long search_key = addr + size - 1;
+    long *result;
+    skipnode_t *node;
+
+    /* There should be either zero or one codemap entry in the range.
+       In theory it should take the complete range, but for alignment
+       reasons the [addr, addr+size] range can be slightly bigger. */
+    node = skiplist_search(&jit_codemap_head, search_key); 
+
+    pypy_codemap_invalid_set(1);
+    skiplist_remove(&jit_codemap_head, node->key);  -----------> Invalid memory access
+    pypy_codemap_invalid_set(0);
+
+    /* there should be at most one */
+    assert(skiplist_search(&jit_codemap_head, search_key)->key < addr);
+
+    result = ((codemap_data_t *)node->data)->bytecode_info;
+    free(node);
+    return result;
+}
+```
+Above example locates in codemap.c. It shows a potential invalid memory access. skiplist_search could return NULL, and node could be NULL. As a result, node->key will cause a crash. 
