@@ -44,5 +44,7 @@ long long op_llong_mul_ovf(long long a, long long b)
 }
 
 int main(void){
-  op_llong_mul_ovf(1,1);
+  long long a = __VERIFIER_nondet_long_long();
+  long long b = __VERIFIER_nondet_long_long();
+  op_llong_mul_ovf(a, b);
 }
