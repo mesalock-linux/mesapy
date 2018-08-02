@@ -30,4 +30,5 @@ void pypy_x86_check_sse2(void)
 #  endif
 int main(void){
     pypy_x86_check_sse2();
+
 }
