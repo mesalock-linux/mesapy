@@ -248,6 +248,13 @@ def test_decompress_max_length():
     rminiz_oxide.inflateEnd(stream)
 
 
+def test_mismatch():
+    """
+    Test the mismatch init and end.
+    """
+    stream = rminiz_oxide.inflateInit()
+    rminiz_oxide.deflateEnd(stream)
+
 def test_cornercases():
     """
     Test degenerate arguments.
