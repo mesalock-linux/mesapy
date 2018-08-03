@@ -2,9 +2,14 @@ pipeline:
   build:
     image: mesalocklinux/build-mesalock-linux
     pull: true
+    environment:
+      - PYPY_USESSION_DIR=/mesapy/pypy-usession-dir
     commands:
+      - mkdir -p /mesapy/pypy-usession-dir
       - make pypy-c
   package:
     image: mesalocklinux/build-mesalock-linux
+    environment:
+      - PYPY_USESSION_DIR=/mesapy/pypy-usession-dir
     commands:
       - pypy pypy/tool/release/package.py --archive-name mesapy --targetdir . --without-cffi
