@@ -183,7 +183,7 @@ directory next to the dlls, as per build instructions.""" %(p, tktcldir)
                     str(pypydir.join('lib_pypy')),
                     ignore=ignore_patterns('.svn', 'py', '*.pyc', '*~',
                                            '*_cffi.c', '*.o'))
-    for file in ['README.rst',]:
+    for file in ['README.pypy.rst', 'README.md',]:
         shutil.copy(str(basedir.join(file)), str(pypydir))
     for file in ['_testcapimodule.c', '_ctypes_test.c']:
         shutil.copyfile(str(basedir.join('lib_pypy', file)),
