@@ -2,6 +2,8 @@
 
 # MesaPy: A Memory-Safe Python Implementation based on PyPy
 
+[![Build Status](https://ci.mesalock-linux.org/api/badges/mesalock-linux/mesapy/status.svg)](https://ci.mesalock-linux.org/mesalock-linux/mesapy)
+
 MesaPy is a *memory-safe* Python implementation based on PyPy. In addition to
 PyPy's distinct features -- speed, memory usage, compatibility and stackless,
 MesaPy mainly focuses on improving its *security* and *memory safety*. On top of
