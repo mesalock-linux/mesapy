@@ -138,6 +138,9 @@ class BasePosix(Platform):
         if config and config.translation.lto:
             cflags = ('-flto',) + cflags
 
+        # runtime index error check
+        eci.compile_extra = eci.compile_extra + ("-DRPY_LL_ASSERT", )
+
         m = GnuMakefile(path)
         m.exe_name = path.join(exe_name.basename)
         m.eci = eci
