@@ -14,7 +14,7 @@ in the trusted execution environment.
 We achieve the memory-safety promise through various methods: hardening
 RPython's type system (RPython is the language for writing PyPy), modifying
 PyPy/RPython's libraries, and verifying the RPython's libraries as well as its
-interpreter/JIT backend. Overall, there are four most notable security
+translator/JIT backend. Overall, there are four most notable security
 features of MesaPy:
 
 - **Memory safety**: To provide a memory-safe runtime, MesaPy replaces external
@@ -29,7 +29,7 @@ features of MesaPy:
   to avoid arbitrarily list read/write during PyPy's implementation.
 
 - **Formal verification**: Some code in RPython's libraries and its
-  interpreter/JIT backend are still written in C, which may contain potential
+  translator/JIT backend are still written in C, which may contain potential
   memory bugs. To prove the memory safety of RPython, we aim to formally
   verify its libraries and backend written in C using state-of-the-art
   verification tools.
