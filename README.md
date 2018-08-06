@@ -5,10 +5,11 @@
 [![Build Status](https://ci.mesalock-linux.org/api/badges/mesalock-linux/mesapy/status.svg)](https://ci.mesalock-linux.org/mesalock-linux/mesapy)
 
 MesaPy is a *memory-safe* Python implementation based on PyPy. In addition to
-PyPy's distinct features -- speed, memory usage, compatibility and stackless,
-MesaPy mainly focuses on improving its *security* and *memory safety*. On top of
-the enhancements, we also bring MesaPy into **Intel SGX** to write memory-safe
-applications running in the trusted execution environment.
+PyPy's distinct features -- speed (thanks to the JIT compiler), memory usage,
+compatibility and stackless (massive concurrency), MesaPy mainly focuses on
+improving its *security* and *memory safety*. On top of the enhancements, we
+also bring MesaPy into **Intel SGX** to write memory-safe applications running
+in the trusted execution environment.
 
 We achieve the memory-safety promise through various methods: hardening
 RPython's type system (RPython is the language for writing PyPy), modifying
@@ -42,7 +43,7 @@ features of MesaPy:
 More details about each features, roadmap, and building process can be found here:
 [https://docs.mesapy.org/](https://docs.mesapy.org/)
 
-# Getting started
+## Getting Started
 
 Basically, you can use MesaPy as any other Python implementations (e.g., CPython
 and PyPy). There are many ways to experience MesaPy:
@@ -51,7 +52,7 @@ and PyPy). There are many ways to experience MesaPy:
   - use MesaLock Linux docker to try MesaPy
   - build MesaPy by yourself from source
 
-## Building MesaPy from source
+### Building MesaPy from source
 
 Building MesaPy from source is very simple, you can simply use the docker provided
 by MesaLock Linux and run `make pypy-c`. The detailed steps are explained in the
@@ -61,13 +62,15 @@ by MesaLock Linux and run `make pypy-c`. The detailed steps are explained in the
 $ docker run --rm -it -v$(pwd):/mesapy -w /mesapy mesalocklinux/build-mesalock-linux make pypy-c
 ```
 
-## Using MesaPy in SGX (WIP)
+### Using MesaPy in SGX (WIP)
 
 One unique feature of MesaPy is to support Intel trusted execution environment
 -- SGX. Developers now can use Python to implement security-sensitive
 applications. The ultimate goal of MesaPy is to have SGX as a platform (just
 like x86 and arm in MesaPy). Right now, the MesaPy with SGX is under the `sgx`
-branch, so please checkout the branch first.
+branch, so please checkout the branch first. Note that this is a work-in-progress
+feature, current version only has limited functions and packages. Contributions
+are very welcome.
 
 To run Python app in SGX is very simple:
 
@@ -75,10 +78,10 @@ To run Python app in SGX is very simple:
   - write Python embeddings
   - use MesaPy to translate and generate SGX enclave
 
-We also provide some sample code (under the `/sgx` directory )to quickly start
+We also provide some sample code (under the `/sgx` directory ) to quickly start
 using MesaPy with SGX. You can also read details in our documentations.
 
-## Formal Verification
+### Formal verification
 
 There are still few lines of C code left in RPython translator/JIT and its
 libraries which are difficult to eliminate. For these code, we still want to
@@ -100,7 +103,7 @@ The detailed instructions and additional mocks are also included in each tool's
 separate directory. You can easily reproduce the verification process. You are
 welcome to contribute mocks and help us to verify files in the TODO list.
 
-# Contributing
+## Contributing
 
 We still have some working-in-progress sub-projects. We are very happy if you
 are interested to help out. Here are several topics you can get involved:
@@ -117,21 +120,21 @@ pick an interesting one and improve MesaPy and send us pull requests on the
 GitHub. If you find it a little difficult, you can also talk to our maintainers
 for help.
 
-# Maintainers
+## Maintainers
 
-Thanks to our maintainers to contribute this projects. Feel free to submit issue
+Thanks to our maintainers to contribute this projects. Feel free to submit issues
 on GitHub or send us email. We are very glad to help out.
 
   - **Memory-safety, security hardening, and all about MesaPy**: Mingshen Sun (`@mssun`)
   - **Formal verification**: Qian Feng (`@qian-feng`)
   - **SGX support**: Huibo Wang (`@MelodyHuibo`)and Yu Ding (`@dingelish`)
 
-# Steering Committee
+## Steering Committee
 
   - Tao Wei
   - Yulong Zhang
 
-# License
+## License
 
 MesaPy is provided under the 3-Clause BSD license. MesaPy is built upon PyPy and
 other open source projects, see the LICENSE file for detailed licenses.
