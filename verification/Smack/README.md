@@ -77,27 +77,27 @@ the mock for each func in RPython C. ./mock provides all mocks we have wrote.
 ### Verification results 
 
 
-| Filename        | Verified Result     |   LOC |
-| -------------   | :-----------------: | ----: | 
-| `dtoa.c`        | sat                 |  3006 |    
-| `asm_gcc_x86.c` | unsat               |    33 | 
-| `entrypoint.c`  | unsat               |   130 | 
-| `codemap.c`     | sat                 |   165 |
-| `skiplist.c`    | unsat               |   109 |
-| `debug_print.c` | unsat               |   274 |
-| `entrypoint.c`  | unsat               |   130 |
-| `exception.c`   | unsat               |    45 |
-| `instrument.c`  | unsat               |    76 |
-| `int.c`         | unsat               |    48 |
-| `ll_strtod.c`   | sat                 |   145 |
-| `mem.c`         | sat                 |   178 |
-| `profiling.c`   | sat                 |    73 |
-| `rtyper.c`      | sat                 |    38 |
-| `signals.c`     | sat                 |   206 |
-| `stack.c`       | sat                 |    66 |
-| `support.c`     | sat                 |    27 |
-| `thread.c`      | sat                 |    22 |
-| `threadlocal.c` | sat                 |   273 |
+| Filename        | Verified Result     |   LOC |     Verified      |
+| -------------   | :-----------------: | ----: |-----------------: | 
+| `dtoa.c`        | sat                 |  3006 | :x:               |    
+| `asm_gcc_x86.c` | unsat               |    33 | :heavy_check_mark:| 
+| `entrypoint.c`  | unsat               |   130 | :heavy_check_mark:| 
+| `codemap.c`     | sat                 |   165 | :x:               |
+| `skiplist.c`    | unsat               |   109 | :heavy_check_mark:|               |
+| `debug_print.c` | unsat               |   274 | :heavy_check_mark:|
+| `entrypoint.c`  | unsat               |   130 | :heavy_check_mark:|
+| `exception.c`   | unsat               |    45 | :heavy_check_mark:|
+| `instrument.c`  | unsat               |    76 | :heavy_check_mark:|
+| `int.c`         | unsat               |    48 | :heavy_check_mark:|
+| `ll_strtod.c`   | sat                 |   145 | :x:               |
+| `mem.c`         | sat                 |   178 | :x:               |
+| `profiling.c`   | sat                 |    73 | :x:               |
+| `rtyper.c`      | sat                 |    38 | :x:               |
+| `signals.c`     | sat                 |   206 | :x:               |
+| `stack.c`       | sat                 |    66 | :x:               |
+| `support.c`     | sat                 |    27 | :x:               |
+| `thread.c`      | sat                 |    22 | :x:               |
+| `threadlocal.c` | sat                 |   273 | :x:               |
 
 ### To Do List
 
