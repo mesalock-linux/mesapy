@@ -36,7 +36,7 @@ endif
 	@echo "===================================================================="
 	@echo
 	@sleep 5
-	cd pypy/goal && $(RUNINTERP) ../../rpython/bin/rpython -Ojit targetpypystandalone.py --withoutmod-_cffi_backend --withoutmod-_rawffi --withoutmod-_cppyy
+	cd pypy/goal && $(RUNINTERP) ../../rpython/bin/rpython -Ojit --make-jobs=$(shell nproc) targetpypystandalone.py --withoutmod-_cffi_backend --withoutmod-_rawffi --withoutmod-_cppyy
 
 pypy-zlib-only:
 	cd pypy/goal && $(RUNINTERP) ../../rpython/bin/rpython -Ojit targetpypystandalone.py --no-allworkingmodules --withmod-zlib
