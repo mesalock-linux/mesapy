@@ -89,7 +89,9 @@ class BaseListRepr(AbstractBaseListRepr):
                                  "ll_items": ll_fixed_items,
                                  "ITEM": ITEM,
                                  "ll_getitem_fast": ll_fixed_getitem_fast,
+                                 "ll_getitem_fast_unsafe": ll_fixed_getitem_fast_unsafe,
                                  "ll_setitem_fast": ll_fixed_setitem_fast,
+                                 "ll_setitem_fast_unsafe": ll_fixed_setitem_fast_unsafe,
                             }))
         return ITEMARRAY
 
@@ -123,7 +125,9 @@ class ListRepr(AbstractListRepr, BaseListRepr):
                                           "ll_items": ll_items,
                                           "ITEM": ITEM,
                                           "ll_getitem_fast": ll_getitem_fast,
+                                          "ll_getitem_fast_unsafe": ll_getitem_fast_unsafe,
                                           "ll_setitem_fast": ll_setitem_fast,
+                                          "ll_setitem_fast_unsafe": ll_setitem_fast_unsafe,
                                           "_ll_resize_ge": _ll_list_resize_ge,
                                           "_ll_resize_le": _ll_list_resize_le,
                                           "_ll_resize": _ll_list_resize,
@@ -374,10 +378,18 @@ def ll_getitem_fast(l, index):
     return l.ll_items()[index]
 ll_getitem_fast.oopspec = 'list.getitem(l, index)'
 
+def ll_getitem_fast_unsafe(l, index):
+    return l.ll_items()[index]
+ll_getitem_fast_unsafe.oopspec = 'list.getitem(l, index)'
+
 def ll_setitem_fast(l, index, item):
     ll_assert(index < l.length, "setitem out of bounds")
     l.ll_items()[index] = item
 ll_setitem_fast.oopspec = 'list.setitem(l, index, item)'
+
+def ll_setitem_fast_unsafe(l, index, item):
+    l.ll_items()[index] = item
+ll_setitem_fast_unsafe.oopspec = 'list.setitem(l, index, item)'
 
 # fixed size versions
 
@@ -404,10 +416,18 @@ def ll_fixed_getitem_fast(l, index):
     return l[index]
 ll_fixed_getitem_fast.oopspec = 'list.getitem(l, index)'
 
+def ll_fixed_getitem_fast_unsafe(l, index):
+    return l[index]
+ll_fixed_getitem_fast_unsafe.oopspec = 'list.getitem(l, index)'
+
 def ll_fixed_setitem_fast(l, index, item):
     ll_assert(index < len(l), "fixed setitem out of bounds")
     l[index] = item
 ll_fixed_setitem_fast.oopspec = 'list.setitem(l, index, item)'
+
+def ll_fixed_setitem_fast_unsafe(l, index, item):
+    l[index] = item
+ll_fixed_setitem_fast_unsafe.oopspec = 'list.setitem(l, index, item)'
 
 def newlist(llops, r_list, items_v, v_sizehint=None):
     LIST = r_list.LIST

@@ -20,7 +20,9 @@ ADTIFixedList = ADTInterface(None, {
     'll_newlist':      (['SELF', Signed        ], 'self'),
     'll_length':       (['self'                ], Signed),
     'll_getitem_fast': (['self', Signed        ], 'item'),
+    'll_getitem_fast_unsafe': (['self', Signed        ], 'item'),
     'll_setitem_fast': (['self', Signed, 'item'], Void),
+    'll_setitem_fast_unsafe': (['self', Signed, 'item'], Void),
 })
 ADTIList = ADTInterface(ADTIFixedList, {
     # grow the length if needed, overallocating a bit
@@ -142,20 +144,26 @@ class AbstractBaseListRepr(Repr):
     def rtype_method_reverse(self, hop):
         v_lst, = hop.inputargs(self)
         hop.exception_cannot_occur()
-        hop.gendirectcall(ll_reverse,v_lst)
+        if hop.unsafe: llfn = ll_reverse_unsafe
+        else: llfn = ll_reverse
+        hop.gendirectcall(llfn,v_lst)
 
     def rtype_method_remove(self, hop):
         v_lst, v_value = hop.inputargs(self, self.item_repr)
         hop.has_implicit_exception(ValueError)   # record that we know about it
         hop.exception_is_here()
-        return hop.gendirectcall(ll_listremove, v_lst, v_value,
+        if hop.unsafe: llfn = ll_listremove_unsafe
+        else: llfn = ll_listremove
+        return hop.gendirectcall(llfn, v_lst, v_value,
                                  self.get_eqfunc())
 
     def rtype_method_index(self, hop):
         v_lst, v_value = hop.inputargs(self, self.item_repr)
         hop.has_implicit_exception(ValueError)   # record that we know about it
         hop.exception_is_here()
-        return hop.gendirectcall(ll_listindex, v_lst, v_value, self.get_eqfunc())
+        if hop.unsafe: llfn = ll_listindex_unsafe
+        else: llfn = ll_listindex
+        return hop.gendirectcall(llfn, v_lst, v_value, self.get_eqfunc())
 
     def get_ll_eq_function(self):
         result = self.eq_func_cache
@@ -185,19 +193,23 @@ class AbstractBaseListRepr(Repr):
 class AbstractListRepr(AbstractBaseListRepr):
 
     def rtype_method_append(self, hop):
+        if hop.unsafe: llfn = ll_append_unsafe
+        else: llfn = ll_append
         v_lst, v_value = hop.inputargs(self, self.item_repr)
         hop.exception_cannot_occur()
-        hop.gendirectcall(ll_append, v_lst, v_value)
+        hop.gendirectcall(llfn, v_lst, v_value)
 
     def rtype_method_insert(self, hop):
         v_lst, v_index, v_value = hop.inputargs(self, Signed, self.item_repr)
         arg1 = hop.args_s[1]
         args = v_lst, v_index, v_value
         if arg1.is_constant() and arg1.const == 0:
-            llfn = ll_prepend
+            if hop.unsafe: llfn = ll_prepend_unsafe
+            else: llfn = ll_prepend
             args = v_lst, v_value
         elif arg1.nonneg:
-            llfn = ll_insert_nonneg
+            if hop.unsafe: llfn = ll_insert_nonneg_unsafe
+            else: llfn = ll_insert_nonneg
         else:
             raise TyperError("insert() index must be proven non-negative")
         hop.exception_cannot_occur()
@@ -219,15 +231,19 @@ class AbstractListRepr(AbstractBaseListRepr):
             assert hasattr(args[1], 'concretetype')
             arg1 = hop.args_s[1]
             if arg1.is_constant() and arg1.const == 0:
-                llfn = ll_pop_zero
+                if hop.unsafe: llfn = ll_pop_zero_unsafe
+                else: llfn = ll_pop_zero
                 args = args[:1]
             elif hop.args_s[1].nonneg:
-                llfn = ll_pop_nonneg
+                if hop.unsafe: llfn = ll_pop_nonneg_unsafe
+                else: llfn = ll_pop_nonneg
             else:
-                llfn = ll_pop
+                if hop.unsafe: llfn = ll_pop_unsafe
+                else: llfn = ll_pop
         else:
             args = hop.inputargs(self)
-            llfn = ll_pop_default
+            if hop.unsafe: llfn = ll_pop_default_unsafe
+            else: llfn = ll_pop_default
         hop.exception_is_here()
         v_res = hop.gendirectcall(llfn, v_func, *args)
         return self.recast(hop.llops, v_res)
@@ -242,11 +258,14 @@ class __extend__(pairtype(AbstractBaseListRepr, Repr)):
     def rtype_contains((r_lst, _), hop):
         v_lst, v_any = hop.inputargs(r_lst, r_lst.item_repr)
         hop.exception_cannot_occur()
-        return hop.gendirectcall(ll_listcontains, v_lst, v_any, r_lst.get_eqfunc())
+        if hop.unsafe: llfn = ll_listcontains_unsafe
+        else: llfn = ll_listcontains
+        return hop.gendirectcall(llfn, v_lst, v_any, r_lst.get_eqfunc())
 
 class __extend__(pairtype(AbstractBaseListRepr, IntegerRepr)):
 
     def rtype_getitem((r_lst, r_int), hop, checkidx=False):
+        # ll_assert(hop.unsafe == False, "unsafe is true")
         v_lst, v_index = hop.inputargs(r_lst, Signed)
         if checkidx:
             hop.exception_is_here()
@@ -255,14 +274,18 @@ class __extend__(pairtype(AbstractBaseListRepr, IntegerRepr)):
             spec = dum_nocheck
             hop.exception_cannot_occur()
         if hop.args_s[0].listdef.listitem.mutated:
-            basegetitem = ll_getitem_fast
+            if hop.unsafe: basegetitem = ll_getitem_fast_unsafe
+            else: basegetitem = ll_getitem_fast
         else:
-            basegetitem = ll_getitem_foldable_nonneg
+            if hop.unsafe: basegetitem = ll_getitem_foldable_nonneg_unsafe
+            else: basegetitem = ll_getitem_foldable_nonneg
 
         if hop.args_s[1].nonneg:
-            llfn = ll_getitem_nonneg
+            if hop.unsafe: llfn = ll_getitem_nonneg_unsafe
+            else: llfn = ll_getitem_nonneg
         else:
-            llfn = ll_getitem
+            if hop.unsafe: llfn = ll_getitem_unsafe
+            else: llfn = ll_getitem
         c_func_marker = hop.inputconst(Void, spec)
         c_basegetitem = hop.inputconst(Void, basegetitem)
         v_res = hop.gendirectcall(llfn, c_func_marker, c_basegetitem, v_lst, v_index)
@@ -279,9 +302,11 @@ class __extend__(pairtype(AbstractBaseListRepr, IntegerRepr)):
         v_func = hop.inputconst(Void, spec)
         v_lst, v_index, v_item = hop.inputargs(r_lst, Signed, r_lst.item_repr)
         if hop.args_s[1].nonneg:
-            llfn = ll_setitem_nonneg
+            if hop.unsafe: llfn = ll_setitem_nonneg_unsafe
+            else: llfn = ll_setitem_nonneg
         else:
-            llfn = ll_setitem
+            if hop.unsafe: llfn = ll_setitem_unsafe
+            else: llfn = ll_setitem
         hop.exception_is_here()
         return hop.gendirectcall(llfn, v_func, v_lst, v_index, v_item)
 
@@ -306,9 +331,11 @@ class __extend__(pairtype(AbstractListRepr, IntegerRepr)):
         v_func = hop.inputconst(Void, spec)
         v_lst, v_index = hop.inputargs(r_lst, Signed)
         if hop.args_s[1].nonneg:
-            llfn = ll_delitem_nonneg
+            if hop.unsafe: llfn = ll_delitem_nonneg_unsafe
+            else: llfn = ll_delitem_nonneg
         else:
-            llfn = ll_delitem
+            if hop.unsafe: llfn = ll_delitem_unsafe
+            else: llfn = ll_delitem
         hop.exception_is_here()
         return hop.gendirectcall(llfn, v_func, v_lst, v_index)
 
@@ -328,12 +355,16 @@ class __extend__(pairtype(AbstractBaseListRepr, AbstractBaseListRepr)):
     def rtype_eq((r_lst1, r_lst2), hop):
         assert r_lst1.item_repr == r_lst2.item_repr
         v_lst1, v_lst2 = hop.inputargs(r_lst1, r_lst2)
-        return hop.gendirectcall(ll_listeq, v_lst1, v_lst2, r_lst1.get_eqfunc())
+        if hop.unsafe: llfn = ll_listeq_unsafe
+        else: llfn = ll_listeq
+        return hop.gendirectcall(llfn, v_lst1, v_lst2, r_lst1.get_eqfunc())
 
     def rtype_ne((r_lst1, r_lst2), hop):
         assert r_lst1.item_repr == r_lst2.item_repr
         v_lst1, v_lst2 = hop.inputargs(r_lst1, r_lst2)
-        flag = hop.gendirectcall(ll_listeq, v_lst1, v_lst2, r_lst1.get_eqfunc())
+        if hop.unsafe: llfn = ll_listeq_unsafe
+        else: llfn = ll_listeq
+        flag = hop.gendirectcall(llfn, v_lst1, v_lst2, r_lst1.get_eqfunc())
         return hop.genop('bool_not', [flag], resulttype=Bool)
 
 
@@ -376,7 +407,9 @@ class __extend__(pairtype(AbstractListRepr, AbstractStringRepr)):
         v_lst1, v_str2 = hop.inputargs(r_lst1, string_repr)
         c_strlen  = hop.inputconst(Void, string_repr.ll.ll_strlen)
         c_stritem = hop.inputconst(Void, string_repr.ll.ll_stritem_nonneg)
-        hop.gendirectcall(ll_extend_with_str, v_lst1, v_str2,
+        if hop.unsafe: llfn = ll_extend_with_str_unsafe
+        else: llfn = ll_extend_with_str
+        hop.gendirectcall(llfn, v_lst1, v_str2,
                           c_strlen, c_stritem)
         return v_lst1
 
@@ -390,7 +423,8 @@ class __extend__(pairtype(AbstractListRepr, AbstractStringRepr)):
         kind, vlist = hop.decompose_slice_args()
         c_strlen  = hop.inputconst(Void, string_repr.ll.ll_strlen)
         c_stritem = hop.inputconst(Void, string_repr.ll.ll_stritem_nonneg)
-        ll_fn = globals()['ll_extend_with_str_slice_%s' % kind]
+        if hop.unsafe: ll_fn = globals()['ll_extend_with_str_slice_%s_unsafe' % kind]
+        else: ll_fn = globals()['ll_extend_with_str_slice_%s' % kind]
         hop.gendirectcall(ll_fn, v_lst1, v_str2, c_strlen, c_stritem, *vlist)
         return v_lst1
 
@@ -402,7 +436,9 @@ class __extend__(pairtype(AbstractListRepr, AbstractCharRepr)):
             raise TyperError('"lst += string" only supported with a list '
                              'of chars or unichars')
         v_lst1, v_chr, v_count = hop.inputargs(r_lst1, char_repr, Signed)
-        hop.gendirectcall(ll_extend_with_char_count, v_lst1, v_chr, v_count)
+        if hop.unsafe: llfn = ll_extend_with_char_count_unsafe
+        else: llfn = ll_extend_with_char_count
+        hop.gendirectcall(llfn, v_lst1, v_chr, v_count)
         return v_lst1
 
 
@@ -412,7 +448,8 @@ class __extend__(AbstractBaseListRepr):
         cRESLIST = hop.inputconst(Void, hop.r_result.LIST)
         v_lst = hop.inputarg(r_lst, arg=0)
         kind, vlist = hop.decompose_slice_args()
-        ll_listslice = globals()['ll_listslice_%s' % kind]
+        if hop.unsafe: ll_listslice = globals()['ll_listslice_%s_unsafe' % kind]
+        else: ll_listslice = globals()['ll_listslice_%s' % kind]
         return hop.gendirectcall(ll_listslice, cRESLIST, v_lst, *vlist)
 
     def rtype_setslice(r_lst, hop):
@@ -423,12 +460,15 @@ class __extend__(AbstractBaseListRepr):
                 kind,))
         v_start, v_stop = vlist
         v_lst2 = hop.inputarg(hop.args_r[3], arg=3)
-        hop.gendirectcall(ll_listsetslice, v_lst, v_start, v_stop, v_lst2)
+        if hop.unsafe: llfn = ll_listsetslice_unsafe
+        else: llfn = ll_listsetslice
+        hop.gendirectcall(llfn, v_lst, v_start, v_stop, v_lst2)
 
     def rtype_delslice(r_lst, hop):
         v_lst = hop.inputarg(r_lst, arg=0)
         kind, vlist = hop.decompose_slice_args()
-        ll_listdelslice = globals()['ll_listdelslice_%s' % kind]
+        if hop.unsafe: ll_listdelslice = globals()['ll_listdelslice_%s_unsafe' % kind]
+        else: ll_listdelslice = globals()['ll_listdelslice_%s' % kind]
         return hop.gendirectcall(ll_listdelslice, v_lst, *vlist)
 
 
@@ -587,6 +627,11 @@ def ll_append(l, newitem):
     l._ll_resize_ge(length+1)           # see "a note about overflows" above
     l.ll_setitem_fast(length, newitem)
 
+def ll_append_unsafe(l, newitem):
+    length = l.ll_length()
+    l._ll_resize_ge(length+1)           # see "a note about overflows" above
+    l.ll_setitem_fast_unsafe(length, newitem)
+
 # this one is for the special case of insert(0, x)
 @jit.look_inside_iff(lambda l,n: jit.isvirtual(l))
 def ll_prepend(l, newitem):
@@ -598,6 +643,18 @@ def ll_prepend(l, newitem):
         l.ll_setitem_fast(dst, l.ll_getitem_fast(src))
         dst = src
     l.ll_setitem_fast(0, newitem)
+
+# this one is for the special case of insert(0, x)
+@jit.look_inside_iff(lambda l,n: jit.isvirtual(l))
+def ll_prepend_unsafe(l, newitem):
+    length = l.ll_length()
+    l._ll_resize_ge(length+1)           # see "a note about overflows" above
+    dst = length
+    while dst > 0:
+        src = dst - 1
+        l.ll_setitem_fast_unsafe(dst, l.ll_getitem_fast_unsafe(src))
+        dst = src
+    l.ll_setitem_fast_unsafe(0, newitem)
 
 def ll_concat(RESLIST, l1, l2):
     len1 = l1.ll_length()
@@ -625,6 +682,17 @@ def ll_insert_nonneg(l, index, newitem):
         dst = src
     l.ll_setitem_fast(index, newitem)
 
+@jit.look_inside_iff(lambda l,i,n: jit.isvirtual(l) and jit.isconstant(i))
+def ll_insert_nonneg_unsafe(l, index, newitem):
+    length = l.ll_length()
+    l._ll_resize_ge(length+1)           # see "a note about overflows" above
+    dst = length
+    while dst > index:
+        src = dst - 1
+        l.ll_setitem_fast_unsafe(dst, l.ll_getitem_fast_unsafe(src))
+        dst = src
+    l.ll_setitem_fast_unsafe(index, newitem)
+
 def ll_pop_nonneg(func, l, index):
     ll_assert(index >= 0, "unexpectedly negative list pop index")
     if func is dum_checkidx:
@@ -637,6 +705,15 @@ def ll_pop_nonneg(func, l, index):
     return res
 ll_pop_nonneg.oopspec = 'list.pop(l, index)'
 
+def ll_pop_nonneg_unsafe(func, l, index):
+    # if func is dum_checkidx:
+    #     if index >= l.ll_length():
+    #         raise IndexError
+    res = l.ll_getitem_fast_unsafe(index)
+    ll_delitem_nonneg_unsafe(dum_nocheck, l, index)
+    return res
+ll_pop_nonneg_unsafe.oopspec = 'list.pop(l, index)'
+
 def ll_pop_default(func, l):
     length = l.ll_length()
     if func is dum_checkidx and (length == 0):
@@ -648,6 +725,19 @@ def ll_pop_default(func, l):
     null = ll_null_item(l)
     if null is not None:
         l.ll_setitem_fast(index, null)
+    l._ll_resize_le(newlength)
+    return res
+
+def ll_pop_default_unsafe(func, l):
+    length = l.ll_length()
+    # if func is dum_checkidx and (length == 0):
+    #     raise IndexError
+    index = length - 1
+    newlength = index
+    res = l.ll_getitem_fast_unsafe(index)
+    null = ll_null_item(l)
+    if null is not None:
+        l.ll_setitem_fast_unsafe(index, null)
     l._ll_resize_le(newlength)
     return res
 
@@ -671,6 +761,25 @@ def ll_pop_zero(func, l):
     return res
 ll_pop_zero.oopspec = 'list.pop(l, 0)'
 
+def ll_pop_zero_unsafe(func, l):
+    length = l.ll_length()
+    # if func is dum_checkidx and (length == 0):
+    #     raise IndexError
+    newlength = length - 1
+    res = l.ll_getitem_fast_unsafe(0)
+    j = 0
+    j1 = j+1
+    while j < newlength:
+        l.ll_setitem_fast_unsafe(j, l.ll_getitem_fast_unsafe(j1))
+        j = j1
+        j1 += 1
+    null = ll_null_item(l)
+    if null is not None:
+        l.ll_setitem_fast_unsafe(newlength, null)
+    l._ll_resize_le(newlength)
+    return res
+ll_pop_zero_unsafe.oopspec = 'list.pop(l, 0)'
+
 def ll_pop(func, l, index):
     length = l.ll_length()
     if index < 0:
@@ -685,6 +794,17 @@ def ll_pop(func, l, index):
     ll_delitem_nonneg(dum_nocheck, l, index)
     return res
 
+def ll_pop_unsafe(func, l, index):
+    length = l.ll_length()
+    if index < 0:
+        index += length
+    # if func is dum_checkidx:
+    #     if index < 0 or index >= length:
+    #         raise IndexError
+    res = l.ll_getitem_fast_unsafe(index)
+    ll_delitem_nonneg_unsafe(dum_nocheck, l, index)
+    return res
+
 @jit.look_inside_iff(lambda l: jit.isvirtual(l))
 def ll_reverse(l):
     length = l.ll_length()
@@ -697,6 +817,18 @@ def ll_reverse(l):
         i += 1
         length_1_i -= 1
 
+@jit.look_inside_iff(lambda l: jit.isvirtual(l))
+def ll_reverse_unsafe(l):
+    length = l.ll_length()
+    i = 0
+    length_1_i = length-1-i
+    while i < length_1_i:
+        tmp = l.ll_getitem_fast_unsafe(i)
+        l.ll_setitem_fast_unsafe(i, l.ll_getitem_fast_unsafe(length_1_i))
+        l.ll_setitem_fast_unsafe(length_1_i, tmp)
+        i += 1
+        length_1_i -= 1
+
 def ll_getitem_nonneg(func, basegetitem, l, index):
     ll_assert(index >= 0, "unexpectedly negative list getitem index")
     if func is dum_checkidx:
@@ -704,6 +836,14 @@ def ll_getitem_nonneg(func, basegetitem, l, index):
             raise IndexError
     return basegetitem(l, index)
 ll_getitem_nonneg._always_inline_ = True
+# no oopspec -- the function is inlined by the JIT
+
+def ll_getitem_nonneg_unsafe(func, basegetitem, l, index):
+    # if func is dum_checkidx:
+    #     if index >= l.ll_length():
+    #         raise IndexError
+    return basegetitem(l, index)
+ll_getitem_nonneg_unsafe._always_inline_ = True
 # no oopspec -- the function is inlined by the JIT
 
 def ll_getitem(func, basegetitem, l, index):
@@ -726,14 +866,36 @@ def ll_getitem(func, basegetitem, l, index):
     return basegetitem(l, index)
 # no oopspec -- the function is inlined by the JIT
 
+def ll_getitem_unsafe(func, basegetitem, l, index):
+    # if func is dum_checkidx:
+    #     length = l.ll_length()    # common case: 0 <= index < length
+    #     if r_uint(index) >= r_uint(length):
+    #         # Failed, so either (-length <= index < 0), or we have to raise
+    #         # IndexError.  First add 'length' to get the final index, then
+    #         # check that we now have (0 <= index < length).
+    #         index = r_uint(index) + r_uint(length)
+    #         if index >= r_uint(length):
+    #             raise IndexError
+    #         index = intmask(index)
+    return basegetitem(l, index)
+# no oopspec -- the function is inlined by the JIT
+
 def ll_getitem_fast(l, index):
     return l.ll_getitem_fast(index)
 ll_getitem_fast._always_inline_ = True
+
+def ll_getitem_fast_unsafe(l, index):
+    return l.ll_getitem_fast_unsafe(index)
+ll_getitem_fast_unsafe._always_inline_ = True
 
 def ll_getitem_foldable_nonneg(l, index):
     ll_assert(index >= 0, "unexpectedly negative list getitem index")
     return l.ll_getitem_fast(index)
 ll_getitem_foldable_nonneg.oopspec = 'list.getitem_foldable(l, index)'
+
+def ll_getitem_foldable_nonneg_unsafe(l, index):
+    return l.ll_getitem_fast_unsafe(index)
+ll_getitem_foldable_nonneg_unsafe.oopspec = 'list.getitem_foldable(l, index)'
 
 def ll_setitem_nonneg(func, l, index, newitem):
     ll_assert(index >= 0, "unexpectedly negative list setitem index")
@@ -742,6 +904,14 @@ def ll_setitem_nonneg(func, l, index, newitem):
             raise IndexError
     l.ll_setitem_fast(index, newitem)
 ll_setitem_nonneg._always_inline_ = True
+# no oopspec -- the function is inlined by the JIT
+
+def ll_setitem_nonneg_unsafe(func, l, index, newitem):
+    # if func is dum_checkidx:
+    #     if index >= l.ll_length():
+    #         raise IndexError
+    l.ll_setitem_fast_unsafe(index, newitem)
+ll_setitem_nonneg_unsafe._always_inline_ = True
 # no oopspec -- the function is inlined by the JIT
 
 def ll_setitem(func, l, index, newitem):
@@ -757,6 +927,17 @@ def ll_setitem(func, l, index, newitem):
             index += l.ll_length()
             ll_assert(index >= 0, "negative list setitem index out of bound")
     l.ll_setitem_fast(index, newitem)
+# no oopspec -- the function is inlined by the JIT
+
+def ll_setitem_unsafe(func, l, index, newitem):
+    # if func is dum_checkidx:
+    #     length = l.ll_length()
+    #     if r_uint(index) >= r_uint(length):   # see comments in ll_getitem().
+    #         index = r_uint(index) + r_uint(length)
+    #         if index >= r_uint(length):
+    #             raise IndexError
+    #         index = intmask(index)
+    l.ll_setitem_fast_unsafe(index, newitem)
 # no oopspec -- the function is inlined by the JIT
 
 @enforceargs(None, None, int)
@@ -782,6 +963,26 @@ def ll_delitem_nonneg(func, l, index):
     l._ll_resize_le(newlength)
 ll_delitem_nonneg.oopspec = 'list.delitem(l, index)'
 
+@enforceargs(None, None, int)
+def ll_delitem_nonneg_unsafe(func, l, index):
+    length = l.ll_length()
+    # if func is dum_checkidx:
+    #     if index >= length:
+    #         raise IndexError
+    newlength = length - 1
+    j = index
+    j1 = j+1
+    while j < newlength:
+        l.ll_setitem_fast_unsafe(j, l.ll_getitem_fast_unsafe(j1))
+        j = j1
+        j1 += 1
+
+    null = ll_null_item(l)
+    if null is not None:
+        l.ll_setitem_fast_unsafe(newlength, null)
+    l._ll_resize_le(newlength)
+ll_delitem_nonneg_unsafe.oopspec = 'list.delitem(l, index)'
+
 def ll_delitem(func, l, index):
     if func is dum_checkidx:
         length = l.ll_length()
@@ -797,6 +998,17 @@ def ll_delitem(func, l, index):
     ll_delitem_nonneg(dum_nocheck, l, index)
 # no oopspec -- the function is inlined by the JIT
 
+def ll_delitem_unsafe(func, l, index):
+    # if func is dum_checkidx:
+    #     length = l.ll_length()
+    #     if r_uint(index) >= r_uint(length):   # see comments in ll_getitem().
+    #         index = r_uint(index) + r_uint(length)
+    #         if index >= r_uint(length):
+    #             raise IndexError
+    #         index = intmask(index)
+    ll_delitem_nonneg_unsafe(dum_nocheck, l, index)
+# no oopspec -- the function is inlined by the JIT
+
 def ll_extend(l1, l2):
     len1 = l1.ll_length()
     len2 = l2.ll_length()
@@ -809,6 +1021,9 @@ def ll_extend(l1, l2):
 
 def ll_extend_with_str(lst, s, getstrlen, getstritem):
     return ll_extend_with_str_slice_startonly(lst, s, getstrlen, getstritem, 0)
+
+def ll_extend_with_str_unsafe(lst, s, getstrlen, getstritem):
+    return ll_extend_with_str_slice_startonly_unsafe(lst, s, getstrlen, getstritem, 0)
 
 def ll_extend_with_str_slice_startonly(lst, s, getstrlen, getstritem, start):
     len1 = lst.ll_length()
@@ -828,6 +1043,26 @@ def ll_extend_with_str_slice_startonly(lst, s, getstrlen, getstritem, start):
         if listItemType(lst) is UniChar:
             c = unichr(ord(c))
         lst.ll_setitem_fast(j, c)
+        i += 1
+        j += 1
+# not inlined by the JIT -- contains a loop
+
+def ll_extend_with_str_slice_startonly_unsafe(lst, s, getstrlen, getstritem, start):
+    len1 = lst.ll_length()
+    len2 = getstrlen(s)
+    count2 = len2 - start
+    try:
+        newlength = ovfcheck(len1 + count2)
+    except OverflowError:
+        raise MemoryError
+    lst._ll_resize_ge(newlength)
+    i = start
+    j = len1
+    while i < len2:
+        c = getstritem(s, i)
+        if listItemType(lst) is UniChar:
+            c = unichr(ord(c))
+        lst.ll_setitem_fast_unsafe(j, c)
         i += 1
         j += 1
 # not inlined by the JIT -- contains a loop
@@ -858,6 +1093,30 @@ def ll_extend_with_str_slice_startstop(lst, s, getstrlen, getstritem,
         j += 1
 # not inlined by the JIT -- contains a loop
 
+def ll_extend_with_str_slice_startstop_unsafe(lst, s, getstrlen, getstritem,
+                                       start, stop):
+    len1 = lst.ll_length()
+    len2 = getstrlen(s)
+    if stop > len2:
+        stop = len2
+    count2 = stop - start
+    assert count2 >= 0, "str slice stop smaller than start"
+    try:
+        newlength = ovfcheck(len1 + count2)
+    except OverflowError:
+        raise MemoryError
+    lst._ll_resize_ge(newlength)
+    i = start
+    j = len1
+    while i < stop:
+        c = getstritem(s, i)
+        if listItemType(lst) is UniChar:
+            c = unichr(ord(c))
+        lst.ll_setitem_fast_unsafe(j, c)
+        i += 1
+        j += 1
+# not inlined by the JIT -- contains a loop
+
 def ll_extend_with_str_slice_minusone(lst, s, getstrlen, getstritem):
     len1 = lst.ll_length()
     len2m1 = getstrlen(s) - 1
@@ -878,6 +1137,25 @@ def ll_extend_with_str_slice_minusone(lst, s, getstrlen, getstritem):
         j += 1
 # not inlined by the JIT -- contains a loop
 
+def ll_extend_with_str_slice_minusone_unsafe(lst, s, getstrlen, getstritem):
+    len1 = lst.ll_length()
+    len2m1 = getstrlen(s) - 1
+    try:
+        newlength = ovfcheck(len1 + len2m1)
+    except OverflowError:
+        raise MemoryError
+    lst._ll_resize_ge(newlength)
+    i = 0
+    j = len1
+    while i < len2m1:
+        c = getstritem(s, i)
+        if listItemType(lst) is UniChar:
+            c = unichr(ord(c))
+        lst.ll_setitem_fast_unsafe(j, c)
+        i += 1
+        j += 1
+# not inlined by the JIT -- contains a loop
+
 def ll_extend_with_char_count(lst, char, count):
     if count <= 0:
         return
@@ -894,6 +1172,21 @@ def ll_extend_with_char_count(lst, char, count):
         lst.ll_setitem_fast(j, char)
         j += 1
 
+def ll_extend_with_char_count_unsafe(lst, char, count):
+    if count <= 0:
+        return
+    len1 = lst.ll_length()
+    try:
+        newlength = ovfcheck(len1 + count)
+    except OverflowError:
+        raise MemoryError
+    lst._ll_resize_ge(newlength)
+    j = len1
+    if listItemType(lst) is UniChar:
+        char = unichr(ord(char))
+    while j < newlength:
+        lst.ll_setitem_fast_unsafe(j, char)
+        j += 1
 
 @signature(types.any(), types.any(), types.int(), returns=types.any())
 def ll_listslice_startonly(RESLIST, l1, start):
@@ -905,12 +1198,29 @@ def ll_listslice_startonly(RESLIST, l1, start):
     ll_arraycopy(l1, l, start, 0, newlength)
     return l
 
+@signature(types.any(), types.any(), types.int(), returns=types.any())
+def ll_listslice_startonly_unsafe(RESLIST, l1, start):
+    len1 = l1.ll_length()
+    newlength = len1 - start
+    l = RESLIST.ll_newlist(newlength)
+    ll_arraycopy(l1, l, start, 0, newlength)
+    return l
 
 def ll_listslice_startstop(RESLIST, l1, start, stop):
     length = l1.ll_length()
     ll_assert(start >= 0, "unexpectedly negative list slice start")
     ll_assert(start <= length, "list slice start larger than list length")
     ll_assert(stop >= start, "list slice stop smaller than start")
+    if stop > length:
+        stop = length
+    newlength = stop - start
+    l = RESLIST.ll_newlist(newlength)
+    ll_arraycopy(l1, l, start, 0, newlength)
+    return l
+# no oopspec -- the function is inlined by the JIT
+
+def ll_listslice_startstop_unsafe(RESLIST, l1, start, stop):
+    length = l1.ll_length()
     if stop > length:
         stop = length
     newlength = stop - start
@@ -927,6 +1237,13 @@ def ll_listslice_minusone(RESLIST, l1):
     return l
 # no oopspec -- the function is inlined by the JIT
 
+def ll_listslice_minusone_unsafe(RESLIST, l1):
+    newlength = l1.ll_length() - 1
+    l = RESLIST.ll_newlist(newlength)
+    ll_arraycopy(l1, l, 0, 0, newlength)
+    return l
+# no oopspec -- the function is inlined by the JIT
+
 @jit.look_inside_iff(lambda l, start: jit.isconstant(start) and jit.isvirtual(l))
 @jit.oopspec('list.delslice_startonly(l, start)')
 def ll_listdelslice_startonly(l, start):
@@ -938,6 +1255,18 @@ def ll_listdelslice_startonly(l, start):
         j = l.ll_length() - 1
         while j >= newlength:
             l.ll_setitem_fast(j, null)
+            j -= 1
+    l._ll_resize_le(newlength)
+
+@jit.look_inside_iff(lambda l, start: jit.isconstant(start) and jit.isvirtual(l))
+@jit.oopspec('list.delslice_startonly_unsafe(l, start)')
+def ll_listdelslice_startonly_unsafe(l, start):
+    newlength = start
+    null = ll_null_item(l)
+    if null is not None:
+        j = l.ll_length() - 1
+        while j >= newlength:
+            l.ll_setitem_fast_unsafe(j, null)
             j -= 1
     l._ll_resize_le(newlength)
 
@@ -964,6 +1293,26 @@ def ll_listdelslice_startstop(l, start, stop):
     l._ll_resize_le(newlength)
 ll_listdelslice_startstop.oopspec = 'list.delslice_startstop(l, start, stop)'
 
+def ll_listdelslice_startstop_unsafe(l, start, stop):
+    length = l.ll_length()
+    if stop > length:
+        stop = length
+    newlength = length - (stop-start)
+    j = start
+    i = stop
+    while j < newlength:
+        l.ll_setitem_fast_unsafe(j, l.ll_getitem_fast_unsafe(i))
+        i += 1
+        j += 1
+    null = ll_null_item(l)
+    if null is not None:
+        j = length - 1
+        while j >= newlength:
+            l.ll_setitem_fast_unsafe(j, null)
+            j -= 1
+    l._ll_resize_le(newlength)
+ll_listdelslice_startstop_unsafe.oopspec = 'list.delslice_startstop_unsafe(l, start, stop)'
+
 def ll_listsetslice(l1, start, stop, l2):
     len1 = l1.ll_length()
     len2 = l2.ll_length()
@@ -985,6 +1334,23 @@ def ll_listsetslice(l1, start, stop, l2):
         ll_arraycopy(l1, l1, stop, start + len2, len1 - stop)
         ll_arraycopy(l2, l1, 0, start, len2)
 
+def ll_listsetslice_unsafe(l1, start, stop, l2):
+    len1 = l1.ll_length()
+    len2 = l2.ll_length()
+    if len2 == stop - start:
+        ll_arraycopy(l2, l1, 0, start, len2)
+    elif len2 < stop - start:
+        ll_arraycopy(l2, l1, 0, start, len2)
+        ll_arraycopy(l1, l1, stop, start + len2, len1 - stop)
+        l1._ll_resize_le(len1 + len2 - (stop - start))
+    else: # len2 > stop - start:
+        try:
+            newlength = ovfcheck(len1 + len2)
+        except OverflowError:
+            raise MemoryError
+        l1._ll_resize_ge(newlength)
+        ll_arraycopy(l1, l1, stop, start + len2, len1 - stop)
+        ll_arraycopy(l2, l1, 0, start, len2)
 
 # ____________________________________________________________
 #
@@ -1019,6 +1385,28 @@ def ll_listeq(l1, l2, eqfn):
     return True
 # not inlined by the JIT -- contains a loop
 
+@jit.look_inside_iff(listeq_unroll_case)
+def ll_listeq_unsafe(l1, l2, eqfn):
+    if not l1 and not l2:
+        return True
+    if not l1 or not l2:
+        return False
+    len1 = l1.ll_length()
+    len2 = l2.ll_length()
+    if len1 != len2:
+        return False
+    j = 0
+    while j < len1:
+        if eqfn is None:
+            if l1.ll_getitem_fast_unsafe(j) != l2.ll_getitem_fast_unsafe(j):
+                return False
+        else:
+            if not eqfn(l1.ll_getitem_fast_unsafe(j), l2.ll_getitem_fast_unsafe(j)):
+                return False
+        j += 1
+    return True
+# not inlined by the JIT -- contains a loop
+
 def ll_listcontains(lst, obj, eqfn):
     lng = lst.ll_length()
     j = 0
@@ -1028,6 +1416,20 @@ def ll_listcontains(lst, obj, eqfn):
                 return True
         else:
             if eqfn(lst.ll_getitem_fast(j), obj):
+                return True
+        j += 1
+    return False
+# not inlined by the JIT -- contains a loop
+
+def ll_listcontains_unsafe(lst, obj, eqfn):
+    lng = lst.ll_length()
+    j = 0
+    while j < lng:
+        if eqfn is None:
+            if lst.ll_getitem_fast_unsafe(j) == obj:
+                return True
+        else:
+            if eqfn(lst.ll_getitem_fast_unsafe(j), obj):
                 return True
         j += 1
     return False
@@ -1047,9 +1449,27 @@ def ll_listindex(lst, obj, eqfn):
     raise ValueError # can't say 'list.index(x): x not in list'
 # not inlined by the JIT -- contains a loop
 
+def ll_listindex_unsafe(lst, obj, eqfn):
+    lng = lst.ll_length()
+    j = 0
+    while j < lng:
+        if eqfn is None:
+            if lst.ll_getitem_fast_unsafe(j) == obj:
+                return j
+        else:
+            if eqfn(lst.ll_getitem_fast_unsafe(j), obj):
+                return j
+        j += 1
+    raise ValueError # can't say 'list.index(x): x not in list'
+# not inlined by the JIT -- contains a loop
+
 def ll_listremove(lst, obj, eqfn):
     index = ll_listindex(lst, obj, eqfn) # raises ValueError if obj not in lst
     ll_delitem_nonneg(dum_nocheck, lst, index)
+
+def ll_listremove_unsafe(lst, obj, eqfn):
+    index = ll_listindex_unsafe(lst, obj, eqfn) # raises ValueError if obj not in lst
+    ll_delitem_nonneg_unsafe(dum_nocheck, lst, index)
 
 def ll_inplace_mul(l, factor):
     if factor == 1:

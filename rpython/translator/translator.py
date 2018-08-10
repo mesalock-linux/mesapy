@@ -72,13 +72,13 @@ class TranslationContext(object):
             self, policy=policy, keepgoing=self.config.translation.keepgoing)
         return self.annotator
 
-    def buildrtyper(self):
+    def buildrtyper(self, unsafe=False):
         if self.annotator is None:
             raise ValueError("no annotator")
         if self.rtyper is not None:
             raise ValueError("we already have an rtyper")
         from rpython.rtyper.rtyper import RPythonTyper
-        self.rtyper = RPythonTyper(self.annotator)
+        self.rtyper = RPythonTyper(self.annotator, unsafe=unsafe)
         return self.rtyper
 
     def getexceptiontransformer(self):

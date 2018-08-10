@@ -11,7 +11,7 @@ from rpython.tool.sourcetools import PY_IDENTIFIER, nice_repr_for_func
 
 
 class FunctionGraph(object):
-    def __init__(self, name, startblock, return_var=None):
+    def __init__(self, name, startblock, return_var=None, unsafe=False):
         self.name = name  # function name (possibly mangled already)
         self.startblock = startblock
         # build default returnblock
@@ -24,6 +24,7 @@ class FunctionGraph(object):
         self.exceptblock.operations = ()
         self.exceptblock.exits = ()
         self.tag = None
+        self.unsafe = unsafe
 
     def getargs(self):
         return self.startblock.inputargs
@@ -65,12 +66,14 @@ class FunctionGraph(object):
 
     def iterblocks(self):
         block = self.startblock
+        block.unsafe = self.unsafe
         yield block
         seen = {block: True}
         stack = list(block.exits[::-1])
         while stack:
             block = stack.pop().target
             if block not in seen:
+                block.unsafe = self.unsafe
                 yield block
                 seen[block] = True
                 stack += block.exits[::-1]
@@ -170,7 +173,7 @@ class Link(object):
 
 class Block(object):
     __slots__ = """inputargs operations exitswitch
-                exits blockcolor generation""".split()
+                exits blockcolor generation unsafe""".split()
 
     def __init__(self, inputargs):
         self.inputargs = list(inputargs)  # mixed list of variable/const XXX
@@ -178,6 +181,7 @@ class Block(object):
         self.exitswitch = None            # a variable or
                                           #  Constant(last_exception), see below
         self.exits = []                   # list of Link(s)
+        self.unsafe = False
 
     def is_final_block(self):
         return self.operations == ()      # return or except block
@@ -539,6 +543,7 @@ def copygraph(graph, shallow=False, varmap={}, shallowvars=False):
                 return result
             newblock.operations = copyoplist(block.operations)
         newblock.exitswitch = copyvar(block.exitswitch)
+        newblock.unsafe = block.unsafe
         return newblock
 
     for block in graph.iterblocks():
@@ -558,7 +563,7 @@ def copygraph(graph, shallow=False, varmap={}, shallowvars=False):
         newblock.closeblock(*newlinks)
 
     newstartblock = blockmap[graph.startblock]
-    newgraph = FunctionGraph(graph.name, newstartblock)
+    newgraph = FunctionGraph(graph.name, newstartblock, unsafe=graph.unsafe)
     newgraph.returnblock = blockmap[graph.returnblock]
     newgraph.exceptblock = blockmap[graph.exceptblock]
     for key, value in graph.__dict__.items():
