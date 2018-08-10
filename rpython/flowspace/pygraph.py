@@ -16,7 +16,10 @@ class PyGraph(FunctionGraph):
             locals[i] = Variable(code.co_varnames[i])
         state = FrameState(locals, [], None, [], 0)
         initialblock = SpamBlock(state)
-        super(PyGraph, self).__init__(self._sanitize_funcname(func), initialblock)
+        unsafe = False
+        if func.func_doc and func.func_doc.lstrip().startswith('UNSAFE'):
+            unsafe = True
+        super(PyGraph, self).__init__(self._sanitize_funcname(func), initialblock, unsafe=unsafe)
         self.func = func
         self.signature = code.signature
         self.defaults = func.func_defaults or ()

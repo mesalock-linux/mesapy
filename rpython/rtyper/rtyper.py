@@ -47,7 +47,7 @@ llinterp_backend = LLInterpBackend()
 class RPythonTyper(object):
     from rpython.rtyper.rmodel import log
 
-    def __init__(self, annotator, backend=genc_backend):
+    def __init__(self, annotator, backend=genc_backend, unsafe=False):
         self.annotator = annotator
         self.backend = backend
         self.lowlevel_ann_policy = LowLevelAnnotatorPolicy(self)
@@ -423,13 +423,13 @@ class RPythonTyper(object):
         # enumerate the HighLevelOps in a block.
         if block.operations:
             for op in block.operations[:-1]:
-                yield HighLevelOp(self, op, [], llops)
+                yield HighLevelOp(self, op, [], llops, block.unsafe)
             # look for exception links for the last operation
             if block.canraise:
                 exclinks = block.exits[1:]
             else:
                 exclinks = []
-            yield HighLevelOp(self, block.operations[-1], exclinks, llops)
+            yield HighLevelOp(self, block.operations[-1], exclinks, llops, block.unsafe)
 
     def translate_hl_to_ll(self, hop, varmapping):
         #self.log.translating(hop.spaceop.opname, hop.args_s)
@@ -616,11 +616,12 @@ RPythonTyper._registeroperations(unaryop.UNARY_OPERATIONS, binaryop.BINARY_OPERA
 
 
 class HighLevelOp(object):
-    def __init__(self, rtyper, spaceop, exceptionlinks, llops):
+    def __init__(self, rtyper, spaceop, exceptionlinks, llops, unsafe=False):
         self.rtyper         = rtyper
         self.spaceop        = spaceop
         self.exceptionlinks = exceptionlinks
         self.llops          = llops
+        self.unsafe         = unsafe
 
     def setup(self):
         rtyper = self.rtyper

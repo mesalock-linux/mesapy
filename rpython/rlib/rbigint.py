@@ -159,23 +159,24 @@ class rbigint(object):
         return not (self == other)
 
     def digit(self, x):
-        """Return the x'th digit, as an int."""
+        """UNSAFE Return the x'th digit, as an int."""
         return self._digits[x]
     digit._always_inline_ = True
 
     def widedigit(self, x):
-        """Return the x'th digit, as a long long int if needed
+        """UNSAFE Return the x'th digit, as a long long int if needed
         to have enough room to contain two digits."""
         return _widen_digit(self._digits[x])
     widedigit._always_inline_ = True
 
     def udigit(self, x):
-        """Return the x'th digit, as an unsigned int."""
+        """UNSAFE Return the x'th digit, as an unsigned int."""
         return _load_unsigned_digit(self._digits[x])
     udigit._always_inline_ = True
 
     @specialize.argtype(2)
     def setdigit(self, x, val):
+        """UNSAFE"""
         val = _mask_digit(val)
         assert val >= 0
         self._digits[x] = _store_digit(val)
@@ -188,6 +189,7 @@ class rbigint(object):
     @staticmethod
     @jit.elidable
     def fromint(intval):
+        """UNSAFE"""
         # This function is marked as pure, so you must not call it and
         # then modify the result.
         check_regular_int(intval)
@@ -235,6 +237,7 @@ class rbigint(object):
     @staticmethod
     @jit.elidable
     def _fromfloat_finite(dval):
+        """UNSAFE"""
         sign = 1
         if dval < 0.0:
             sign = -1
@@ -272,7 +275,7 @@ class rbigint(object):
     @staticmethod
     @jit.elidable
     def fromstr(s, base=0, allow_underscores=False):
-        """As string_to_int(), but ignores an optional 'l' or 'L' suffix
+        """UNSAFE As string_to_int(), but ignores an optional 'l' or 'L' suffix
         and returns an rbigint."""
         from rpython.rlib.rstring import NumberStringParser, \
             strip_spaces
@@ -291,6 +294,7 @@ class rbigint(object):
     @staticmethod
     @jit.elidable
     def frombytes(s, byteorder, signed):
+        """UNSAFE"""
         if byteorder not in ('big', 'little'):
             raise InvalidEndiannessError()
         if not s:
@@ -331,6 +335,7 @@ class rbigint(object):
 
     @jit.elidable
     def tobytes(self, nbytes, byteorder, signed):
+        """UNSAFE"""
         if byteorder not in ('big', 'little'):
             raise InvalidEndiannessError()
         if not signed and self.sign == -1:
@@ -495,6 +500,7 @@ class rbigint(object):
 
     @jit.elidable
     def eq(self, other):
+        """UNSAFE"""
         if (self.sign != other.sign or
             self.numdigits() != other.numdigits()):
             return False
@@ -509,7 +515,7 @@ class rbigint(object):
 
     @jit.elidable
     def int_eq(self, other):
-        """ eq with int """
+        """UNSAFE eq with int """
         
         if not int_in_valid_range(other):
             # Fallback to Long. 
@@ -528,6 +534,7 @@ class rbigint(object):
 
     @jit.elidable
     def lt(self, other):
+        """UNSAFE"""
         if self.sign > other.sign:
             return False
         if self.sign < other.sign:
@@ -563,7 +570,7 @@ class rbigint(object):
 
     @jit.elidable
     def int_lt(self, other):
-        """ lt where other is an int """
+        """UNSAFE lt where other is an int """
 
         if not int_in_valid_range(other):
             # Fallback to Long.
@@ -622,6 +629,7 @@ class rbigint(object):
 
     @jit.elidable
     def add(self, other):
+        """UNSAFE"""
         if self.sign == 0:
             return other
         if other.sign == 0:
@@ -635,6 +643,7 @@ class rbigint(object):
 
     @jit.elidable
     def int_add(self, other):
+        """UNSAFE"""
         if not int_in_valid_range(other):
             # Fallback to long.
             return self.add(rbigint.fromint(other))
@@ -654,6 +663,7 @@ class rbigint(object):
 
     @jit.elidable
     def sub(self, other):
+        """UNSAFE"""
         if other.sign == 0:
             return self
         elif self.sign == 0:
@@ -667,6 +677,7 @@ class rbigint(object):
 
     @jit.elidable
     def int_sub(self, other):
+        """UNSAFE"""
         if not int_in_valid_range(other):
             # Fallback to long.
             return self.sub(rbigint.fromint(other))
@@ -683,6 +694,7 @@ class rbigint(object):
 
     @jit.elidable
     def mul(self, b):
+        """UNSAFE"""
         asize = self.numdigits()
         bsize = b.numdigits()
 
@@ -726,6 +738,7 @@ class rbigint(object):
 
     @jit.elidable
     def int_mul(self, b):
+        """UNSAFE"""
         if not int_in_valid_range(b):
             # Fallback to long.
             return self.mul(rbigint.fromint(b))
@@ -757,11 +770,13 @@ class rbigint(object):
 
     @jit.elidable
     def truediv(self, other):
+        """UNSAFE"""
         div = _bigint_true_divide(self, other)
         return div
 
     @jit.elidable
     def floordiv(self, other):
+        """UNSAFE"""
         if self.sign == 1 and other.numdigits() == 1 and other.sign == 1:
             digit = other.digit(0)
             if digit == 1:
@@ -778,10 +793,12 @@ class rbigint(object):
         return div
 
     def div(self, other):
+        """UNSAFE"""
         return self.floordiv(other)
 
     @jit.elidable
     def mod(self, other):
+        """UNSAFE"""
         if other.sign == 0:
             raise ZeroDivisionError("long division or modulo by zero")
         if self.sign == 0:
@@ -799,6 +816,7 @@ class rbigint(object):
 
     @jit.elidable
     def int_mod(self, other):
+        """UNSAFE"""
         if other == 0:
             raise ZeroDivisionError("long division or modulo by zero")
         if self.sign == 0:
@@ -842,7 +860,7 @@ class rbigint(object):
 
     @jit.elidable
     def divmod(v, w):
-        """
+        """UNSAFE
         The / and % operators are now defined in terms of divmod().
         The expression a mod b has the value a - b*floor(a/b).
         The _divrem function gives the remainder after division of
@@ -868,6 +886,7 @@ class rbigint(object):
 
     @jit.elidable
     def pow(a, b, c=None):
+        """UNSAFE"""
         negativeOutput = False  # if x<0 return negative output
 
         # 5-ary values.  If the exponent is large enough, table is
@@ -1008,16 +1027,19 @@ class rbigint(object):
 
     @jit.elidable
     def neg(self):
+        """UNSAFE"""
         return rbigint(self._digits, -self.sign, self.size)
 
     @jit.elidable
     def abs(self):
+        """UNSAFE"""
         if self.sign != -1:
             return self
         return rbigint(self._digits, 1, self.size)
 
     @jit.elidable
     def invert(self): #Implement ~x as -(x + 1)
+        """UNSAFE"""
         if self.sign == 0:
             return ONENEGATIVERBIGINT
 
@@ -1027,6 +1049,7 @@ class rbigint(object):
 
     @jit.elidable
     def lshift(self, int_other):
+        """UNSAFE"""
         if int_other < 0:
             raise ValueError("negative shift count")
         elif int_other == 0:
@@ -1064,6 +1087,7 @@ class rbigint(object):
 
     @jit.elidable
     def lqshift(self, int_other):
+        """UNSAFE"""
         " A quicker one with much less checks, int_other is valid and for the most part constant."
         assert int_other > 0
 
@@ -1084,6 +1108,7 @@ class rbigint(object):
 
     @jit.elidable
     def rshift(self, int_other, dont_invert=False):
+        """UNSAFE"""
         if int_other < 0:
             raise ValueError("negative shift count")
         elif int_other == 0:
@@ -1114,6 +1139,7 @@ class rbigint(object):
 
     @jit.elidable
     def abs_rshift_and_mask(self, bigshiftcount, mask):
+        """UNSAFE"""
         assert isinstance(bigshiftcount, r_ulonglong)
         assert mask >= 0
         wordshift = bigshiftcount / SHIFT
@@ -1130,6 +1156,7 @@ class rbigint(object):
 
     @staticmethod
     def from_list_n_bits(list, nbits):
+        """UNSAFE"""
         if len(list) == 0:
             return NULLRBIGINT
 
@@ -1198,6 +1225,7 @@ class rbigint(object):
 
     @jit.elidable
     def log(self, base):
+        """UNSAFE"""
         # base is supposed to be positive or 0.0, which means we use e
         if base == 10.0:
             return _loghelper(math.log10, self)
@@ -1211,6 +1239,7 @@ class rbigint(object):
 
     @not_rpython
     def tolong(self):
+        """UNSAFE"""
         l = 0L
         digits = list(self._digits)
         digits.reverse()
@@ -1220,6 +1249,7 @@ class rbigint(object):
         return l * self.sign
 
     def _normalize(self):
+        """UNSAFE"""
         i = self.numdigits()
 
         while i > 1 and self._digits[i - 1] == NULLDIGIT:
@@ -1236,6 +1266,7 @@ class rbigint(object):
 
     @jit.elidable
     def bit_length(self):
+        """UNSAFE"""
         i = self.numdigits()
         if i == 1 and self._digits[0] == NULLDIGIT:
             return 0
@@ -1279,6 +1310,7 @@ MAX_DIGITS_THAT_CAN_FIT_IN_INT = rbigint.fromint(-sys.maxint - 1).numdigits()
 
 
 def _help_mult(x, y, c):
+    """UNSAFE"""
     """
     Multiply two values, then reduce the result:
     result = X*Y % c.  If c is None, skip the mod.
@@ -1293,6 +1325,7 @@ def _help_mult(x, y, c):
 
 @specialize.argtype(0)
 def digits_from_nonneg_long(l):
+    """UNSAFE"""
     digits = []
     while True:
         digits.append(_store_digit(_mask_digit(l & MASK)))
@@ -1302,6 +1335,7 @@ def digits_from_nonneg_long(l):
 
 @specialize.argtype(0)
 def digits_for_most_neg_long(l):
+    """UNSAFE"""
     # This helper only works if 'l' is the most negative integer of its
     # type, which in base 2 looks like: 1000000..0000
     digits = []
@@ -1318,6 +1352,7 @@ def digits_for_most_neg_long(l):
 
 @specialize.argtype(0)
 def args_from_rarith_int1(x):
+    """UNSAFE"""
     if x > 0:
         return digits_from_nonneg_long(x), 1
     elif x == 0:
@@ -1331,12 +1366,14 @@ def args_from_rarith_int1(x):
 
 @specialize.argtype(0)
 def args_from_rarith_int(x):
+    """UNSAFE"""
     return args_from_rarith_int1(widen(x))
 # ^^^ specialized by the precise type of 'x', which is typically a r_xxx
 #     instance from rlib.rarithmetic
 
 @not_rpython
 def args_from_long(x):
+    """UNSAFE"""
     if x >= 0:
         if x == 0:
             return [NULLDIGIT], 0
@@ -1346,7 +1383,8 @@ def args_from_long(x):
         return digits_from_nonneg_long(-x), -1
 
 def _x_add(a, b):
-    """ Add the absolute values of two bigint integers. """
+    """UNSAFE
+    Add the absolute values of two bigint integers. """
     size_a = a.numdigits()
     size_b = b.numdigits()
 
@@ -1372,7 +1410,8 @@ def _x_add(a, b):
     return z
 
 def _x_int_add(a, b):
-    """ Add the absolute values of one bigint and one integer. """
+    """UNSAFE
+    Add the absolute values of one bigint and one integer. """
     size_a = a.numdigits()
 
     z = rbigint([NULLDIGIT] * (size_a + 1), 1)
@@ -1391,7 +1430,8 @@ def _x_int_add(a, b):
     return z
 
 def _x_sub(a, b):
-    """ Subtract the absolute values of two integers. """
+    """UNSAFE
+    Subtract the absolute values of two integers. """
 
     size_a = a.numdigits()
     size_b = b.numdigits()
@@ -1437,7 +1477,8 @@ def _x_sub(a, b):
     return z
 
 def _x_int_sub(a, b):
-    """ Subtract the absolute values of two integers. """
+    """UNSAFE
+    Subtract the absolute values of two integers. """
 
     size_a = a.numdigits()
 
@@ -1479,7 +1520,7 @@ for x in range(SHIFT-1):
     ptwotable[r_longlong(-2 << x)] = x+1
 
 def _x_mul(a, b, digit=0):
-    """
+    """UNSAFE
     Grade school multiplication, ignoring the signs.
     Returns the absolute value of the product, or None if error.
     """
@@ -1590,7 +1631,7 @@ def _x_mul(a, b, digit=0):
     return z
 
 def _kmul_split(n, size):
-    """
+    """UNSAFE
     A helper for Karatsuba multiplication (k_mul).
     Takes a bigint "n" and an integer "size" representing the place to
     split, and sets low and high such that abs(n) == (high << size) + low,
@@ -1608,7 +1649,7 @@ def _kmul_split(n, size):
     return hi, lo
 
 def _k_mul(a, b):
-    """
+    """UNSAFE
     Karatsuba multiplication.  Ignores the input signs, and returns the
     absolute value of the product (or raises if error).
     See Knuth Vol. 2 Chapter 4.3.3 (Pp. 294-295).
@@ -1755,7 +1796,7 @@ ah*bh and al*bl too.
 def _k_lopsided_mul(a, b):
     # Not in use anymore, only account for like 1% performance. Perhaps if we
     # Got rid of the extra list allocation this would be more effective.
-    """
+    """UNSAFE
     b has at least twice the digits of a, and a is big enough that Karatsuba
     would pay off *if* the inputs had balanced sizes.  View b as a sequence
     of slices, each with a->ob_size digits, and multiply the slices by a,
@@ -1805,7 +1846,7 @@ def _k_lopsided_mul(a, b):
     return ret
 
 def _inplace_divrem1(pout, pin, n):
-    """
+    """UNSAFE
     Divide bigint pin by non-zero digit n, storing quotient
     in pout, and returning the remainder. It's OK for pin == pout on entry.
     """
@@ -1821,7 +1862,7 @@ def _inplace_divrem1(pout, pin, n):
     return rffi.cast(lltype.Signed, rem)
 
 def _divrem1(a, n):
-    """
+    """UNSAFE
     Divide a bigint integer by a digit, returning both the quotient
     and the remainder as a tuple.
     The sign of a is ignored; n should not be zero.
@@ -1835,8 +1876,7 @@ def _divrem1(a, n):
     return z, rem
 
 def _v_iadd(x, xofs, m, y, n):
-    """
-    x and y are rbigints, m >= n required.  x.digits[0:n] is modified in place,
+    """UNSAFE x and y are rbigints, m >= n required.  x.digits[0:n] is modified in place,
     by adding y.digits[0:m] to it.  Carries are propagated as far as
     x[m-1], and the remaining carry (0 or 1) is returned.
     Python adaptation: x is addressed relative to xofs!
@@ -1860,8 +1900,7 @@ def _v_iadd(x, xofs, m, y, n):
     return carry
 
 def _v_isub(x, xofs, m, y, n):
-    """
-    x and y are rbigints, m >= n required.  x.digits[0:n] is modified in place,
+    """UNSAFE x and y are rbigints, m >= n required.  x.digits[0:n] is modified in place,
     by substracting y.digits[0:m] to it. Borrows are propagated as
     far as x[m-1], and the remaining borrow (0 or 1) is returned.
     Python adaptation: x is addressed relative to xofs!
@@ -1888,7 +1927,7 @@ def _v_isub(x, xofs, m, y, n):
 
 @specialize.argtype(2)
 def _muladd1(a, n, extra=0):
-    """Multiply by a single digit and add a single digit, ignoring the sign.
+    """UNSAFE Multiply by a single digit and add a single digit, ignoring the sign.
     """
 
     size_a = a.numdigits()
@@ -1906,7 +1945,7 @@ def _muladd1(a, n, extra=0):
     return z
 
 def _v_lshift(z, a, m, d):
-    """ Shift digit vector a[0:m] d bits left, with 0 <= d < SHIFT. Put
+    """UNSAFE Shift digit vector a[0:m] d bits left, with 0 <= d < SHIFT. Put
         * result in z[0:m], and return the d bits shifted out of the top.
     """
 
@@ -1922,7 +1961,7 @@ def _v_lshift(z, a, m, d):
     return carry
 
 def _v_rshift(z, a, m, d):
-    """ Shift digit vector a[0:m] d bits right, with 0 <= d < PyLong_SHIFT. Put
+    """UNSAFE Shift digit vector a[0:m] d bits right, with 0 <= d < PyLong_SHIFT. Put
         * result in z[0:m], and return the d bits shifted out of the bottom.
     """
 
@@ -1941,7 +1980,7 @@ def _v_rshift(z, a, m, d):
     return carry
 
 def _x_divrem(v1, w1):
-    """ Unsigned bigint division with remainder -- the algorithm """
+    """UNSAFE Unsigned bigint division with remainder -- the algorithm """
     size_v = v1.numdigits()
     size_w = w1.numdigits()
     assert size_v >= size_w and size_w > 1
@@ -2031,7 +2070,7 @@ def _x_divrem(v1, w1):
     return a, w
 
 def _divrem(a, b):
-    """ Long division with remainder, top-level routine """
+    """UNSAFE Long division with remainder, top-level routine """
     size_a = a.numdigits()
     size_b = b.numdigits()
 
@@ -2061,7 +2100,7 @@ def _divrem(a, b):
 # ______________ conversions to double _______________
 
 def _AsScaledDouble(v):
-    """
+    """ UNSAFE
     NBITS_WANTED should be > the number of bits in a double's precision,
     but small enough so that 2**NBITS_WANTED is within the normal double
     range.  nbitsneeded is set to 1 less than that because the most-significant
@@ -2108,7 +2147,7 @@ def _AsScaledDouble(v):
 
 @jit.dont_look_inside
 def _AsDouble(n):
-    """ Get a C double from a bigint object. """
+    """UNSAFE Get a C double from a bigint object. """
     # This is a "correctly-rounded" version from Python 2.7.
     #
     from rpython.rlib import rfloat
@@ -2158,7 +2197,7 @@ def _AsDouble(n):
 
 @specialize.arg(0)
 def _loghelper(func, arg):
-    """
+    """UNSAFE
     A decent logarithm is easy to compute even for huge bigints, but libm can't
     do that by itself -- loghelper can.  func is log or log10.
     Note that overflow isn't possible:  a bigint can contain
@@ -2184,6 +2223,7 @@ BitLengthTable = ''.join(map(chr, [
     5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5]))
 
 def bits_in_digit(d):
+    """UNSAFE"""
     # returns the unique integer k such that 2**(k-1) <= d <
     # 2**k if d is nonzero, else 0.
     d_bits = 0
@@ -2194,14 +2234,17 @@ def bits_in_digit(d):
     return d_bits
 
 def _truediv_result(result, negate):
+    """UNSAFE"""
     if negate:
         result = -result
     return result
 
 def _truediv_overflow():
+    """UNSAFE"""
     raise OverflowError("integer division result too large for a float")
 
 def _bigint_true_divide(a, b):
+    """UNSAFE"""
     # A longish method to obtain the floating-point result with as much
     # precision as theoretically possible.  The code is almost directly
     # copied from CPython.  See there (Objects/longobject.c,
@@ -2332,6 +2375,7 @@ BASE10 = '0123456789'
 BASE16 = '0123456789abcdef'
 
 def _format_base2_notzero(a, digits, prefix='', suffix=''):
+        """UNSAFE"""
         base = len(digits)
         # JRH: special case for power-of-2 bases
         accum = 0
@@ -2389,6 +2433,7 @@ def _format_base2_notzero(a, digits, prefix='', suffix=''):
 
 class _PartsCache(object):
     def __init__(self):
+        """UNSAFE"""
         # 36 - 3, because bases 0, 1 make no sense
         # and 2 is handled differently
         self.parts_cache = [None] * 34
@@ -2403,6 +2448,7 @@ class _PartsCache(object):
             self.mindigits[i] = mindigits
 
     def get_cached_parts(self, base):
+        """UNSAFE"""
         index = base - 3
         res = self.parts_cache[index]
         if res is None:
@@ -2413,11 +2459,13 @@ class _PartsCache(object):
         return res
 
     def get_mindigits(self, base):
+        """UNSAFE"""
         return self.mindigits[base - 3]
 
 _parts_cache = _PartsCache()
 
 def _format_int_general(val, digits):
+    """UNSAFE"""
     base = len(digits)
     out = []
     while val:
@@ -2427,10 +2475,12 @@ def _format_int_general(val, digits):
     return "".join(out)
 
 def _format_int10(val, digits):
+    """UNSAFE"""
     return str(val)
 
 @specialize.arg(7)
 def _format_recursive(x, i, output, pts, digits, size_prefix, mindigits, _format_int):
+    """UNSAFE"""
     # bottomed out with min_digit sized pieces
     # use str of ints
     if i < 0:
@@ -2449,6 +2499,7 @@ def _format_recursive(x, i, output, pts, digits, size_prefix, mindigits, _format
         _format_recursive(bot, i-1, output, pts, digits, size_prefix, mindigits, _format_int)
 
 def _format(x, digits, prefix='', suffix=''):
+    """UNSAFE"""
     if x.sign == 0:
         return prefix + "0" + suffix
     base = len(digits)
@@ -2499,7 +2550,7 @@ def _format(x, digits, prefix='', suffix=''):
 
 @specialize.arg(1)
 def _bitwise(a, op, b): # '&', '|', '^'
-    """ Bitwise and/or/xor operations """
+    """UNSAFE Bitwise and/or/xor operations """
 
     if a.sign < 0:
         a = a.invert()
@@ -2582,7 +2633,7 @@ def _bitwise(a, op, b): # '&', '|', '^'
 
 @specialize.arg(1)
 def _int_bitwise(a, op, b): # '&', '|', '^'
-    """ Bitwise and/or/xor operations """
+    """UNSAFE Bitwise and/or/xor operations """
 
     if not int_in_valid_range(b):
         # Fallback to long.
@@ -2668,8 +2719,7 @@ ULONGLONG_BOUND = r_ulonglong(1L << (r_longlong.BITS-1))
 LONGLONG_MIN = r_longlong(-(1L << (r_longlong.BITS-1)))
 
 def _AsLongLong(v):
-    """
-    Get a r_longlong integer from a bigint object.
+    """UNSAFE Get a r_longlong integer from a bigint object.
     Raises OverflowError if overflow occurs.
     """
     x = _AsULonglong_ignore_sign(v)
@@ -2686,6 +2736,7 @@ def _AsLongLong(v):
     return x
 
 def _AsULonglong_ignore_sign(v):
+    """UNSAFE"""
     x = r_ulonglong(0)
     i = v.numdigits() - 1
     while i >= 0:
@@ -2698,7 +2749,9 @@ def _AsULonglong_ignore_sign(v):
     return x
 
 def make_unsigned_mask_conversion(T):
+    """UNSAFE"""
     def _As_unsigned_mask(v):
+        """UNSAFE"""
         x = T(0)
         i = v.numdigits() - 1
         while i >= 0:
@@ -2713,6 +2766,7 @@ _AsULonglong_mask = make_unsigned_mask_conversion(r_ulonglong)
 _AsUInt_mask = make_unsigned_mask_conversion(r_uint)
 
 def _hash(v):
+    """UNSAFE"""
     # This is designed so that Python ints and longs with the
     # same value hash to the same value, otherwise comparisons
     # of mapping keys will turn out weird.  Moreover, purely
@@ -2741,6 +2795,7 @@ def _hash(v):
 # a few internal helpers
 
 def digits_max_for_base(base):
+    """UNSAFE"""
     dec_per_digit = 1
     while base ** dec_per_digit < MASK:
         dec_per_digit += 1
@@ -2752,6 +2807,7 @@ DEC_MAX = digits_max_for_base(10)
 assert DEC_MAX == BASE_MAX[10]
 
 def _decimalstr_to_bigint(s):
+    """UNSAFE"""
     # a string that has been already parsed to be decimal and valid,
     # is turned into a bigint
     p = 0
@@ -2780,6 +2836,7 @@ def _decimalstr_to_bigint(s):
     return a
 
 def parse_digit_string(parser):
+    """UNSAFE"""
     # helper for fromstr
     base = parser.base
     if (base & (base - 1)) == 0:
@@ -2802,6 +2859,7 @@ def parse_digit_string(parser):
     return a
 
 def parse_string_from_binary_base(parser):
+    """UNSAFE"""
     # The point to this routine is that it takes time linear in the number of
     # string characters.
     from rpython.rlib.rstring import ParseStringError

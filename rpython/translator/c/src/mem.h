@@ -57,7 +57,7 @@ static int count_mallocs=0, count_frees=0;
 
 /*** tracking raw mallocs and frees for debugging ***/
 
-#ifndef RPY_ASSERT
+#ifndef PYPY_DEBUG_ALLOC
 
 #  define OP_TRACK_ALLOC_START(addr, r)   /* nothing */
 #  define OP_TRACK_ALLOC_STOP(addr, r)    /* nothing */
@@ -204,7 +204,7 @@ RPY_EXTERN long pypy_asm_stackwalk(void*, void*);
 /* marker for trackgcroot.py, and inhibits tail calls */
 #define pypy_asm_stack_bottom() { asm volatile ("/* GC_STACK_BOTTOM */" : : : \
                                   "memory"); pypy_check_stack_count(); }
-#ifdef RPY_ASSERT
+#ifdef PYPY_DEBUG_ALLOC
 RPY_EXTERN void pypy_check_stack_count(void);
 #else
 static void pypy_check_stack_count(void) { }

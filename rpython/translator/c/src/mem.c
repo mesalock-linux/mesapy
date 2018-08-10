@@ -5,7 +5,7 @@
 
 /***  tracking raw mallocs and frees for debugging ***/
 
-#ifdef RPY_ASSERT
+#ifdef PYPY_DEBUG_ALLOC
 
 struct pypy_debug_alloc_s {
   struct pypy_debug_alloc_s *next;
