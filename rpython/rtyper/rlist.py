@@ -265,7 +265,6 @@ class __extend__(pairtype(AbstractBaseListRepr, Repr)):
 class __extend__(pairtype(AbstractBaseListRepr, IntegerRepr)):
 
     def rtype_getitem((r_lst, r_int), hop, checkidx=False):
-        # ll_assert(hop.unsafe == False, "unsafe is true")
         v_lst, v_index = hop.inputargs(r_lst, Signed)
         if checkidx:
             hop.exception_is_here()
@@ -706,9 +705,6 @@ def ll_pop_nonneg(func, l, index):
 ll_pop_nonneg.oopspec = 'list.pop(l, index)'
 
 def ll_pop_nonneg_unsafe(func, l, index):
-    # if func is dum_checkidx:
-    #     if index >= l.ll_length():
-    #         raise IndexError
     res = l.ll_getitem_fast_unsafe(index)
     ll_delitem_nonneg_unsafe(dum_nocheck, l, index)
     return res
@@ -730,8 +726,6 @@ def ll_pop_default(func, l):
 
 def ll_pop_default_unsafe(func, l):
     length = l.ll_length()
-    # if func is dum_checkidx and (length == 0):
-    #     raise IndexError
     index = length - 1
     newlength = index
     res = l.ll_getitem_fast_unsafe(index)
@@ -763,8 +757,6 @@ ll_pop_zero.oopspec = 'list.pop(l, 0)'
 
 def ll_pop_zero_unsafe(func, l):
     length = l.ll_length()
-    # if func is dum_checkidx and (length == 0):
-    #     raise IndexError
     newlength = length - 1
     res = l.ll_getitem_fast_unsafe(0)
     j = 0
@@ -798,9 +790,6 @@ def ll_pop_unsafe(func, l, index):
     length = l.ll_length()
     if index < 0:
         index += length
-    # if func is dum_checkidx:
-    #     if index < 0 or index >= length:
-    #         raise IndexError
     res = l.ll_getitem_fast_unsafe(index)
     ll_delitem_nonneg_unsafe(dum_nocheck, l, index)
     return res
@@ -839,9 +828,6 @@ ll_getitem_nonneg._always_inline_ = True
 # no oopspec -- the function is inlined by the JIT
 
 def ll_getitem_nonneg_unsafe(func, basegetitem, l, index):
-    # if func is dum_checkidx:
-    #     if index >= l.ll_length():
-    #         raise IndexError
     return basegetitem(l, index)
 ll_getitem_nonneg_unsafe._always_inline_ = True
 # no oopspec -- the function is inlined by the JIT
@@ -867,16 +853,6 @@ def ll_getitem(func, basegetitem, l, index):
 # no oopspec -- the function is inlined by the JIT
 
 def ll_getitem_unsafe(func, basegetitem, l, index):
-    # if func is dum_checkidx:
-    #     length = l.ll_length()    # common case: 0 <= index < length
-    #     if r_uint(index) >= r_uint(length):
-    #         # Failed, so either (-length <= index < 0), or we have to raise
-    #         # IndexError.  First add 'length' to get the final index, then
-    #         # check that we now have (0 <= index < length).
-    #         index = r_uint(index) + r_uint(length)
-    #         if index >= r_uint(length):
-    #             raise IndexError
-    #         index = intmask(index)
     return basegetitem(l, index)
 # no oopspec -- the function is inlined by the JIT
 
@@ -907,9 +883,6 @@ ll_setitem_nonneg._always_inline_ = True
 # no oopspec -- the function is inlined by the JIT
 
 def ll_setitem_nonneg_unsafe(func, l, index, newitem):
-    # if func is dum_checkidx:
-    #     if index >= l.ll_length():
-    #         raise IndexError
     l.ll_setitem_fast_unsafe(index, newitem)
 ll_setitem_nonneg_unsafe._always_inline_ = True
 # no oopspec -- the function is inlined by the JIT
@@ -930,13 +903,6 @@ def ll_setitem(func, l, index, newitem):
 # no oopspec -- the function is inlined by the JIT
 
 def ll_setitem_unsafe(func, l, index, newitem):
-    # if func is dum_checkidx:
-    #     length = l.ll_length()
-    #     if r_uint(index) >= r_uint(length):   # see comments in ll_getitem().
-    #         index = r_uint(index) + r_uint(length)
-    #         if index >= r_uint(length):
-    #             raise IndexError
-    #         index = intmask(index)
     l.ll_setitem_fast_unsafe(index, newitem)
 # no oopspec -- the function is inlined by the JIT
 
@@ -966,9 +932,6 @@ ll_delitem_nonneg.oopspec = 'list.delitem(l, index)'
 @enforceargs(None, None, int)
 def ll_delitem_nonneg_unsafe(func, l, index):
     length = l.ll_length()
-    # if func is dum_checkidx:
-    #     if index >= length:
-    #         raise IndexError
     newlength = length - 1
     j = index
     j1 = j+1
@@ -999,13 +962,6 @@ def ll_delitem(func, l, index):
 # no oopspec -- the function is inlined by the JIT
 
 def ll_delitem_unsafe(func, l, index):
-    # if func is dum_checkidx:
-    #     length = l.ll_length()
-    #     if r_uint(index) >= r_uint(length):   # see comments in ll_getitem().
-    #         index = r_uint(index) + r_uint(length)
-    #         if index >= r_uint(length):
-    #             raise IndexError
-    #         index = intmask(index)
     ll_delitem_nonneg_unsafe(dum_nocheck, l, index)
 # no oopspec -- the function is inlined by the JIT
 
