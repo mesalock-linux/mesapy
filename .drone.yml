@@ -5,7 +5,7 @@ pipeline:
     commands:
       - export PYPY_USESSION_DIR=$(pwd)/pypy-usession-dir
       - mkdir pypy-usession-dir
-      - make pypy-c
+      - /bin/bash -c "make pypy-c"
   package:
     image: mesalocklinux/build-mesalock-linux
     commands:
