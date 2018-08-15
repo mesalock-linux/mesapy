@@ -120,7 +120,17 @@ pick an interesting one and improve MesaPy and send us pull requests on the
 GitHub. If you find it a little difficult, you can also talk to our maintainers
 for help.
 
-## Maintainers
+## Acknowledgment
+
+The MesaPy project would not have been possible without the following
+high-quality open source projects.
+
+  - PyPy: [PyPy](http://pypy.org/) is a fast, compliant alternative
+    implementation of the Python language, which provides distinct features --
+    speed, memory usage, compatibility, and stackless. Thanks to these amazing
+    [maintainers](https://pypy.org/people.html).
+
+## Maintainer
 
 Thanks to our maintainers to contribute this projects. Feel free to submit issues
 on GitHub or send us email. We are very glad to help out.
