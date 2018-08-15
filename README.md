@@ -147,4 +147,4 @@ on GitHub or send us email. We are very glad to help out.
 ## License
 
 MesaPy is provided under the 3-Clause BSD license. MesaPy is built upon PyPy and
-other open source projects, see the LICENSE file for detailed licenses.
+other open source projects, see the [LICENSE](LICENSE) file for detailed licenses.
