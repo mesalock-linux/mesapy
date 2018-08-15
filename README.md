@@ -43,6 +43,21 @@ features of MesaPy:
 More details about each features, roadmap, and building process can be found here:
 [https://docs.mesapy.org/](https://docs.mesapy.org/)
 
+## Design
+
+MesaPy enhances PyPy in security. Compared to CPython (as known as Python),
+MesaPy provides a comprehensive security protection. Following figure illustrates
+MesaPy's design and implementation. Blocks highlighted in read means unsafe
+components, while blue blocks represent safe components. MesaPy aims to
+protect Python runtime by our security hardening.
+
+![Design](img/design.png)
+
+By using formal verification, type system enhancement, and memory safe
+programming language, MesaPy mitigates potential memory safety issues of both
+CPython and PyPy. MesaPy's goal is to provide a fast and memory safe Python
+runtime.
+
 ## Getting Started
 
 Basically, you can use MesaPy as any other Python implementations (e.g., CPython
@@ -102,6 +117,17 @@ report to present our findings.
 The detailed instructions and additional mocks are also included in each tool's
 separate directory. You can easily reproduce the verification process. You are
 welcome to contribute mocks and help us to verify files in the TODO list.
+
+## Benchmark
+
+We used 19 Python scripts to run our performance evaluation. Each script is
+executed in ten times for MesaPy, PyPy 6.0.0, and Python 2.7.12 respectively.
+The benchmarks are shown in the following figure.
+
+![Benchmarks](img/benchmarks.png)
+
+Thanks to JIT and efficient GC mechanism, MesaPy can achieve 10x plus speedup
+compared to Python 2.7.12.
 
 ## Contributing
 
