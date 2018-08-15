@@ -51,7 +51,9 @@ MesaPy's design and implementation. Blocks highlighted in read means unsafe
 components, while blue blocks represent safe components. MesaPy aims to
 protect Python runtime by our security hardening.
 
-<img src="img/design.png" width="400"/>
+<p align="center">
+<img src="img/design.png" width="500"/>
+</p>
 
 By using formal verification, type system enhancement, and memory safe
 programming language, MesaPy mitigates potential memory safety issues of both
@@ -124,7 +126,9 @@ We used 19 Python scripts to run our performance evaluation. Each script is
 executed in ten times for MesaPy, PyPy 6.0.0, and Python 2.7.12 respectively.
 The benchmarks are shown in the following figure.
 
-<img src="img/benchmarks.png" width="400"/>
+<p align="center">
+<img src="img/benchmarks.png" width="500"/>
+</p>
 
 Thanks to JIT and efficient GC mechanism, MesaPy can achieve 10x plus speedup
 compared to Python 2.7.12.
