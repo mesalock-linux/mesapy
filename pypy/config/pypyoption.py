@@ -34,7 +34,7 @@ working_modules.update([
     "select", "_lsprof", "signal", "_rawffi", "termios",
     "zlib", "struct", "_md5", "_sha",
     "cStringIO", "thread", "itertools", "_ssl", "cpyext", "array",
-    "_multiprocessing", '_warnings', "_collections",
+    "binascii", "_multiprocessing", '_warnings', "_collections",
     "_multibytecodec", "micronumpy", "_continuation", "_cffi_backend",
     "_csv", "_cppyy", "_pypyjson", "_jitlog"
 ])

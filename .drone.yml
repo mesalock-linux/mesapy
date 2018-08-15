@@ -3,6 +3,7 @@ pipeline:
     image: mesalocklinux/build-mesalock-linux
     pull: true
     commands:
+      - git checkout -b temp-branch-name # make a temp branch name to work around a issue in building process
       - export PYPY_USESSION_DIR=$(pwd)/pypy-usession-dir
       - mkdir pypy-usession-dir
       - make pypy-c

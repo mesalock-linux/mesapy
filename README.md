@@ -14,7 +14,7 @@ in the trusted execution environment.
 We achieve the memory-safety promise through various methods: hardening
 RPython's type system (RPython is the language for writing PyPy), modifying
 PyPy/RPython's libraries, and verifying the RPython's libraries as well as its
-interpreter/JIT backend. Overall, there are four most notable security
+translator/JIT backend. Overall, there are four most notable security
 features of MesaPy:
 
 - **Memory safety**: To provide a memory-safe runtime, MesaPy replaces external
@@ -29,7 +29,7 @@ features of MesaPy:
   to avoid arbitrarily list read/write during PyPy's implementation.
 
 - **Formal verification**: Some code in RPython's libraries and its
-  interpreter/JIT backend are still written in C, which may contain potential
+  translator/JIT backend are still written in C, which may contain potential
   memory bugs. To prove the memory safety of RPython, we aim to formally
   verify its libraries and backend written in C using state-of-the-art
   verification tools.
@@ -120,7 +120,17 @@ pick an interesting one and improve MesaPy and send us pull requests on the
 GitHub. If you find it a little difficult, you can also talk to our maintainers
 for help.
 
-## Maintainers
+## Acknowledgment
+
+The MesaPy project would not have been possible without the following
+high-quality open source projects.
+
+  - PyPy: [PyPy](http://pypy.org/) is a fast, compliant alternative
+    implementation of the Python language, which provides distinct features --
+    speed, memory usage, compatibility, and stackless. Thanks to these amazing
+    [maintainers](https://pypy.org/people.html).
+
+## Maintainer
 
 Thanks to our maintainers to contribute this projects. Feel free to submit issues
 on GitHub or send us email. We are very glad to help out.
@@ -137,4 +147,4 @@ on GitHub or send us email. We are very glad to help out.
 ## License
 
 MesaPy is provided under the 3-Clause BSD license. MesaPy is built upon PyPy and
-other open source projects, see the LICENSE file for detailed licenses.
+other open source projects, see the [LICENSE](LICENSE) file for detailed licenses.

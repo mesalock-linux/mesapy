@@ -30,28 +30,28 @@ This table briefly illustrate our verification results. "sat" means that there e
 the violation of rules the memory safety rules. "unsat" means that no violation
 of memory safety checking.
 
-| Filename        | Verified Result     |   LOC |
-| -------------   | :-----------------: | ----: |
-| `asm.c`         | unsat               |    13 |
-| `asm_gcc_x86.c` | unsat               |    33 |
-| `cygwin_wait.c` | unsat               |    59 |
-| `asm_gcc_x86.c` | unsat               |    33 |
-| `asm_msvc.c`    | unsat               |    26 |
-| `debug_print.c` | sat                 |   274 |
-| `dtoa.c`        | unsat               |  3006 |
-| `entrypoint.c`  | unsat               |   130 |
-| `exception.c`   | unsat               |    45 |
-| `instrument.c`  | unsat               |    76 |
-| `int.c`         | unsat               |    48 |
-| `ll_strtod.c`   | sat                 |   145 |
-| `mem.c`         | sat                 |   178 |
-| `profiling.c`   | sat                 |    73 |
-| `rtyper.c`      | sat                 |    38 |
-| `signals.c`     | sat                 |   206 |
-| `stack.c`       | sat                 |    66 |
-| `support.c`     | sat                 |    27 |
-| `thread.c`      | sat                 |    22 |
-| `threadlocal.c` | sat                 |   273 |
+| Filename        |        Result       |   LOC |       Verified    |
+| -------------   | :-----------------: | ----: | -----------------:|
+| `asm.c`         | unsat               |    13 | :heavy_check_mark:|
+| `asm_gcc_x86.c` | unsat               |    33 | :heavy_check_mark:|
+| `cygwin_wait.c` | unsat               |    59 | :heavy_check_mark:|
+| `asm_gcc_x86.c` | unsat               |    33 | :heavy_check_mark:|
+| `asm_msvc.c`    | unsat               |    26 | :heavy_check_mark:|
+| `debug_print.c` | sat                 |   274 | :x:               |
+| `dtoa.c`        | unsat               |  3006 | :heavy_check_mark:|
+| `entrypoint.c`  | unsat               |   130 | :heavy_check_mark:|
+| `exception.c`   | unsat               |    45 | :heavy_check_mark:|
+| `instrument.c`  | unsat               |    76 | :heavy_check_mark:|
+| `int.c`         | unsat               |    48 | :heavy_check_mark:|
+| `ll_strtod.c`   | sat                 |   145 | :x:               |
+| `mem.c`         | sat                 |   178 | :x:               |
+| `profiling.c`   | sat                 |    73 | :x:               |
+| `rtyper.c`      | sat                 |    38 | :x:               |
+| `signals.c`     | sat                 |   206 | :x:               |
+| `stack.c`       | sat                 |    66 | :x:               |
+| `support.c`     | sat                 |    27 | :x:               |
+| `thread.c`      | sat                 |    22 | :x:               |
+| `threadlocal.c` | sat                 |   273 | :x:               |
 
 ### To Do List
 
