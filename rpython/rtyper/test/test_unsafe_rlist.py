@@ -56,14 +56,14 @@ class BaseTestListImpl:
     def test_rlist_slice(self):
         l = self.sample_list()
         LIST = typeOf(l).TO
-        self.check_list(ll_listslice_startonly(LIST, l, 0), [42, 43, 44, 45])
-        self.check_list(ll_listslice_startonly(LIST, l, 1), [43, 44, 45])
-        self.check_list(ll_listslice_startonly(LIST, l, 2), [44, 45])
-        self.check_list(ll_listslice_startonly(LIST, l, 3), [45])
-        self.check_list(ll_listslice_startonly(LIST, l, 4), [])
+        self.check_list(ll_listslice_startonly_unsafe(LIST, l, 0), [42, 43, 44, 45])
+        self.check_list(ll_listslice_startonly_unsafe(LIST, l, 1), [43, 44, 45])
+        self.check_list(ll_listslice_startonly_unsafe(LIST, l, 2), [44, 45])
+        self.check_list(ll_listslice_startonly_unsafe(LIST, l, 3), [45])
+        self.check_list(ll_listslice_startonly_unsafe(LIST, l, 4), [])
         for start in range(5):
             for stop in range(start, 8):
-                self.check_list(ll_listslice_startstop(LIST, l, start, stop),
+                self.check_list(ll_listslice_startstop_unsafe(LIST, l, start, stop),
                                 [42, 43, 44, 45][start:stop])
 
     def test_rlist_setslice(self):
@@ -77,7 +77,7 @@ class BaseTestListImpl:
                     expected[i] = n
                     ll_setitem_unsafe(l2, i, n)
                     n += 1
-                l2 = ll_listslice_startstop(typeOf(l2).TO, l2, start, stop)
+                l2 = ll_listslice_startstop_unsafe(typeOf(l2).TO, l2, start, stop)
                 ll_listsetslice(l1, start, stop, l2)
                 self.check_list(l1, expected)
 
@@ -99,7 +99,7 @@ class TestListImpl(BaseTestListImpl):
         ll_setitem_unsafe(l, 0, 42)
         ll_setitem_unsafe(l, -2, 43)
         ll_setitem_nonneg_unsafe(l, 2, 44)
-        ll_append(l, 45)
+        ll_append_unsafe(l, 45)
         return l
 
     def test_rlist_del(self):
@@ -124,14 +124,14 @@ class TestListImpl(BaseTestListImpl):
 
     def test_rlist_delslice(self):
         l = self.sample_list()
-        ll_listdelslice_startonly(l, 3)
+        ll_listdelslice_startonly_unsafe(l, 3)
         self.check_list(l, [42, 43, 44])
-        ll_listdelslice_startonly(l, 0)
+        ll_listdelslice_startonly_unsafe(l, 0)
         self.check_list(l, [])
         for start in range(5):
             for stop in range(start, 8):
                 l = self.sample_list()
-                ll_listdelslice_startstop(l, start, stop)
+                ll_listdelslice_startstop_unsafe(l, start, stop)
                 expected = [42, 43, 44, 45]
                 del expected[start:stop]
                 self.check_list(l, expected)
@@ -1613,17 +1613,16 @@ class TestRlist(BaseRtypingTest):
                 total += ord(c)
             return total
         #
-        prev = rlist.ll_getitem_foldable_nonneg
+        prev = rlist.ll_getitem_foldable_nonneg_unsafe
         try:
             def seen_ok(l, index):
                 if index == 5:
                     raise KeyError     # expected case
                 return prev(l, index)
-            rlist.ll_getitem_foldable_nonneg = seen_ok
-            e = py.test.raises(LLException, self.interpret, dummyfn, [])
-            assert 'KeyError' in str(e.value)
+            rlist.ll_getitem_foldable_nonneg_unsafe = seen_ok
+            self.interpret(dummyfn, [])
         finally:
-            rlist.ll_getitem_foldable_nonneg = prev
+            rlist.ll_getitem_foldable_nonneg_unsafe = prev
 
     def test_iterate_over_immutable_list_quasiimmut_attr(self):
         from rpython.rtyper import rlist
@@ -1639,17 +1638,16 @@ class TestRlist(BaseRtypingTest):
                 total += ord(c)
             return total
         #
-        prev = rlist.ll_getitem_foldable_nonneg
+        prev = rlist.ll_getitem_foldable_nonneg_unsafe
         try:
             def seen_ok(l, index):
                 if index == 5:
                     raise KeyError     # expected case
                 return prev(l, index)
-            rlist.ll_getitem_foldable_nonneg = seen_ok
-            e = py.test.raises(LLException, self.interpret, dummyfn, [])
-            assert 'KeyError' in str(e.value)
+            rlist.ll_getitem_foldable_nonneg_unsafe = seen_ok
+            self.interpret(dummyfn, [])
         finally:
-            rlist.ll_getitem_foldable_nonneg = prev
+            rlist.ll_getitem_foldable_nonneg_unsafe = prev
 
     def test_iterate_over_mutable_list(self):
         from rpython.rtyper import rlist
@@ -1663,17 +1661,17 @@ class TestRlist(BaseRtypingTest):
             lst[0] = 'x'
             return total
         #
-        prev = rlist.ll_getitem_foldable_nonneg
+        prev = rlist.ll_getitem_foldable_nonneg_unsafe
         try:
             def seen_ok(l, index):
                 if index == 5:
                     raise KeyError     # expected case
                 return prev(l, index)
-            rlist.ll_getitem_foldable_nonneg = seen_ok
+            rlist.ll_getitem_foldable_nonneg_unsafe = seen_ok
             res = self.interpret(dummyfn, [])
             assert res == sum(map(ord, 'abcdef'))
         finally:
-            rlist.ll_getitem_foldable_nonneg = prev
+            rlist.ll_getitem_foldable_nonneg_unsafe = prev
 
     def test_extend_was_not_overallocating(self):
         from rpython.rlib import rgc
