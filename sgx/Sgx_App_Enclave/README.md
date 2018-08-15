@@ -5,11 +5,15 @@ How to Build/Execute your own Python Code
 * Download SGX Driver, SGX PSW, SGX SDK from https://download.01.org/intel-sgx/linux-2.2/ubuntu64-server/, Install them. 
 #### 2. Install pypy and libffi for your machine.
 * Download pypy by using "sudo apt-get install" command in Linux machine.
+>* sudo apt-get install pypy-dev
 * Download libffi from https://github.com/libffi/libffi, Build libffi.a following the instructions. 
 ####Notice:You will find library under libffi/x86_64-unknown-linux-gnu/.libs/libffi.a 
 #### 3. Download pypy package provided by us.
 * Download MesaPy from our github MesaPy, choose sgx branch.
+>* git clone -b sgx git@github.com:mesalock-linux/mesapy.git
 * Download MesaPy from our github MesaPy, choose mesapy2.7 branch.
+>* git clone -b mesapy2.7 --recursive https://github.com/mesalock-linux/mesapy.git
+>* make pypy-c
 #### 4. Build project following the detail instructions we provide below:
 * Build libpypy-c.a by using the pypy source code in MesaPy sgx branch. 
 >* Go into mesapy/pypy/goal directory
