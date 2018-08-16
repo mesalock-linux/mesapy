@@ -76,6 +76,8 @@ by MesaLock Linux and run `make pypy-c`. The detailed steps are explained in the
 [documentation](https://docs.mesapy.org/building-from-source.html).
 
 ```
+$ git clone --recursive git@github.com:mesalock-linux/mesapy.git # recursively clone mesapy and its submodules
+$ cd mesapy
 $ docker run --rm -it -v$(pwd):/mesapy -w /mesapy mesalocklinux/build-mesalock-linux make pypy-c
 ```
 
