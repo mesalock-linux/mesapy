@@ -1,5 +1,5 @@
 
-all: pypy-c cffi_imports
+all: pypy-c
 
 PYPY_EXECUTABLE := $(shell which pypy)
 URAM := $(shell python -c "import sys; print 4.5 if sys.maxint>1<<32 else 2.5")
