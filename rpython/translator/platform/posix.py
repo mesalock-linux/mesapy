@@ -167,9 +167,12 @@ class BasePosix(Platform):
 	
         cwd = os.getcwd()
         curpath = os.path.join(cwd, "../../sgx/Sgx_App_Enclave/Enclave")
-
+        if os.getenv('SGX_SDK') is not None:
+           tlibcdir = os.path.join(os.getenv('SGX_SDK'), "include/tlibc")
+        else:
+           tlibcdir = "/opt/intel/sgxsdk/include/tlibc"
         rel_includedirs = [rpyrel(incldir) for incldir in
-                           self.preprocess_include_dirs(eci.include_dirs)] + ["/opt/intel/sgxsdk/include/tlibc", curpath]
+                           self.preprocess_include_dirs(eci.include_dirs)] + [tlibcdir, curpath]
         rel_libdirs = [rpyrel(libdir) for libdir in
                        self.preprocess_library_dirs(eci.library_dirs)]
 

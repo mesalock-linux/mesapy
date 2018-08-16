@@ -501,7 +501,11 @@ class build_ext (Command):
             macros.append((undef,))
         par_dir = os.path.dirname(os.getcwd())
         include_dir = os.path.join(par_dir, "include")
-        ext.include_dirs = ext.include_dirs + [par_dir] + [include_dir] + ["/opt/intel/sgxsdk/include/tlibc"]
+        if os.getenv('SGX_SDK') is not None:
+           tlibcdir = os.path.join(os.getenv('SGX_SDK'), "include/tlibc")
+        else:
+           tlibcdir = "/opt/intel/sgxsdk/include/tlibc"
+        ext.include_dirs = ext.include_dirs + [par_dir] + [include_dir] + [tlibcdir]
         objects = self.compiler.compile(sources,
                                          output_dir=self.build_temp,
                                          macros=macros,
