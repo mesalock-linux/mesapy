@@ -4,9 +4,10 @@ MesaPy SGX SDK aims at helping developers write Intel SGX applications in Python
 
 #### Requirement
 * Ubuntu 16.04
-* Intel SGX SDK 2.2 for Linux installed
+* Intel SGX SDK 2.2 for Linux installed(Very important! heap memory need to be 2M at least)
 * libffi is installed
 * pypy is installed.
+
 
 #### User Guide
 * As to Sample code, See README in the Sample directory for details.
