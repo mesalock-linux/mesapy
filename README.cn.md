@@ -105,8 +105,8 @@ https://github.com/mesalock-linux/mesapy-benchmarks，更多更详细的性能�
 
 MesaPy 可以在多种场景下使用，如运行大数据计算、训练机器学习模型等。我们提供多种渠道下载使用 MesaPy：
 
-1. 下载预编译的 MesaPy 包使用 MesaPy
-2. 使用 Docker 体验 MesaPy
+1. 下载[预编译的 MesaPy 包](https://github.com/mesalock-linux/mesapy/releases)使用 MesaPy
+2. 使用 Docker 体验 MesaPy：`docker run --rm -it mesalocklinux/mesalock-linux:latest mesapy`
 3. 从源代码编译 MesaPy
 
 MesaPy 在 GitHub 的 README 上提供了详细编译步骤，详见：https://github.com/mesalock-linux/mesapy
