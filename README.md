@@ -67,8 +67,8 @@ runtime.
 Basically, you can use MesaPy as any other Python implementations (e.g., CPython
 and PyPy). There are many ways to experience MesaPy:
 
-  - the pre-built binary of MesaPy
-  - use MesaLock Linux docker to try MesaPy
+  - the [pre-built binary](https://github.com/mesalock-linux/mesapy/releases) of MesaPy
+  - use MesaLock Linux docker to try MesaPy: `docker run --rm -it mesalocklinux/mesalock-linux:latest mesapy`
   - build MesaPy by yourself from source
 
 ### Building MesaPy from source
