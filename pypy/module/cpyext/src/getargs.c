@@ -1804,6 +1804,7 @@ PyArg_UnpackTuple(PyObject *args, const char *name, Py_ssize_t min, Py_ssize_t m
     if (!PyTuple_Check(args)) {
         PyErr_SetString(PyExc_SystemError,
             "PyArg_UnpackTuple() argument list is not a tuple");
+        va_end(vargs);
         return 0;
     }
     l = PyTuple_GET_SIZE(args);
