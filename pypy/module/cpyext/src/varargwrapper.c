@@ -16,8 +16,10 @@ PyTuple_Pack(Py_ssize_t n, ...)
     for (i = 0; i < n; i++) {
         o = va_arg(vargs, PyObject *);
         Py_INCREF(o);
-        if (PyTuple_SetItem(result, i, o) < 0)
+        if (PyTuple_SetItem(result, i, o) < 0) {
+            va_end(vargs);
             return NULL;
+        }
     }
     va_end(vargs);
     return result;
