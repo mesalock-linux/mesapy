@@ -2,7 +2,7 @@
 
 MesaPy SGX SDK aims at helping developers write Intel SGX applications in Python language with memory safety.
 
-## Getting start with sample code
+## Getting Started with Sample code
 ### Requirement
 * Ubuntu 16.04
 * Support SGX, check the link(https://github.com/ayeks/SGX-hardware), find out if your machine has SGX support.  
