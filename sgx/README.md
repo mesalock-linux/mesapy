@@ -3,12 +3,14 @@
 MesaPy SGX SDK aims at helping developers write Intel SGX applications in Python language with memory safety.
 
 ## Getting Started with Sample
+
 ### Requirement
-* Ubuntu 16.04
+* Ubuntu 16.04.
 * Support SGX, check the link(https://github.com/ayeks/SGX-hardware), find out if your machine has SGX support.  
 
 ### 1. Install Intel(R) SGX SDK for Linux* OS.
-* Download SGX Driver, SGX PSW, SGX SDK from https://download.01.org/intel-sgx/linux-2.2/ubuntu64-server/, following link  (https://download.01.org/intel-sgx/linux-2.2/docs/Intel_SGX_Installation_Guide_Linux_2.2_Open_Source.pdf)install them. 
+* Download SGX Driver, SGX PSW, SGX SDK from https://download.01.org/intel-sgx/linux-2.2/ubuntu64-server/, Intsall SGX by following the link (https://download.01.org/intel-sgx/linux-2.2/docs/Intel_SGX_Installation_Guide_Linux_2.2_Open_Source.pdf).
+
 ### 2. Install pypy and libffi for your machine.
 * Install pypy by using "sudo apt-get install" command in Linux machine.
 ```
@@ -16,7 +18,9 @@ $ sudo apt-get install pypy
 $ sudo apt-get install pypy-dev
 ```
 * Download libffi from https://github.com/libffi/libffi, Build libffi.a and install libffi by following the instructions provided from the website.
+
 #### Notice:You will find library under libffi/x86_64-unknown-linux-gnu/.libs/libffi.a.
+
 ### 3. Download pypy package provided by us.
 * Download MesaPy from our github MesaPy, Choose sgx branch. Save in directory sgx.
 ```
@@ -58,6 +62,7 @@ $ helloworld. this line will be printed!
 >* Write cffi interface generating part in embed.py.
 >* Write your function's C interface defition in api.h.
 * Write your own Makefile, link libpypy-c.a, libffi.a and Python C interface function's object file in Enclave.so, you can do these by referring Makefile provided by Sample code.
+* Have SGX heap size as 2M.
 
 
 
