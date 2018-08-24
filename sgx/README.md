@@ -2,7 +2,7 @@
 
 MesaPy SGX SDK aims at helping developers write Intel SGX applications in Python language with memory safety.
 
-## Getting Started with Sample code
+## Getting Started with Sample
 ### Requirement
 * Ubuntu 16.04
 * Support SGX, check the link(https://github.com/ayeks/SGX-hardware), find out if your machine has SGX support.  
@@ -52,7 +52,7 @@ $
 ### NOTICE: While running pypy embed.py, make sure the typedefine.h and include directory are in the parent directory as the command running, and import the cffi module from the lib_pypy we provide.
 
 ## Customization 
-* Write your own edl for your ecall function, see Gettinf Start with Sample.
+* Write your own edl for your ecall function, see Getting Started with Sample.
 * Write your own code following the sample code.
 >* Write your own Python function code you want to call in Enclave in implementation.py.
 >* Write cffi interface generating part in embed.py.
