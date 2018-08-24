@@ -42,11 +42,11 @@ $ "../../rpython/bin/rpython --opt=2 targetstandaloned.py --no-allworkingmodules
 
 * Make sure SGX service is started on your machine. 
 
-* Run ./app. Here you go!
+* Run ./app. Here you go! You will expect the following result from Compute. Exec, HelloWorld.
 ```
-$
-$
-$
+$ ret_compute is 6 
+$ helloworld
+$ helloworld. this line will be printed!
 ```
 
 ### NOTICE: While running pypy embed.py, make sure the typedefine.h and include directory are in the parent directory as the command running, and import the cffi module from the lib_pypy we provide.
