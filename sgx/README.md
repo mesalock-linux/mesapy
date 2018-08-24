@@ -1,6 +1,6 @@
 # Welcome to MesaPy in SGX
 
-MesaPy SGX SDK aims at helping developers write Intel SGX applications in Python language with memory safety.
+MesaPy SGX aims at helping developers write Intel SGX applications in Python language with memory safety.
 
 ## Getting Started with Sample
 
