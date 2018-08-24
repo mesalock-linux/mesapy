@@ -8,7 +8,7 @@ MesaPy SGX SDK aims at helping developers write Intel SGX applications in Python
 * Support SGX, check the link(https://github.com/ayeks/SGX-hardware), find out if your machine has SGX support.  
 
 ### 1. Install Intel(R) SGX SDK for Linux* OS.
-* Download SGX Driver, SGX PSW, SGX SDK from https://download.01.org/intel-sgx/linux-2.2/ubuntu64-server/, following link  install them. 
+* Download SGX Driver, SGX PSW, SGX SDK from https://download.01.org/intel-sgx/linux-2.2/ubuntu64-server/, following link  (https://download.01.org/intel-sgx/linux-2.2/docs/Intel_SGX_Installation_Guide_Linux_2.2_Open_Source.pdf)install them. 
 ### 2. Install pypy and libffi for your machine.
 * Install pypy by using "sudo apt-get install" command in Linux machine.
 ```
