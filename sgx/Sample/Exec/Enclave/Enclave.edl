@@ -42,7 +42,7 @@ enclave {
      */
     
     trusted{
-        public int compute_num(int a0, int a1);
+        public void testexec([in, string] char* a);
 	};
     untrusted {
         long ocall_syscall3(long n, long a1, long a2, long a3);
