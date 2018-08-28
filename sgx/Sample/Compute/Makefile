@@ -251,7 +251,7 @@ Enclave/%.o: Enclave/%.cpp
 	@echo "CXX  <=  $<"
 
 $(Enclave_Name): Enclave/Enclave_t.o Enclave/pypy_embedding/cm_library.o Enclave/Enclave_syscalls.o Enclave/Enclave_unused_sys.o
-	@$(CXX) $^ Enclave/usession/testing_1/main.o Enclave/usession/testing_1/libpypy-c.a Enclave/libffi-3.0.13/x86_64-unknown-linux-gnu/.libs/libffi.a -o $@ $(Enclave_Link_Flags)
+	@$(CXX) $^ Enclave/libpypy-c.a Enclave/libffi.a -o $@ $(Enclave_Link_Flags)
 	@echo "LINK =>  $@"
 
 $(Signed_Enclave_Name): $(Enclave_Name)
