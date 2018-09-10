@@ -77,7 +77,7 @@ Build MesaPy for SGX:
 
 ```
 $ cd pypy/goal
-$ ../../rpython/bin/rpython --opt=2 targetstandaloned.py --no-allworkingmodules
+$ ../../rpython/bin/rpython --opt=2 targetpypystandalone.py --no-allworkingmodules
 ```
 
 The detailed instructions of building MesaPy are described in the
