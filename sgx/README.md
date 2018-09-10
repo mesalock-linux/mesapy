@@ -1,38 +1,104 @@
-# Welcome to MesaPy in SGX
+# MesaPy for SGX
 
-MesaPy SGX aims at helping developers write Intel SGX applications in Python language with memory safety.
+MesaPy for SGX aims at helping developers to write memory-safe Intel SGX apps in
+Python.
 
-## Getting Started with Sample
+## Getting Started
 
-### Requirement
-* Ubuntu 16.04.
-* Support SGX, check the link(https://github.com/ayeks/SGX-hardware), find out if your machine has SGX support.  
+### Requirements
 
-### 1. Install Intel(R) SGX SDK for Linux* OS.
-* Download SGX Driver, SGX PSW, SGX SDK from https://download.01.org/intel-sgx/linux-2.2/ubuntu64-server/, Intsall SGX by following the link (https://download.01.org/intel-sgx/linux-2.2/docs/Intel_SGX_Installation_Guide_Linux_2.2_Open_Source.pdf).
+MesaPy for SGX needs following hardware requirements to run SGX:
 
-### 2. Install pypy and libffi for your machine.
-* Install pypy by using "sudo apt-get install" command in Linux machine.
+- CPU with Intel SGX support (6th Generation Intel Core Processor or newer, you
+  can check in the [list of SGX supported hardware](https://github.com/ayeks/SGX-hardware))
+- Intel SGX option enabled in BIOS
+
+Also, ensure that you have one of the follwing operating systems required by SGX:
+
+- Ubuntu 16.04.3 LTS 64-bit Desktop version
+- Ubuntu 16.04.3 LTS 64-bit Server version
+- Red Hat Enterprise Linux Server release 7.4 64bits
+- CentOS 7.4.1708 64bits
+- SUSE Linux Enterprise Server 12 64bits
+
+Below, we use Ubuntu 16.04.3 as an example to show steps to get started with
+MesaPy for SGX.
+
+### Installing Intel SGX
+
+Let's install dependencies for Instal SGX PSW and SGX SDK first. Following instructions are
+for Ubuntu 16.04, you can find detailed guilde from
+the [Intel SGX Installation Guide](https://download.01.org/intel-sgx/linux-2.2/docs/Intel_SGX_Installation_Guide_Linux_2.2_Open_Source.pdf).
+
 ```
-$ sudo apt-get install pypy
-$ sudo apt-get install pypy-dev
+# Install dependencies of Intel SGX PSW:
+$ sudo apt-get install libssl-dev libcurl4-openssl-dev libprotobuf-dev
+
+# Install dependencies of Intel SGX SDK
+$ sudo apt-get install build-essential python
+
+# Install trusted platform service
+# Download Capability Licensing Client (iCLS) for Linux 64-bit clinet from https://software.intel.com/en-us/sgx-sdk/download
+$ sudo apt-get install alien
+$ sudo alien --scripts iclsClient-1.45.449.12-1.x86_64.rpm
+$ sudo dpkg -i iclsclient_1.45.449.12-2_amd64.deb
+
+# Download dynamic-application-loader-host-interface from https://github.com/intel/dynamic-application-loader-host-interface
+# Install dependencies
+$ sudo apt-get install uuid-dev libxml2-dev cmake pkg-config
+$ cmake .; make; sudo make install;sudo systemctl enable jhi
 ```
-* Download libffi from https://github.com/libffi/libffi, Build libffi.a and install libffi by following the instructions provided from the website.
 
-#### Notice:You will find library under libffi/x86_64-unknown-linux-gnu/.libs/libffi.a.
+Then, let's install driver, PSW packages and SDK. First, download them from
+[https://download.01.org/intel-sgx/linux-2.2/](https://download.01.org/intel-sgx/linux-2.2/).
+Then, follow these instructions to install.
 
-### 3. Download pypy package provided by us.
-* Download MesaPy from our github MesaPy, Choose sgx branch. Save in directory sgx.
+```
+$ sudo ./sgx_linux_x64_driver.bin
+$ sudo ./sgx_linux_<os>_x64_psw_<version>.bin
+$ sudo ./sgx_linux_<os>_x64_sdk_<version>.bin
+```
+
+### Building MesaPy for SGX
+
+Install dependencies described in the [documentation](https://docs.mesapy.org/building-from-source.html#install-dependencies).
+
+```
+$ sudo apt-get install gcc make libffi-dev pkg-config libgdbm-dev libgc-dev python-cffi
+```
+
+Clone MesaPy from GitHub. Note that currently MesaPy for SGX is in the `sgx` branch.
+
 ```
 $ git clone -b sgx git@github.com:mesalock-linux/mesapy.git
 ```
-* Build MesaPy2.7 from source. Save MesaPy2.7 in directory mesapy2.7. The detailed steps are explained in the [documentation](https://docs.mesapy.org/building-from-source.html).
 
-### 4. Build project as the detail instructions we provide in the following:
-* Build libpypy-c.a by using the pypy source code in MesaPy sgx branch, Go into pypy/pypy/goal directory.
+Build MesaPy for SGX:
+
 ```
-$ "../../rpython/bin/rpython --opt=2 targetstandaloned.py --no-allworkingmodules"
+$ cd pypy/goal
+$ ../../rpython/bin/rpython --opt=2 targetstandaloned.py --no-allworkingmodules
 ```
+
+The detailed instructions of building MesaPy are described in the
+[documentation](https://docs.mesapy.org/building-from-source.html**.
+
+**TODO: all things below need to be polished, will come back later.**
+
+### Run examples
+
+### Build libffi
+
+Clone libffi from GitHub.
+
+```
+$ git clone https://github.com/libffi/libffi
+```
+
+Build libffi.a and install libffi by following the instructions provided from the website.
+
+#### Notice:You will find library under libffi/x86_64-unknown-linux-gnu/.libs/libffi.a.
+
 >* The libpypy-c.a will be generated and stored in the directory /pypy/pypy/goal/
 
 * Build Python functions' C interfaces using CFFI.
@@ -63,11 +129,3 @@ $ helloworld. this line will be printed!
 >* Write your function's C interface defition in api.h.
 * Write your own Makefile, link libpypy-c.a, libffi.a and Python C interface function's object file in Enclave.so, you can do these by referring Makefile provided by Sample code.
 * Have SGX heap size as 2M.
-
-
-
-
-
-
-
-
