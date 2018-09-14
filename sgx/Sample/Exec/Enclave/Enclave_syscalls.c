@@ -12,13 +12,9 @@ extern "C" {
 extern void* sgx_ocalloc(unsigned long size);
 extern void sgx_ocfree(void);
 
-unsigned long write(long fd, long buf, long count){
-        unsigned long ret = -1;
-        unsigned char* buf1;
-        buf1 = (unsigned char*)sgx_ocalloc(count);
-        memcpy(buf1, (void*)buf, count);
-        ocall_syscall3(&ret, WRITE, fd, (long)buf1, count);
-        sgx_ocfree();
+ssize_t write(int fd, const void *buf, size_t count){
+        ssize_t reti = -1;
+        ocall_write(&ret, fd, buf, count);	
         return ret;
 }
 

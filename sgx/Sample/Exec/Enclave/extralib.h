@@ -1,30 +1,3 @@
-#define WRITE 1
-
-unsigned long open(long pathname, long flags, long mode);
-unsigned long close(long fd);
-unsigned long unlink(long pathname);
-unsigned long readlink(long path, long buf, long bufsiz);
-unsigned long access(long pathname, long mode);
-unsigned long clock_gettime(long clk_id, long tp);
-unsigned long clock_getres(long clk_id, long res);
-unsigned long getsid(long pid);
-unsigned long read(long fd, long buf, long count);
-unsigned long write(long fd, long buf, long count);
-unsigned long fcntl(long int fd, int cmd, long arg);
-unsigned long select(long nfds, long readfds, long writefds,
-                  long exceptfds, long timeout);
-unsigned long accept(long sockfd, long addr, long addrlen);
-unsigned long lseek(long fd, long offset, long whence);
-unsigned long lstat64(long pathname, long statbuf);
-unsigned long stat64(long pathname, long statbuf);
-unsigned long fstat64(long fd, long statbuf);
-unsigned long exit_group(long status);
-unsigned long execve(long filename, long argv, long envp);
-unsigned long getcwd(long buf, long size);
-unsigned long mmap(long addr, long length, long port, long flags, long fd, long offset);
-int sprintf(char *result, const char *format, ...);
-void ocall_printf(const char *fmt, ...);
-
 # define _SIGSET_NWORDS (1024 / (8 * sizeof (unsigned long int)))
 
 struct sigset_t
@@ -46,15 +19,6 @@ struct timeval {
                long    tv_sec;         /* seconds */
                long    tv_usec;        /* microseconds */
            };
-
-
-#define __FD_SETSIZE 1024
-#define __NFDBITS (8 * sizeof(unsigned long))
-#define __FDSET_LONGS (__FD_SETSIZE/__NFDBITS)
-struct fd_set{
-  unsigned long fds_bits[__FDSET_LONGS];
-};
-
 
 struct stat64
   {
@@ -192,4 +156,71 @@ struct lconv
   char __int_n_sign_posn;
 #endif
 };
+
+#define __fd_mask long
+#define __NFDBITS       (8 * (int) sizeof (__fd_mask))
+#define __FD_SETSIZE 1024
+struct fd_set
+{
+    /* XPG4.2 requires this member name.  Otherwise avoid the name
+       from the global namespace.  */
+#ifdef __USE_XOPEN
+    __fd_mask fds_bits[__FD_SETSIZE / __NFDBITS];
+# define __FDS_BITS(set) ((set)->fds_bits)
+#else
+    __fd_mask __fds_bits[__FD_SETSIZE / __NFDBITS];
+# define __FDS_BITS(set) ((set)->__fds_bits)
+#endif
+};
+
+
+#define off_t long
+#define size_t long
+#define ssize_t long
+#define mode_t int
+#define socklen_t int
+#define clockid_t int
+
+int dlclose(void * handle);
+void *dlopen(const char* filename, int flag);
+char *dlerror(void);
+void *dlsym(void *handle, const char *symbol);
+int isatty(int fd);
+int ftruncate(int fd, long length);
+int uname(struct utsname *buf);
+int madvise(void *addr, size_t length, int advice);
+char *setlocale(int category, const char *locale);
+char *nl_langinfo(int item);
+struct lconv *localeconv(void);
+int execv(const char *path, char *const argv[]);
+char *getenv(const char *name);
+long syscall(long number, ...);
+int fork(void);
+int mprotect(void *addr, size_t len, int prot);
+int prctl(int option, unsigned long arg2, unsigned long arg3,
+                 unsigned long arg4, unsigned long arg5);
+void _exit(int status);
+void setbuf(void *stream, char *buf);
+int fclose(void* stream);
+void *fdopen(int fd, const char *mode);
+int open(const char *pathname, int flags, mode_t mode);
+int close(int fd);
+int unlink(const char *pathname);
+ssize_t readlink(const char *pathname, char *buf, size_t bufsiz);
+int access(const char *pathname, int mode);
+int clock_gettime(clockid_t clk_id, struct timespec *tp);
+int clock_getres(clockid_t clk_id, struct timespec *res);
+ssize_t read(int fd, void *buf, size_t count);
+int fcntl(int fd, int cmd, ... /* arg */ );
+int select(int nfds, struct fd_set *readfds, struct fd_set *writefds,
+                  struct fd_set *exceptfds, struct timeval *timeout);
+int accept(int sockfd, struct sockaddr *addr, socklen_t *addrlen);
+off_t lseek(int fd, off_t offset, int whence);
+int lstat64(const char *pathname, struct stat64 *buf);
+int stat64(const char *pathname, struct stat64 *buf);
+int fstat64(int fildes, struct stat64 *buf);
+char *getcwd(char *buf, size_t size);
+void *mmap(void *addr, size_t length, int prot, int flags,
+                  int fd, off_t offset);
+int sprintf(char *result, const char *format, ...);
 

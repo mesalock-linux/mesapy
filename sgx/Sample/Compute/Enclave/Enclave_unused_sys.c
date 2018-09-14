@@ -123,90 +123,90 @@ void *fdopen(int fd, const char *mode){
 	return NULL;
 }
 
-unsigned long open(long pathname, long flags, long mode){
+int open(const char *pathname, int flags, mode_t mode){
 
 	return;
 }
 
-unsigned long close(long fd){
+int close(int fd){
 
 	return;
 }
 
-unsigned long unlink(long pathname){
+int unlink(const char *pathname){
 
 	return;
 }
 
-unsigned long readlink(long path, long buf, long bufsiz){
+ssize_t readlink(const char *pathname, char *buf, size_t bufsiz){
 
 	return;
 }
 
-unsigned long access(long pathname, long mode){
+int access(const char *pathname, int mode){
 
 	return;
 }
 
-unsigned long clock_gettime(long clk_id, long tp){
+int clock_gettime(clockid_t clk_id, struct timespec *tp){
 
 	return;
 }
 
-unsigned long clock_getres(long clk_id, long res){
+int clock_getres(clockid_t clk_id, struct timespec *res){
 	
 	return;
 }
 
-unsigned long read(long fd, long buf, long count){
+ssize_t read(int fd, void *buf, size_t count){
 	
 	return;
 }
 
-unsigned long fcntl(long int fd, int cmd, long arg){
+int fcntl(int fd, int cmd, ... /* arg */ ){
 	
 	return;
 }
 
-unsigned long select(long nfds, long readfds, long writefds,
-			long exceptfds, long timeout){
+int select(int nfds, struct fd_set *readfds, struct fd_set *writefds,
+                 struct fd_set *exceptfds, struct timeval *timeout){
 	
 	return;
 }
 
-unsigned long accept(long sockfd, long addr, long addrlen){
+int accept(int sockfd, struct sockaddr *addr, socklen_t *addrlen){
 	
 	return;
 }
 
-unsigned long lseek(long fd, long offset, long whence){
+off_t lseek(int fd, off_t offset, int whence){
 	
 	return;
 }
 
-unsigned long lstat64(long pathname, long statbuf){
+int lstat64(const char *pathname, struct stat64 *buf){
 
 	return;
 }
 
-unsigned long stat64(long pathname, long statbuf){
+int stat64(const char *pathname, struct stat64 *buf){
 
 	return;
 }
 
-unsigned long fstat64(long fd, long statbuf){
+int fstat64(int fildes, struct stat64 *buf){
 	
 	return;
 }
 
-unsigned long getcwd(long buf, long size){
+char *getcwd(char *buf, size_t size){
 
 	return;
 }
 
-unsigned long mmap(long addr, long length, long port, long flags,
-			 long fd, long offset){
-		
+void *mmap(void *addr, size_t length, int prot, int flags,
+                  int fd, off_t offset){
+	
 	return;
 }
 
