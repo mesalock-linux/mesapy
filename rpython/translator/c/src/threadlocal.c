@@ -14,13 +14,10 @@ static long pypy_threadlocal_lock = 0;
 static int check_valid(void);
 
 int _RPython_ThreadLocals_AcquireTimeout(int max_wait_iterations) {
-
 }
 void _RPython_ThreadLocals_Acquire(void) {
-
 }
 void _RPython_ThreadLocals_Release(void) {
-
 }
 
 #ifdef _WIN32
@@ -165,7 +162,6 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL,
 
 void RPython_ThreadLocals_ProgramInit(void)
 {
-
 }
 
 
@@ -180,12 +176,10 @@ __thread struct pypy_threadlocal_s pypy_threadlocal;
 
 char *_RPython_ThreadLocals_Build(void)
 {
-
 }
 
 void RPython_ThreadLocals_ThreadDie(void)
 {
-
 }
 
 

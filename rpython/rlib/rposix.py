@@ -16,6 +16,7 @@ from rpython.rlib.signature import signature
 from rpython.tool.sourcetools import func_renamer
 from rpython.translator.platform import platform
 from rpython.translator.tool.cbuild import ExternalCompilationInfo
+from rpython.rlib.rsgx import SGXStatus, SGXError
 
 
 if _WIN32:
@@ -117,7 +118,7 @@ if os.name == 'nt':
         RPY_EXTERN void* enter_suppress_iph(void)
         {
             void* ret = _set_thread_local_invalid_parameter_handler(_Py_silent_invalid_parameter_handler);
-            fprintf(stdout, "setting %p returning %p\\n", (void*)_Py_silent_invalid_parameter_handler, ret);
+            /*fprintf(stdout, "setting %p returning %p\\n", (void*)_Py_silent_invalid_parameter_handler, ret);*/
             return ret;
         }
         RPY_EXTERN void exit_suppress_iph(void*  old_handler)
@@ -125,7 +126,7 @@ if os.name == 'nt':
             void * ret;
             _invalid_parameter_handler _handler = (_invalid_parameter_handler)old_handler;
             ret = _set_thread_local_invalid_parameter_handler(_handler);
-            fprintf(stdout, "exiting, setting %p returning %p\\n", old_handler, ret);
+            /*fprintf(stdout, "exiting, setting %p returning %p\\n", old_handler, ret);*/
         }
 
         #else
@@ -508,9 +509,9 @@ def open(path, flags, mode):
 c_read = external(UNDERSCORE_ON_WIN32 + 'read',
                   [rffi.INT, rffi.VOIDP, rffi.SIZE_T], rffi.SSIZE_T,
                   save_err=rffi.RFFI_SAVE_ERRNO)
-c_write = external(UNDERSCORE_ON_WIN32 + 'write',
-                   [rffi.INT, rffi.VOIDP, rffi.SIZE_T], rffi.SSIZE_T,
-                   save_err=rffi.RFFI_SAVE_ERRNO)
+c_write = c_u_write_ocall = external('u_write_ocall',
+                                     [rffi.SIGNEDP, rffi.INT, rffi.VOIDP, rffi.SIZE_T], rffi.INT,
+                                     save_err=rffi.RFFI_SAVE_ERRNO)
 c_close = external(UNDERSCORE_ON_WIN32 + 'close', [rffi.INT], rffi.INT,
                    releasegil=False, save_err=rffi.RFFI_SAVE_ERRNO)
 
@@ -532,8 +533,13 @@ def write(fd, data):
     with FdValidator(fd):
         count = _bound_for_write(fd, count)
         with rffi.scoped_nonmovingbuffer(data) as buf:
-            ret = c_write(fd, buf, count)
-            return handle_posix_error('write', ret)
+            retval = lltype.malloc(rffi.SIGNEDP.TO, 1, flavor='raw')
+            status = c_u_write_ocall(retval, fd, buf, count)
+            if status != SGXStatus.SGX_SUCCESS:
+                raise SGXError(status)
+            ret = handle_posix_error('write', retval[0])
+            lltype.free(retval, flavor='raw')
+            return ret
 
 @replace_os_function('close')
 @signature(types.int(), returns=types.any())

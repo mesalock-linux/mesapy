@@ -164,15 +164,9 @@ class BasePosix(Platform):
         rel_cfiles = [m.pathrel(cfile) for cfile in cfiles]
         rel_ofiles = [rel_cfile[:rel_cfile.rfind('.')]+'.o' for rel_cfile in rel_cfiles]
         m.cfiles = rel_cfiles
-	
-        cwd = os.getcwd()
-        curpath = os.path.join(cwd, "../../sgx/Sgx_App_Enclave/Enclave")
-        if os.getenv('SGX_SDK') is not None:
-           tlibcdir = os.path.join(os.getenv('SGX_SDK'), "include/tlibc")
-        else:
-           tlibcdir = "/opt/intel/sgxsdk/include/tlibc"
+
         rel_includedirs = [rpyrel(incldir) for incldir in
-                           self.preprocess_include_dirs(eci.include_dirs)] + [tlibcdir, curpath]
+                           self.preprocess_include_dirs(eci.include_dirs)]
         rel_libdirs = [rpyrel(libdir) for libdir in
                        self.preprocess_library_dirs(eci.library_dirs)]
 
@@ -182,15 +176,14 @@ class BasePosix(Platform):
             ('TARGET', target_name),
             ('DEFAULT_TARGET', exe_name.basename),
             ('PYPY_A', 'libpypy-c.a'),
-            ('AR', 'ar rcu'),
-            ('RANLIB', 'ranlib'),
+            ('AR', 'ar rcs'),
             ('SOURCES', rel_cfiles),
             ('OBJECTS', rel_ofiles),
             ('LIBS', self._libs(eci.libraries) + list(self.extra_libs)),
             ('LIBDIRS', self._libdirs(rel_libdirs)),
             ('INCLUDEDIRS', self._includedirs(rel_includedirs)),
             ('CFLAGS', cflags),
-            ('CFLAGSEXTRA', list(eci.compile_extra).append('-nostdinc')),
+            ('CFLAGSEXTRA', list(eci.compile_extra)),
             ('LDFLAGS', linkflags),
             ('LDFLAGS_LINK', list(self.link_flags)),
             ('LDFLAGSEXTRA', list(eci.link_extra)),
@@ -215,9 +208,9 @@ class BasePosix(Platform):
             postcompile_rule[2].append('attr -q -s pax.flags -V m $(BIN)')
 
         rules = [
-            ('all', '$(PYPY_A) main.o', []),
+            ('all', '$(PYPY_A)', []),
             ('$(TARGET)', '$(OBJECTS)', ['$(CC_LINK) $(LDFLAGSEXTRA) -o $@ $(OBJECTS) $(LIBDIRS) $(LIBS) $(LINKFILES) $(LDFLAGS)', '$(MAKE) postcompile BIN=$(TARGET)']),
-	    ('$(PYPY_A)', '$(OBJECTS)', ['$(AR) $@ $(OBJECTS)', '$(RANLIB) $@']),
+            ('$(PYPY_A)', '$(OBJECTS)', ['$(AR) $@ $(OBJECTS)']),
             ('%.o', '%.c', '$(CC) $(CFLAGS) $(CFLAGSEXTRA) -o $@ -c $< $(INCLUDEDIRS)'),
             ('%.o', '%.s', '$(CC) $(CFLAGS) $(CFLAGSEXTRA) -o $@ -c $< $(INCLUDEDIRS)'),
             ('%.o', '%.cxx', '$(CXX) $(CFLAGS) $(CFLAGSEXTRA) -o $@ -c $< $(INCLUDEDIRS)'),

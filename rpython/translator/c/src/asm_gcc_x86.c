@@ -4,8 +4,8 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <extralib.h>
-#include <typedefine.h>
+
+
 #  ifdef PYPY_X86_CHECK_SSE2
 void pypy_x86_check_sse2(void)
 {

@@ -1,6 +1,5 @@
 #include "common_header.h"
 #include <src/instrument.h>
-#include <typedefine.h>
 
 #ifdef  PYPY_INSTRUMENT
 

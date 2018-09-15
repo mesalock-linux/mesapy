@@ -218,23 +218,15 @@ char *_pypy_init_home(void)
 else:
 
     _source_code = r"""
+#include <dlfcn.h>
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <extralib.h>
 
 RPY_EXPORTED
 char *_pypy_init_home(void)
 {
-    char *p = malloc(11);
-    if(p == NULL)
-    {
-       assert(!"bad switch!!");
-       abort();
-    }
-    memset(p, 0, 11);
-    memcpy(p, "enclave.so", 11);
-    return p;
+    return "";
 }
 """
 

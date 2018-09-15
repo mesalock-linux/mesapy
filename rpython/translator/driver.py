@@ -509,6 +509,13 @@ class TranslationDriver(SimpleTaskEngine):
             self.c_entryp = newexename
         self.log.info("created: %s" % (self.c_entryp,))
 
+    def create_ar(self):
+        soname = self.cbuilder.shared_library_name
+        newexename = mkexename(self.compute_exe_name())
+        newarname = newexename.new(basename=soname.basename)
+        shutil_copy(str(soname).replace("libpypy-c.so", "libpypy-c.a"),
+                    str(newarname).replace("libpypy-c.so", "libpypy-c.a"))
+
     @taskdef(['source_c'], "Compiling c source")
     def task_compile_c(self):
         """ Compile the generated C code using either makefile or
@@ -522,6 +529,7 @@ class TranslationDriver(SimpleTaskEngine):
 
         if self.standalone:
             self.c_entryp = cbuilder.executable_name
+            self.create_ar()
         else:
             self.c_entryp = cbuilder.get_entry_point()
 

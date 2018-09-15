@@ -88,6 +88,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
+#include <locale.h>
 #include <ctype.h>
 
 #include "boolobject.h"

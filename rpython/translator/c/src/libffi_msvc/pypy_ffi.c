@@ -6,8 +6,7 @@
 #include "ffi.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include <extralib.h>
-#include <typedefine.h>
+
 typedef struct { char c; long long x; } s_long_long;
 typedef struct { char c; float x; } s_float;
 typedef struct { char c; double x; } s_double;

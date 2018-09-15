@@ -1,0 +1,11 @@
+enclave {
+
+    from "sgx_u_unistd.edl" import *;
+
+    trusted {
+        public void say();
+    };
+
+    untrusted { };
+
+};

@@ -172,7 +172,21 @@ def create_file(filename, mode="r", buffering=-1):
 
 
 def create_fdopen_rfile(fd, mode="r", buffering=-1):
-    pass
+    newmode = _sanitize_mode(mode)
+    ll_mode = rffi.str2charp(newmode)
+    try:
+        with rposix.FdValidator(fd):
+            ll_file = c_fdopen(fd, ll_mode)
+        if not ll_file:
+            errno = rposix.get_saved_errno()
+            raise OSError(errno, os.strerror(errno))
+    finally:
+        lltype.free(ll_mode, flavor='raw')
+    _dircheck(ll_file)
+    f = RFile(ll_file, mode)
+    f._setbufsize(buffering)
+    return f
+
 
 def create_temp_rfile():
     res = c_tmpfile()

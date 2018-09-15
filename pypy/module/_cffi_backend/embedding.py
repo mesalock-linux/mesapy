@@ -119,7 +119,7 @@ static void _cffi_init_once(void)
 else:
 
     do_includes = r"""
-#include <typedefine.h>
+#include <pthread.h>
 
 static void _cffi_init(void);
 

@@ -58,6 +58,8 @@ static volatile LONG _cffi_dummy;
 
 #ifdef WITH_THREAD
 # ifndef _MSC_VER
+#  include <pthread.h>
+   static pthread_mutex_t _cffi_embed_startup_lock;
 # else
    static CRITICAL_SECTION _cffi_embed_startup_lock;
 # endif
@@ -78,6 +80,10 @@ static void _cffi_acquire_reentrant_mutex(void)
 #ifdef WITH_THREAD
     if (!_cffi_embed_startup_lock_ready) {
 # ifndef _MSC_VER
+        pthread_mutexattr_t attr;
+        pthread_mutexattr_init(&attr);
+        pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);
+        pthread_mutex_init(&_cffi_embed_startup_lock, &attr);
 # else
         InitializeCriticalSection(&_cffi_embed_startup_lock);
 # endif
@@ -89,6 +95,7 @@ static void _cffi_acquire_reentrant_mutex(void)
         ;
 
 #ifndef _MSC_VER
+    pthread_mutex_lock(&_cffi_embed_startup_lock);
 #else
     EnterCriticalSection(&_cffi_embed_startup_lock);
 #endif
@@ -97,6 +104,7 @@ static void _cffi_acquire_reentrant_mutex(void)
 static void _cffi_release_reentrant_mutex(void)
 {
 #ifndef _MSC_VER
+    pthread_mutex_unlock(&_cffi_embed_startup_lock);
 #else
     LeaveCriticalSection(&_cffi_embed_startup_lock);
 #endif
@@ -383,6 +391,7 @@ static _cffi_call_python_fnptr _cffi_start_python(void)
     if (_cffi_carefully_make_gil() != 0)
         return NULL;
 
+    _cffi_acquire_reentrant_mutex();
 
     /* Here the GIL exists, but we don't have it.  We're only protected
        from concurrency by the reentrant mutex. */
@@ -408,6 +417,7 @@ static _cffi_call_python_fnptr _cffi_start_python(void)
                ensures that after that read barrier, we see everything
                done here before the write barrier.
             */
+
             assert(_cffi_call_python_org != NULL);
             _cffi_call_python = (_cffi_call_python_fnptr)_cffi_call_python_org;
         }
@@ -420,6 +430,7 @@ static _cffi_call_python_fnptr _cffi_start_python(void)
         }
     }
 
+    _cffi_release_reentrant_mutex();
 
     return (_cffi_call_python_fnptr)_cffi_call_python_org;
 }

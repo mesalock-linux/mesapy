@@ -29,15 +29,13 @@
 
 /* macros used by the generated code */
 #define PYPY_HAVE_DEBUG_PRINTS    0
-/*#define PYPY_HAVE_DEBUG_PRINTS    (pypy_have_debug_prints & 1 ? \
-                                   (pypy_debug_ensure_opened(), 1) : 0)*/
 #define PYPY_DEBUG_FILE           pypy_debug_file
-#define PYPY_DEBUG_START(cat, ts) 42 
+#define PYPY_DEBUG_START(cat, ts) 42
 #define PYPY_DEBUG_STOP(cat, ts)  42
-#define OP_DEBUG_OFFSET(res)      
-#define OP_DEBUG_FORKED(ofs, _) 
+#define OP_DEBUG_OFFSET(res)
+#define OP_DEBUG_FORKED(ofs, _)
 #define OP_HAVE_DEBUG_PRINTS(r)   r = (pypy_have_debug_prints & 1)
-#define OP_DEBUG_FLUSH() 
+#define OP_DEBUG_FLUSH()
 
 /************************************************************/
 

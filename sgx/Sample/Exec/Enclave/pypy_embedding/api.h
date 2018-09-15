@@ -1,1 +1,0 @@
-void testexec(char* a);

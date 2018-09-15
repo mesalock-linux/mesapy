@@ -30,3 +30,15 @@ release/
 !pypy/tool/release/
 rpython/_cache/
 .cache/
+
+.gdb_history
+sgx/**/*.o
+sgx/**/*.so
+sgx/**/*.a
+sgx/**/.config_HW_DEBUG_x64
+sgx/**/App/Enclave_u.c
+sgx/**/App/Enclave_u.h
+sgx/**/Enclave/Enclave_t.c
+sgx/**/Enclave/Enclave_t.h
+sgx/**/Enclave/src/python_enclave.c
+sgx/**/app

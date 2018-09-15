@@ -765,7 +765,6 @@ class SourceGenerator:
                     print >> fc, '#include "preimpl.h"'
                     print >> fc, '#define PYPY_FILE_NAME "%s"' % name
                     print >> fc, '#include "src/g_include.h"'
-                    print >> fc, '#include <typedefine.h>'
                     print >> fc
                 print >> fc, MARKER
                 for node, impl in nodeiter:
@@ -780,7 +779,6 @@ def gen_structdef(f, database):
     print >> f, '/***********************************************************/'
     print >> f, '/***  Structure definitions                              ***/'
     print >> f
-    print >> f, '#include <typedefine.h>'
     print >> f, "#ifndef _PYPY_STRUCTDEF_H"
     print >> f, "#define _PYPY_STRUCTDEF_H"
     for node in structdeflist:
@@ -821,8 +819,6 @@ def gen_forwarddecl(f, database):
     print >> f, '/***********************************************************/'
     print >> f, '/***  Forward declarations                               ***/'
     print >> f
-    print >> f, '#include <extralib.h>'
-    print >> f, '#include <typedefine.h>'
     print >> f, "#ifndef _PYPY_FORWARDDECL_H"
     print >> f, "#define _PYPY_FORWARDDECL_H"
     for node in database.globalcontainers():
@@ -911,8 +907,8 @@ def gen_source(database, modulename, targetdir,
     for key, value in defines.items():
         print >> fi, '#define %s %s' % (key, value)
 
-    eci.write_c_header_sgx(fi)
-    print >> fi, '#include <src/g_prerequisite.h>'
+    eci.write_c_header(fi)
+    print >> fi, '#include "src/g_prerequisite.h"'
     fi.write('#endif /* _PY_COMMON_HEADER_H*/\n')
 
     fi.close()

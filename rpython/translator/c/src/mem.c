@@ -2,8 +2,7 @@
 #include "src/support.h"
 #include <stdlib.h>
 #include <stdio.h>
-#include <extralib.h>
-#include <typedefine.h>
+
 /***  tracking raw mallocs and frees for debugging ***/
 
 #ifdef RPY_ASSERT

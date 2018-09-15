@@ -1,8 +1,7 @@
 #include "common_header.h"
 #include <src/support.h>
 #include <src/exception.h>
-#include <extralib.h>
-#include <typedefine.h>
+
 /************************************************************/
 /***  C header subsection: support functions              ***/
 

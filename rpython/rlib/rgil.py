@@ -17,20 +17,15 @@ eci = ExternalCompilationInfo(
 
 llexternal = rffi.llexternal
 
-def _gil_allocate():
-        pass
+def _gil_allocate(): pass
 
-def _gil_yield_thread():
-        pass
+def _gil_yield_thread(): pass
 
-def _gil_release():
-        pass
+def _gil_release(): pass
 
-def _gil_acquire():
-        pass
+def _gil_acquire(): pass
 
-def gil_fetch_fastgil():
-        pass
+def gil_fetch_fastgil(): pass
 
 # ____________________________________________________________
 

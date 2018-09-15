@@ -61,71 +61,67 @@ $ sudo ./sgx_linux_<os>_x64_sdk_<version>.bin
 
 ### Building MesaPy for SGX
 
-Install dependencies described in the [documentation](https://docs.mesapy.org/building-from-source.html#install-dependencies).
+Install dependencies of building MesaPy for SGX.
 
 ```
 $ sudo apt-get install gcc make libffi-dev pkg-config libgdbm-dev libgc-dev python-cffi
 ```
 
-Clone MesaPy from GitHub. Note that currently MesaPy for SGX is in the `sgx` branch.
+Clone the MesaPy repository from GitHub recursively with its submodules. Note
+that currently MesaPy for SGX is in the `sgx` branch.
 
 ```
-$ git clone -b sgx git@github.com:mesalock-linux/mesapy.git
+$ git clone -b sgx --recursive git@github.com:mesalock-linux/mesapy.git
 ```
 
 Build MesaPy for SGX:
 
 ```
-$ cd pypy/goal
-$ ../../rpython/bin/rpython --opt=2 targetpypystandalone.py --no-allworkingmodules
+$ cd mesapy
+$ make sgx
 ```
+
+The building process takes around 15 minutes depending on your machine.
+Then, you will get a `libpypy-c.a` file in the `pypy/goal` directory.
 
 The detailed instructions of building MesaPy are described in the
-[documentation](https://docs.mesapy.org/building-from-source.html**.
+[documentation](https://docs.mesapy.org/building-from-source.html).
 
-**TODO: all things below need to be polished, will come back later.**
-
-### Run examples
-
-### Build libffi
-
-Clone libffi from GitHub.
+Build the `libffi` library which bridges C and Python.
 
 ```
-$ git clone https://github.com/libffi/libffi
+$ cd sgx/libffi
+$ ./autogen.sh
+$ mkdir build_dir && cd build_dir
+$ ../configure --prefix=$(pwd) --with-pic
+$ make && make install
 ```
 
-Build libffi.a and install libffi by following the instructions provided from the website.
+### Starting with the `HelloWorld` example
 
-#### Notice:You will find library under libffi/x86_64-unknown-linux-gnu/.libs/libffi.a.
+First, you need to setup Intel SGX SDK environment properly.
 
->* The libpypy-c.a will be generated and stored in the directory /pypy/pypy/goal/
-
-* Build Python functions' C interfaces using CFFI.
->* The example code is under /Enclave/pypy_embedding. There are three files, implementation.py, embed.py, api.h.
->* Replace lib-pypy and lib_python folders in mesapy2.7 with provided by sgx-wip , which let "import cffi" use lib_pypy and lib-python we provide.
->* run mesapy2.7/mesapy/pypy/goal/pypy-c ./embed.py for generating the corresponed object file.
-
-* Copy libpypy-c.a and libffi.a to directory Enclave.
-
-* Run "make" in the Sample/Compute(HelloWorld, Exec), which generates sgx binary app.
-
-* Make sure SGX service is started on your machine. 
-
-* Run ./app. Here you go! You will expect the following result from Compute. Exec, HelloWorld.
 ```
-$ ret_compute is 6 
-$ helloworld
-$ helloworld. this line will be printed!
+$ source $(SGX_SDK)/environment    # setup environment variables of Intel SGX SDK
 ```
 
-### NOTICE: While running pypy embed.py, make sure the typedefine.h and include directory are in the parent directory as the command running, and import the cffi module from the lib_pypy we provide.
+Build the `HelloWorld` sample code:
 
-## Customization 
-* Write your own edl for your ecall function, see Getting Started with Sample.
-* Write your own code following the sample code.
->* Write your own Python function code you want to call in Enclave in implementation.py.
->* Write cffi interface generating part in embed.py.
->* Write your function's C interface defition in api.h.
-* Write your own Makefile, link libpypy-c.a, libffi.a and Python C interface function's object file in Enclave.so, you can do these by referring Makefile provided by Sample code.
-* Have SGX heap size as 2M.
+```
+$ cd sgx/SampleCode/HelloWorld
+$ make
+```
+
+Run the `HelloWorld` sample, you will see hello world and welcome messages:
+
+```
+$ ./app
+Hello, World!
+Welcome to MesaPy for SGX.
+Do what I mean: 42
+
+Info: HelloWorld successfully returned.
+Enter a character before exit ...
+```
+
+Also, you can build and run the sample with a single command: `make run`.
