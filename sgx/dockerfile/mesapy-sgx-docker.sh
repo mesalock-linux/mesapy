@@ -1,11 +1,14 @@
 #!/bin/bash
 
+MESAPY_SGX=$(dirname `pwd`)
+MESAPY=$(dirname "$MESAPY_SGX")
+
 function build() {
-    docker build -t mesapy-sgx  --build-arg UID=`id -u $USER` --build-arg GID=`id -g $USER` -f Dockerfile .
+    docker build -t mesapy-sgx  --build-arg UID=$(id -u "$USER") --build-arg GID=$(id -g "$USER") -f Dockerfile .
 }
 
 function run() {
-    docker run --device /dev/isgx -u `id -u $USER` --rm -it -v`dirname $(pwd)`:/mesapy-sgx -w /mesapy-sgx/sgx mesapy-sgx
+    docker run --device /dev/isgx -u $(id -u "$USER") --rm -it -v"$MESAPY":/mesapy -w /mesapy/sgx mesapy-sgx
 }
 
 function usage() {

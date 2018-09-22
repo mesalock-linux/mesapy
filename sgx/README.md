@@ -97,6 +97,10 @@ $ ../configure --prefix=$(pwd) --with-pic
 $ make && make install
 ```
 
+Note that, we also provide a `Dockerfile` with all essential dependencies.
+You can build an image by execute `./mesapy-sgx-docker.sh build` and run the image
+by execute `./mesapy-sgx-docker.sh run`.
+
 ### Starting with the `HelloWorld` example
 
 First, you need to setup Intel SGX SDK environment properly.
