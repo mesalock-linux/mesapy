@@ -28,15 +28,14 @@
 */
 
 /* macros used by the generated code */
-#define PYPY_HAVE_DEBUG_PRINTS    (pypy_have_debug_prints & 1 ? \
-                                   (pypy_debug_ensure_opened(), 1) : 0)
+#define PYPY_HAVE_DEBUG_PRINTS    0
 #define PYPY_DEBUG_FILE           pypy_debug_file
-#define PYPY_DEBUG_START(cat, ts) pypy_debug_start(cat, ts)
-#define PYPY_DEBUG_STOP(cat, ts)  pypy_debug_stop(cat, ts)
-#define OP_DEBUG_OFFSET(res)      res = pypy_debug_offset()
-#define OP_DEBUG_FORKED(ofs, _)   pypy_debug_forked(ofs)
+#define PYPY_DEBUG_START(cat, ts) 42
+#define PYPY_DEBUG_STOP(cat, ts)  42
+#define OP_DEBUG_OFFSET(res)
+#define OP_DEBUG_FORKED(ofs, _)
 #define OP_HAVE_DEBUG_PRINTS(r)   r = (pypy_have_debug_prints & 1)
-#define OP_DEBUG_FLUSH() fflush(pypy_debug_file)
+#define OP_DEBUG_FLUSH()
 
 /************************************************************/
 
@@ -56,7 +55,7 @@ RPY_EXPORTED FILE *pypy_debug_file;
 #define TIMESTAMP_UNIT_NS 1
 #define TIMESTAMP_UNIT_QUERY_PERFORMANCE_COUNTER 2
 
-#define OP_LL_READ_TIMESTAMP(val) READ_TIMESTAMP(val)
+#define OP_LL_READ_TIMESTAMP(val)
 
 #include "src/asm.h"
 

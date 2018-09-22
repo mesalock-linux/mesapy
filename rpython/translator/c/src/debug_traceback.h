@@ -33,22 +33,12 @@
   pypy_debug_tracebacks[pypydtcount].exctype = etype;   \
   pypydtcount = (pypydtcount + 1) & (PYPY_DEBUG_TRACEBACK_DEPTH-1)
 
-#define OP_DEBUG_START_TRACEBACK(etype, _)  PYPYDTSTORE(NULL, etype)
-#define OP_DEBUG_RERAISE_TRACEBACK(etp, _)  PYPYDTSTORE(PYPYDTPOS_RERAISE, etp)
-#define OP_DEBUG_PRINT_TRACEBACK()          pypy_debug_traceback_print()
+#define OP_DEBUG_START_TRACEBACK(etype, _)
+#define OP_DEBUG_RERAISE_TRACEBACK(etp, _)
+#define OP_DEBUG_PRINT_TRACEBACK()
 
-#define PYPY_DEBUG_RECORD_TRACEBACK(funcname)   {       \
-    static struct pypydtpos_s loc = {                   \
-      PYPY_FILE_NAME, funcname, __LINE__ };             \
-    PYPYDTSTORE(&loc, NULL);                            \
-  }
-#define PYPY_DEBUG_CATCH_EXCEPTION(funcname, etype, is_fatal)   {       \
-    static struct pypydtpos_s loc = {                                   \
-      PYPY_FILE_NAME, funcname, __LINE__ };                             \
-    PYPYDTSTORE(&loc, etype);                                           \
-    if (is_fatal) pypy_debug_catch_fatal_exception();                   \
-  }
-
+#define PYPY_DEBUG_RECORD_TRACEBACK(funcname)
+#define PYPY_DEBUG_CATCH_EXCEPTION(funcname, etype, is_fatal)
 struct pypydtpos_s {
   const char *filename;
   const char *funcname;

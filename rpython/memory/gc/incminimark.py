@@ -223,7 +223,7 @@ class IncrementalMiniMarkGC(MovingGCBase):
         # Automatically adjust the size of the nursery and the
         # 'major_collection_threshold' from the environment.
         # See docstring at the start of the file.
-        "read_from_env": True,
+        "read_from_env": False,
 
         # The size of the nursery.  Note that this is only used as a
         # fall-back number.
@@ -497,7 +497,7 @@ class IncrementalMiniMarkGC(MovingGCBase):
             self.nursery_size = newsize
             self.allocate_nursery()
         #
-        env_max_number_of_pinned_objects = os.environ.get('PYPY_GC_MAX_PINNED')
+        env_max_number_of_pinned_objects = None
         if env_max_number_of_pinned_objects:
             try:
                 env_max_number_of_pinned_objects = int(env_max_number_of_pinned_objects)

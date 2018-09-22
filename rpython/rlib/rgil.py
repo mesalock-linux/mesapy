@@ -17,26 +17,15 @@ eci = ExternalCompilationInfo(
 
 llexternal = rffi.llexternal
 
+def _gil_allocate(): pass
 
-_gil_allocate = llexternal('RPyGilAllocate', [], lltype.Void,
-                           _nowrapper=True, sandboxsafe=True,
-                           compilation_info=eci)
+def _gil_yield_thread(): pass
 
-_gil_yield_thread = llexternal('RPyGilYieldThread', [], lltype.Signed,
-                               _nowrapper=True, sandboxsafe=True,
-                               compilation_info=eci)
+def _gil_release(): pass
 
-_gil_release      = llexternal('RPyGilRelease', [], lltype.Void,
-                               _nowrapper=True, sandboxsafe=True,
-                               compilation_info=eci)
+def _gil_acquire(): pass
 
-_gil_acquire      = llexternal('RPyGilAcquire', [], lltype.Void,
-                              _nowrapper=True, sandboxsafe=True,
-                              compilation_info=eci)
-
-gil_fetch_fastgil = llexternal('RPyFetchFastGil', [], llmemory.Address,
-                               _nowrapper=True, sandboxsafe=True,
-                               compilation_info=eci)
+def gil_fetch_fastgil(): pass
 
 # ____________________________________________________________
 

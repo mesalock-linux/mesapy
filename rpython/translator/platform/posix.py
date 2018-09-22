@@ -175,6 +175,8 @@ class BasePosix(Platform):
             ('RPYDIR', '"%s"' % rpydir),
             ('TARGET', target_name),
             ('DEFAULT_TARGET', exe_name.basename),
+            ('PYPY_A', 'libpypy-c.a'),
+            ('AR', 'ar rcs'),
             ('SOURCES', rel_cfiles),
             ('OBJECTS', rel_ofiles),
             ('LIBS', self._libs(eci.libraries) + list(self.extra_libs)),
@@ -206,8 +208,9 @@ class BasePosix(Platform):
             postcompile_rule[2].append('attr -q -s pax.flags -V m $(BIN)')
 
         rules = [
-            ('all', '$(DEFAULT_TARGET)', []),
+            ('all', '$(PYPY_A)', []),
             ('$(TARGET)', '$(OBJECTS)', ['$(CC_LINK) $(LDFLAGSEXTRA) -o $@ $(OBJECTS) $(LIBDIRS) $(LIBS) $(LINKFILES) $(LDFLAGS)', '$(MAKE) postcompile BIN=$(TARGET)']),
+            ('$(PYPY_A)', '$(OBJECTS)', ['$(AR) $@ $(OBJECTS)']),
             ('%.o', '%.c', '$(CC) $(CFLAGS) $(CFLAGSEXTRA) -o $@ -c $< $(INCLUDEDIRS)'),
             ('%.o', '%.s', '$(CC) $(CFLAGS) $(CFLAGSEXTRA) -o $@ -c $< $(INCLUDEDIRS)'),
             ('%.o', '%.cxx', '$(CXX) $(CFLAGS) $(CFLAGSEXTRA) -o $@ -c $< $(INCLUDEDIRS)'),

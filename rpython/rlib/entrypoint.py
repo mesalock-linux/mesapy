@@ -41,7 +41,7 @@ def entrypoint_lowlevel(key, argtypes, c_name=None, relax=False):
     return deco
 
 
-pypy_debug_catch_fatal_exception = rffi.llexternal('pypy_debug_catch_fatal_exception', [], lltype.Void)
+def pypy_debug_catch_fatal_exception(): pass
 
 def entrypoint_highlevel(key, argtypes, c_name=None):
     """

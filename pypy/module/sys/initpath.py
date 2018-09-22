@@ -226,18 +226,7 @@ else:
 RPY_EXPORTED
 char *_pypy_init_home(void)
 {
-    Dl_info info;
-    dlerror();   /* reset */
-    if (dladdr(&_pypy_init_home, &info) == 0) {
-        fprintf(stderr, "PyPy initialization: dladdr() failed: %s\n",
-                dlerror());
-        return NULL;
-    }
-    char *p = realpath(info.dli_fname, NULL);
-    if (p == NULL) {
-        p = strdup(info.dli_fname);
-    }
-    return p;
+    return "";
 }
 """
 

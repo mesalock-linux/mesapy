@@ -10,7 +10,7 @@ else
 RUNINTERP = $(PYPY_EXECUTABLE)
 endif
 
-.PHONY: pypy-c cffi_imports
+.PHONY: pypy-c cffi_imports sgx
 
 pypy-c:
 	@echo
@@ -41,3 +41,6 @@ endif
 
 cffi_imports: pypy-c
 	PYTHONPATH=. pypy/goal/pypy-c pypy/tool/build_cffi_imports.py || /bin/true
+
+sgx:
+	cd pypy/goal && $(RUNINTERP) ../../rpython/bin/rpython -O2 --make-jobs=$(shell nproc) targetpypystandalone.py

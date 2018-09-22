@@ -125,8 +125,7 @@ static void _cffi_init(void);
 
 static void _cffi_init_once(void)
 {
-    static pthread_once_t once_control = PTHREAD_ONCE_INIT;
-    pthread_once(&once_control, _cffi_init);
+    _cffi_init();
 }
 """
 
@@ -147,7 +146,6 @@ static void _cffi_init_error(const char *msg, const char *extra)
 static void _cffi_init(void)
 {
     rpython_startup_code();
-    RPyGilAllocate();
 
     if (pypy_setup_home(NULL, 1) != 0) {
         _cffi_init_error("pypy_setup_home() failed", "");

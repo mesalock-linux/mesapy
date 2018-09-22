@@ -15,47 +15,18 @@ all_modules = [p.basename for p in modulepath.listdir()
                and not p.basename.startswith('test')]
 
 essential_modules = set([
-    "exceptions", "_file", "sys", "__builtin__", "posix", "_warnings",
-    "itertools"
+    "_file",
 ])
 
 default_modules = essential_modules.copy()
-default_modules.update([
-    "_codecs", "gc", "_weakref", "marshal", "errno", "imp", "math", "cmath",
-    "_sre", "_pickle_support", "operator", "parser", "symbol", "token", "_ast",
-    "_io", "_random", "__pypy__", "_testing", "time"
-])
+default_modules.update(["__pypy__", "marshal", "operator", "_ast", "_weakref", "_cffi_backend"])
 
 
 # --allworkingmodules
 working_modules = default_modules.copy()
-working_modules.update([
-    "_socket", "unicodedata", "mmap", "fcntl", "_locale", "pwd",
-    "select", "zipimport", "_lsprof", "crypt", "signal", "_rawffi", "termios",
-    "zlib", "bz2", "struct", "_hashlib", "_md5", "_sha", "_minimal_curses",
-    "cStringIO", "thread", "itertools", "pyexpat", "_ssl", "cpyext", "array",
-    "binascii", "_multiprocessing", '_warnings', "_collections",
-    "_multibytecodec", "micronumpy", "_continuation", "_cffi_backend",
-    "_csv", "_cppyy", "_pypyjson", "_jitlog"
-])
 
-from rpython.jit.backend import detect_cpu
-try:
-    if detect_cpu.autodetect().startswith('x86'):
-        if not sys.platform.startswith('openbsd'):
-            working_modules.add('_vmprof')
-            working_modules.add('faulthandler')
-except detect_cpu.ProcessorAutodetectError:
-    pass
 
 translation_modules = default_modules.copy()
-translation_modules.update([
-    "fcntl", "time", "select", "signal", "_rawffi", "zlib", "struct", "_md5",
-    "cStringIO", "array", "binascii",
-    # the following are needed for pyrepl (and hence for the
-    # interactive prompt/pdb)
-    "termios", "_minimal_curses",
-])
 
 # XXX this should move somewhere else, maybe to platform ("is this posixish"
 #     check or something)

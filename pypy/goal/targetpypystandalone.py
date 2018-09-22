@@ -103,49 +103,8 @@ def get_additional_entrypoints(space, w_initstdio):
     @entrypoint_highlevel('main', [rffi.CCHARP, rffi.INT],
                           c_name='pypy_setup_home')
     def pypy_setup_home(ll_home, verbose):
-        from pypy.module.sys.initpath import pypy_find_stdlib
-        verbose = rffi.cast(lltype.Signed, verbose)
-        if ll_home and ord(ll_home[0]):
-            home1 = rffi.charp2str(ll_home)
-            home = os.path.join(home1, 'x') # <- so that 'll_home' can be
-                                            # directly the root directory
-        else:
-            home1 = "pypy's shared library location"
-            home = '*'
-        w_path = pypy_find_stdlib(space, home)
-        if space.is_none(w_path):
-            if verbose:
-                debug("pypy_setup_home: directories 'lib-python' and 'lib_pypy'"
-                      " not found in %s or in any parent directory" % home1)
-            return rffi.cast(rffi.INT, 1)
         space.startup()
-        must_leave = space.threadlocals.try_enter_thread(space)
-        try:
-            # initialize sys.{path,executable,stdin,stdout,stderr}
-            # (in unbuffered mode, to avoid troubles) and import site
-            space.appexec([w_path, space.newtext(home), w_initstdio],
-            r"""(path, home, initstdio):
-                import sys
-                sys.path[:] = path
-                sys.executable = home
-                initstdio(unbuffered=True)
-                try:
-                    import site
-                except Exception as e:
-                    sys.stderr.write("'import site' failed:\n")
-                    import traceback
-                    traceback.print_exc()
-            """)
-            return rffi.cast(rffi.INT, 0)
-        except OperationError as e:
-            if verbose:
-                debug("OperationError:")
-                debug(" operror-type: " + e.w_type.getname(space))
-                debug(" operror-value: " + space.text_w(space.str(e.get_w_value(space))))
-            return rffi.cast(rffi.INT, -1)
-        finally:
-            if must_leave:
-                space.threadlocals.leave_thread(space)
+	return 0
 
     @entrypoint_highlevel('main', [rffi.CCHARP], c_name='pypy_execute_source')
     def pypy_execute_source(ll_source):
@@ -332,8 +291,6 @@ class PyPyTarget(object):
         options = make_dict(config)
         wrapstr = 'space.wrap(%r)' % (options) # import time
         pypy.module.sys.Module.interpleveldefs['pypy_translation_info'] = wrapstr
-        if config.objspace.usemodules._cffi_backend:
-            self.hack_for_cffi_modules(driver)
 
         return self.get_entry_point(config)
 
@@ -388,7 +345,6 @@ class PyPyTarget(object):
                      'jitpolicy', 'get_entry_point',
                      'get_additional_config_options']:
             ns[name] = getattr(self, name)
-        ns['get_gchooks'] = self.get_gchooks
 
 PyPyTarget().interface(globals())
 

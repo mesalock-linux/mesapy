@@ -55,8 +55,7 @@ class GCBase(object):
     def post_setup(self):
         # More stuff that needs to be initialized when the GC is already
         # fully working.  (Only called by gctransform/framework for now.)
-        from rpython.memory.gc import env
-        self.DEBUG = env.read_from_env('PYPY_GC_DEBUG')
+        self.DEBUG = False
 
     def _teardown(self):
         pass

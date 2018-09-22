@@ -1,0 +1,4 @@
+[submodule "sgx/libffi"]
+	path = sgx/libffi
+	url = https://github.com/libffi/libffi.git
+	branch = v3.2.1

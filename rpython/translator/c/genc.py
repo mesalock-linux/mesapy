@@ -876,9 +876,6 @@ def add_extra_files(eci):
         srcdir / 'exception.c',
         srcdir / 'rtyper.c',           # ifdef HAVE_RTYPER
         srcdir / 'support.c',
-        srcdir / 'profiling.c',
-        srcdir / 'debug_print.c',
-        srcdir / 'debug_traceback.c',  # ifdef HAVE_RTYPER
         srcdir / 'asm.c',
         srcdir / 'instrument.c',
         srcdir / 'int.c',

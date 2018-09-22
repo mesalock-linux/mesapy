@@ -5,7 +5,6 @@
 #include <string.h>
 #include <assert.h>
 #include "src/threadlocal.h"
-#include "src/thread.h"
 
 
 /* this is a spin-lock that must be acquired around each doubly-linked-list
@@ -15,29 +14,12 @@ static long pypy_threadlocal_lock = 0;
 static int check_valid(void);
 
 int _RPython_ThreadLocals_AcquireTimeout(int max_wait_iterations) {
-    while (1) {
-        long old_value = pypy_lock_test_and_set(&pypy_threadlocal_lock, 1);
-        if (old_value == 0)
-            break;
-        /* busy loop */
-        if (max_wait_iterations == 0)
-            return -1;
-        if (max_wait_iterations > 0)
-            --max_wait_iterations;
-    }
-    assert(check_valid());
-    return 0;
 }
 void _RPython_ThreadLocals_Acquire(void) {
-    _RPython_ThreadLocals_AcquireTimeout(-1);
 }
 void _RPython_ThreadLocals_Release(void) {
-    assert(check_valid());
-    pypy_lock_release(&pypy_threadlocal_lock);
 }
 
-
-pthread_key_t pypy_threadlocal_key
 #ifdef _WIN32
 = TLS_OUT_OF_INDEXES
 #endif
@@ -180,30 +162,6 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL,
 
 void RPython_ThreadLocals_ProgramInit(void)
 {
-    /* Initialize the pypy_threadlocal_key, together with a destructor
-       that will be called every time a thread shuts down (if there is
-       a non-null thread-local value).  This is needed even in the
-       case where we use '__thread' below, for the destructor.
-    */
-    assert(pypy_threadlocal_lock == 0);
-#ifdef _WIN32
-    pypy_threadlocal_key = TlsAlloc();
-    if (pypy_threadlocal_key == TLS_OUT_OF_INDEXES)
-#else
-    if (pthread_key_create(&pypy_threadlocal_key, threadloc_unlink) != 0)
-#endif
-    {
-        fprintf(stderr, "Internal RPython error: "
-                        "out of thread-local storage indexes");
-        abort();
-    }
-    _RPython_ThreadLocals_Build();
-
-#ifndef _WIN32
-    pthread_atfork(_RPython_ThreadLocals_Acquire,
-                   _RPython_ThreadLocals_Release,
-                   cleanup_after_fork);
-#endif
 }
 
 
@@ -218,20 +176,10 @@ __thread struct pypy_threadlocal_s pypy_threadlocal;
 
 char *_RPython_ThreadLocals_Build(void)
 {
-    RPyAssert(pypy_threadlocal.ready == 0, "unclean thread-local");
-    _RPy_ThreadLocals_Init(&pypy_threadlocal);
-
-    /* we also set up &pypy_threadlocal as a POSIX thread-local variable,
-       because we need the destructor behavior. */
-    pthread_setspecific(pypy_threadlocal_key, (void *)&pypy_threadlocal);
-
-    return (char *)&pypy_threadlocal;
 }
 
 void RPython_ThreadLocals_ThreadDie(void)
 {
-    pthread_setspecific(pypy_threadlocal_key, NULL);
-    threadloc_unlink(&pypy_threadlocal);
 }
 
 
@@ -244,28 +192,6 @@ void RPython_ThreadLocals_ThreadDie(void)
    explicitly, with malloc()/free(), and attached to (a single) thread-
    local key using the API of Windows or pthread. */
 
-
-char *_RPython_ThreadLocals_Build(void)
-{
-    void *p = malloc(sizeof(struct pypy_threadlocal_s));
-    if (!p) {
-        fprintf(stderr, "Internal RPython error: "
-                        "out of memory for the thread-local storage");
-        abort();
-    }
-    _RPy_ThreadLocals_Init(p);
-    _RPy_ThreadLocals_Set(p);
-    return (char *)p;
-}
-
-void RPython_ThreadLocals_ThreadDie(void)
-{
-    void *p = _RPy_ThreadLocals_Get();
-    if (p != NULL) {
-        _RPy_ThreadLocals_Set(NULL);
-        threadloc_unlink(p);   /* includes free(p) */
-    }
-}
 
 
 /* ------------------------------------------------------------ */
