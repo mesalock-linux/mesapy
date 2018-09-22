@@ -109,14 +109,14 @@ First, you need to setup Intel SGX SDK environment properly.
 $ source $(SGX_SDK)/environment    # setup environment variables of Intel SGX SDK
 ```
 
-Build the `HelloWorld` sample code:
+Build the `HelloWorld` example:
 
 ```
-$ cd sgx/SampleCode/HelloWorld
+$ cd sgx/examples/HelloWorld
 $ make
 ```
 
-Run the `HelloWorld` sample, you will see hello world and welcome messages:
+Run the `HelloWorld` example, you will see hello world and welcome messages:
 
 ```
 $ ./app
@@ -128,4 +128,4 @@ Info: HelloWorld successfully returned.
 Enter a character before exit ...
 ```
 
-Also, you can build and run the sample with a single command: `make run`.
+Also, you can build and run the example with a single command: `make run`.
