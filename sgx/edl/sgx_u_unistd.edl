@@ -2,8 +2,6 @@ enclave {
 
     include "sys/types.h"
 
-    trusted { };
-
     untrusted {
         ssize_t u_write_ocall(int fd, [in, size=count] const void *buf, size_t count);
     };

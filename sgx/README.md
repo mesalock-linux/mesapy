@@ -176,8 +176,6 @@ enclave {
     // import untrusted functions from sgx_ulibc
     from "sgx_u_unistd.edl" import *;
 
-    untrusted { };
-
 };
 ```
 
