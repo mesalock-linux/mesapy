@@ -1,3 +1,10 @@
+/*
+ * This file contains symbols which are not supported for now. This is just a
+ * temporary workaround. The enclave will abort if MesaPy for SGX calls these
+ * functions for some reasons. We will gradually move useful functions into the
+ * untrusted libc and remove unused or unsafe functions from MesaPy for SGX.
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/types.h>
