@@ -169,12 +169,12 @@ we should declare the `say` function in `Enclave.edl` like this:
 ```
 enclave {
 
-    // import untrusted functions from sgx_ulibc
-    from "sgx_u_unistd.edl" import *;
-
     trusted {
         public void say();
     };
+
+    // import untrusted functions from sgx_ulibc
+    from "sgx_u_unistd.edl" import *;
 
     untrusted { };
 
