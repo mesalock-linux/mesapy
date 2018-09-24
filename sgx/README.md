@@ -129,3 +129,57 @@ Enter a character before exit ...
 ```
 
 Also, you can build and run the example with a single command: `make run`.
+
+### Writing your own Python enclave
+
+Writing a Python enclave is pretty simple. Fistly, we need to write Python code
+and export it as external CFFI functions. Here is a simple code from the
+`hello_world` example (`python_enclave.py`) with detailed comments.
+
+```
+import sgx_cffi
+import _cffi_backend as backend
+
+ffi = sgx_cffi.FFI(backend)
+
+# declare the `say` function
+ffi.embedding_api("void say();")
+
+# put your Python code here, you can also read the code from another file
+ffi.embedding_init_code(
+"""
+from python_enclave import ffi
+import __pypy__
+
+# define the `say` function as CFFI extern function
+@ffi.def_extern()
+def say():
+    print "Hello, World!"
+"""
+)
+
+# generate CFFI code
+ffi.set_source("python_enclave", "")
+ffi.emit_c_code("python_enclave.c")
+```
+
+The second step is to declare functions in EDL as trusted function. In this example,
+we should declare the `say` function in `Enclave.edl` like this:
+
+```
+enclave {
+
+    // import untrusted functions from sgx_ulibc
+    from "sgx_u_unistd.edl" import *;
+
+    trusted {
+        public void say();
+    };
+
+    untrusted { };
+
+};
+```
+
+At last, you can write your own application (e.g., the `App/App.cpp` file in the
+example) to call the trusted python function.
