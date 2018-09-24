@@ -183,3 +183,16 @@ enclave {
 
 At last, you can write your own application (e.g., the `App/App.cpp` file in the
 example) to call the trusted python function.
+
+## Roadmap
+
+MesaPy for SGX is still a work-in-progress project. Right now, it supports simple
+tasks like secure computation. Here is a TODO list.
+
+  - bring more Python modules into SGX (e.g., the standard library and NumPy)
+  - multi-threading support
+  - GC support
+  - remote attestation
+
+If you are interested in contributing to MesaPy for SGX, feel free to open an issue
+stating your plan and start working on it.
