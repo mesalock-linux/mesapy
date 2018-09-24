@@ -36,7 +36,7 @@ features of MesaPy:
   verify its libraries and backend written in C using state-of-the-art
   verification tools.
 
-- **SGX support** (WIP): With the memory safety of MesaPy, we also port it to
+- **SGX support**: With the memory safety of MesaPy, we also port it to
   Intel SGX, which is a trusted execution environment to provide integrity and
   confidentiality guarantees to security-sensitive computation. Developers now
   can easily use MesaPy to implement SGX applications without worrying about
@@ -83,24 +83,28 @@ $ cd mesapy
 $ docker run --rm -it -v$(pwd):/mesapy -w /mesapy mesalocklinux/build-mesalock-linux make pypy-c
 ```
 
-### Using MesaPy in SGX (WIP)
+### Using MesaPy for SGX
 
 One unique feature of MesaPy is to support Intel trusted execution environment
 -- SGX. Developers now can use Python to implement security-sensitive
 applications. The ultimate goal of MesaPy is to have SGX as a platform (just
-like x86 and arm in MesaPy). Right now, the MesaPy with SGX is under the `sgx`
-branch, so please checkout the branch first. Note that this is a work-in-progress
-feature, current version only has limited functions and packages. Contributions
-are very welcome.
+like x86 and arm in MesaPy). Right now, the MesaPy for SGX is under the `sgx`
+[branch](https://github.com/mesalock-linux/mesapy/tree/sgx/sgx), so please
+checkout the branch first. You can follow the instruction in its
+[README](https://github.com/mesalock-linux/mesapy/blob/sgx/sgx/README.md) to
+start using MesaPy for SGX. Note that this is a work-in-progress feature,
+current version only has limited functions and packages. Contributions are very
+welcome.
 
 To run Python app in SGX is very simple:
 
-  - checkout and build MesaPy with SGX
+  - checkout and build MesaPy for SGX
   - write Python embeddings
-  - use MesaPy to translate and generate SGX enclave
+  - use MesaPy for SGX to build an SGX enclave with the Python embeddings
 
-We also provide some sample code (under the `/sgx` directory ) to quickly start
-using MesaPy with SGX. You can also read details in our documentations.
+We also provide some examples (under the `/sgx/examples` directory ) to quickly start
+using MesaPy for SGX. You can also read details in our
+[documentations](https://github.com/mesalock-linux/mesapy/blob/sgx/sgx/README.md).
 
 ### Formal verification
 
