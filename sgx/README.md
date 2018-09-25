@@ -5,7 +5,7 @@ Python.
 
 ## Getting Started
 
-### Requirements
+### Prerequisites
 
 MesaPy for SGX needs following hardware requirements to run SGX:
 
@@ -21,8 +21,9 @@ Also, ensure that you have one of the follwing operating systems required by SGX
 - CentOS 7.4.1708 64bits
 - SUSE Linux Enterprise Server 12 64bits
 
-Below, we use Ubuntu 16.04.3 as an example to show steps to get started with
-MesaPy for SGX.
+Please refer to the [Intel SGX for Linux](https://github.com/intel/linux-sgx)
+project for the cutting edge version. Now, we use Ubuntu 16.04.3 as an example
+to show steps to get started with MesaPy for SGX.
 
 ### Installing Intel SGX
 
@@ -194,3 +195,10 @@ tasks like secure computation. Here is a TODO list.
 
 If you are interested in contributing to MesaPy for SGX, feel free to open an issue
 stating your plan and start working on it.
+
+## License
+
+MesaPy for SGX is provided under the 3-Clause BSD license. MesaPy for SGX is
+built upon PyPy and other open source projects, see the
+[LICENSE](https://github.com/mesalock-linux/mesapy/blob/mesapy2.7/LICENSE) file
+for detailed licenses.
