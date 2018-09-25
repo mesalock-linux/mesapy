@@ -27,7 +27,7 @@ function main() {
             h|?)
                 usage
                 exit 0
-            ;;
+                ;;
             \?)
                 echo "Unknown option: -$OPTARG" 1>&2
                 exit 1
