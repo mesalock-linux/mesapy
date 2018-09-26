@@ -92,7 +92,7 @@ Note that, we also provide a `Dockerfile` with all essential dependencies.
 You can build an image by execute `./mesapy-sgx-docker.sh build` and run the image
 by execute `./mesapy-sgx-docker.sh run`.
 
-### Starting with the `HelloWorld` example
+### Starting with the `hello_world` example
 
 First, you need to setup Intel SGX SDK environment properly.
 
@@ -100,14 +100,14 @@ First, you need to setup Intel SGX SDK environment properly.
 $ source $(SGX_SDK)/environment    # setup environment variables of Intel SGX SDK
 ```
 
-Build the `HelloWorld` example:
+Build the `hello_world` example:
 
 ```
-$ cd sgx/examples/HelloWorld
+$ cd sgx/examples/hello_world
 $ make
 ```
 
-Run the `HelloWorld` example, you will see hello world and welcome messages:
+Run the `hello_world` example, you will see hello world and welcome messages:
 
 ```
 $ ./app
@@ -115,7 +115,7 @@ Hello, World!
 Welcome to MesaPy for SGX.
 Do what I mean: 42
 
-Info: HelloWorld successfully returned.
+Info: hello_world successfully returned.
 Enter a character before exit ...
 ```
 
