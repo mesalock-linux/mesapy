@@ -15,7 +15,8 @@ all_modules = [p.basename for p in modulepath.listdir()
                and not p.basename.startswith('test')]
 
 essential_modules = set([
-    "_file",
+    "exceptions", "_file", "sys", "__builtin__", "_warnings",
+    "itertools"
 ])
 
 default_modules = essential_modules.copy()
