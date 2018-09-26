@@ -1,7 +1,7 @@
 # MesaPy for SGX
 
 MesaPy for SGX aims at helping developers to write memory-safe Intel SGX apps in
-Python.
+Python with minimal TCB.
 
 ## Getting Started
 
@@ -69,7 +69,7 @@ $ sudo apt-get install gcc make libffi-dev pkg-config libgdbm-dev libgc-dev pyth
 ```
 
 Clone the MesaPy repository from GitHub recursively with its submodules. Note
-that currently MesaPy for SGX is in the `sgx` branch.
+that MesaPy for SGX is in the `sgx` branch.
 
 ```
 $ git clone -b sgx --recursive git@github.com:mesalock-linux/mesapy.git
