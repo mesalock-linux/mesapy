@@ -10,7 +10,7 @@ else
 RUNINTERP = $(PYPY_EXECUTABLE)
 endif
 
-.PHONY: pypy-c cffi_imports sgx
+.PHONY: pypy-c cffi_imports sgx libffi
 
 pypy-c:
 	@echo
@@ -42,5 +42,11 @@ endif
 cffi_imports: pypy-c
 	PYTHONPATH=. pypy/goal/pypy-c pypy/tool/build_cffi_imports.py || /bin/true
 
-sgx:
+sgx: libffi
 	cd pypy/goal && $(RUNINTERP) ../../rpython/bin/rpython -O2 --make-jobs=$(shell nproc) targetpypystandalone.py
+
+libffi:
+	cd sgx/libffi && ./autogen.sh
+	mkdir -p sgx/libffi/build_dir
+	cd sgx/libffi/build_dir && ../configure --prefix=$(shell pwd) --with-pic
+	make -C sgx/libffi/build_dir && make -C sgx/libffi/build_dir install

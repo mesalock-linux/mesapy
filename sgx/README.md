@@ -88,16 +88,6 @@ Then, you will get a `libpypy-c.a` file in the `pypy/goal` directory.
 The detailed instructions of building MesaPy are described in the
 [documentation](https://docs.mesapy.org/building-from-source.html).
 
-Build the `libffi` library which bridges C and Python.
-
-```
-$ cd sgx/libffi
-$ ./autogen.sh
-$ mkdir build_dir && cd build_dir
-$ ../configure --prefix=$(pwd) --with-pic
-$ make && make install
-```
-
 Note that, we also provide a `Dockerfile` with all essential dependencies.
 You can build an image by execute `./mesapy-sgx-docker.sh build` and run the image
 by execute `./mesapy-sgx-docker.sh run`.
