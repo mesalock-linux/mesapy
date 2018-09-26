@@ -3,6 +3,8 @@ all: pypy-c cffi_imports
 
 PYPY_EXECUTABLE := $(shell which pypy)
 URAM := $(shell python -c "import sys; print 4.5 if sys.maxint>1<<32 else 2.5")
+LIBFFI := $(shell pwd)/sgx/libffi
+LIBFFI_BUILD_DIR := $(LIBFFI)/build_DIR
 
 ifeq ($(PYPY_EXECUTABLE),)
 RUNINTERP = python
@@ -46,7 +48,7 @@ sgx: libffi
 	cd pypy/goal && $(RUNINTERP) ../../rpython/bin/rpython -O2 --make-jobs=$(shell nproc) targetpypystandalone.py
 
 libffi:
-	cd sgx/libffi && ./autogen.sh
-	mkdir -p sgx/libffi/build_dir
-	cd sgx/libffi/build_dir && ../configure --prefix=$(shell pwd) --with-pic
-	make -C sgx/libffi/build_dir && make -C sgx/libffi/build_dir install
+	cd $(LIBFFI) && ./autogen.sh
+	mkdir -p $(LIBFFI_BUILD_DIR)
+	cd $(LIBFFI_BUILD_DIR) && ../configure --prefix=$(LIBFFI_BUILD_DIR) --with-pic
+	make -C $(LIBFFI_BUILD_DIR) && make -C $(LIBFFI_BUILD_DIR) install
