@@ -31,7 +31,7 @@ Let's install dependencies for Instal SGX PSW and SGX SDK first. Following instr
 for Ubuntu 16.04, you can find detailed guilde from
 the [Intel SGX Installation Guide](https://download.01.org/intel-sgx/linux-2.2/docs/Intel_SGX_Installation_Guide_Linux_2.2_Open_Source.pdf).
 
-```
+```sh
 # Install dependencies of Intel SGX PSW:
 $ sudo apt-get install libssl-dev libcurl4-openssl-dev libprotobuf-dev
 
@@ -54,7 +54,7 @@ Then, let's install driver, PSW packages and SDK. First, download them from
 [https://download.01.org/intel-sgx/linux-2.2/](https://download.01.org/intel-sgx/linux-2.2/).
 Then, follow these instructions to install.
 
-```
+```sh
 $ sudo ./sgx_linux_x64_driver.bin
 $ sudo ./sgx_linux_<os>_x64_psw_<version>.bin
 $ sudo ./sgx_linux_<os>_x64_sdk_<version>.bin
@@ -64,20 +64,20 @@ $ sudo ./sgx_linux_<os>_x64_sdk_<version>.bin
 
 Install dependencies of building MesaPy for SGX.
 
-```
+```sh
 $ sudo apt-get install gcc make libffi-dev pkg-config libgdbm-dev libgc-dev python-cffi
 ```
 
 Clone the MesaPy repository from GitHub recursively with its submodules. Note
 that MesaPy for SGX is in the `sgx` branch.
 
-```
+```sh
 $ git clone -b sgx --recursive git@github.com:mesalock-linux/mesapy.git
 ```
 
 Build MesaPy for SGX:
 
-```
+```sh
 $ cd mesapy
 $ make sgx
 ```
@@ -96,20 +96,20 @@ by execute `./mesapy-sgx-docker.sh run`.
 
 First, you need to setup Intel SGX SDK environment properly.
 
-```
+```sh
 $ source $(SGX_SDK)/environment    # setup environment variables of Intel SGX SDK
 ```
 
 Build the `hello_world` example:
 
-```
+```sh
 $ cd sgx/examples/hello_world
 $ make
 ```
 
 Run the `hello_world` example, you will see hello world and welcome messages:
 
-```
+```sh
 $ ./app
 Hello, World!
 Welcome to MesaPy for SGX.
@@ -127,7 +127,7 @@ Writing a Python enclave is pretty simple. Fistly, we need to write Python code
 and export it as external CFFI functions. Here is a simple code from the
 `hello_world` example (`python_enclave.py`) with detailed comments.
 
-```
+```python
 import sgx_cffi
 import _cffi_backend as backend
 
