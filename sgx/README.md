@@ -65,7 +65,7 @@ $ sudo ./sgx_linux_<os>_x64_sdk_<version>.bin
 Install dependencies of building MesaPy for SGX.
 
 ```sh
-$ sudo apt-get install gcc make libffi-dev pkg-config libgdbm-dev libgc-dev python-cffi
+$ sudo apt-get install gcc make libffi-dev pkg-config libgdbm-dev libgc-dev python-cffi pypy pypy-dev
 ```
 
 Clone the MesaPy repository from GitHub recursively with its submodules. Note
