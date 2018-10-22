@@ -180,7 +180,6 @@ tasks like secure computation. Here is a TODO list.
 
   - bring more Python modules into SGX (e.g., the standard library and NumPy)
   - multi-threading support
-  - GC support
   - remote attestation
 
 If you are interested in contributing to MesaPy for SGX, feel free to open an issue
