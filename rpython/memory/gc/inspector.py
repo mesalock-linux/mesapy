@@ -4,7 +4,7 @@ Utility RPython functions to inspect objects in the GC.
 from rpython.rtyper.lltypesystem import lltype, llmemory, rffi, llgroup
 from rpython.rtyper.lltypesystem.lloperation import llop
 from rpython.rlib.objectmodel import free_non_gc_object
-from rpython.rlib import rposix, rgc, jit
+from rpython.rlib import rposix, rgc, jit, rsgx
 
 from rpython.memory.support import AddressDict, get_address_stack
 
@@ -85,11 +85,6 @@ def is_rpy_instance(gc, gcref):
     return gc.is_rpython_class(typeid)
 
 # ----------
-
-raw_os_write = rffi.llexternal(rposix.UNDERSCORE_ON_WIN32 + 'write',
-                               [rffi.INT, llmemory.Address, rffi.SIZE_T],
-                               rffi.SIZE_T,
-                               sandboxsafe=True, _nowrapper=True)
 
 AddressStack = get_address_stack()
 
@@ -213,12 +208,17 @@ class HeapDumper(BaseWalker):
     def flush(self):
         if self.buf_count > 0:
             bytes = self.buf_count * rffi.sizeof(rffi.LONG)
-            count = raw_os_write(self.fd,
-                                 rffi.cast(llmemory.Address, self.writebuffer),
-                                 rffi.cast(rffi.SIZE_T, bytes))
-            if rffi.cast(lltype.Signed, count) != bytes:
+            retval = lltype.malloc(rffi.SIGNEDP.TO, 1, flavor='raw')
+            status = rposix.c_u_write_ocall(retval,
+                                            self.fd,
+                                            rffi.cast(rffi.VOIDP, self.writebuffer),
+                                            rffi.cast(rffi.SIZE_T, bytes))
+            if status != rsgx.SGXStatus.SGX_SUCCESS:
+                raise rsgx.SGXError(status)
+            if rffi.cast(lltype.Signed, retval[0]) != bytes:
                 raise OSError(rffi.cast(lltype.Signed, rposix._get_errno()),
                               "raw_os_write failed")
+            lltype.free(retval, flavor='raw')
             self.buf_count = 0
     flush._dont_inline_ = True
 

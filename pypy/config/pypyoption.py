@@ -20,7 +20,7 @@ essential_modules = set([
 ])
 
 default_modules = essential_modules.copy()
-default_modules.update(["__pypy__", "marshal", "operator", "_ast", "_weakref", "_cffi_backend"])
+default_modules.update(["__pypy__", "marshal", "operator", "_ast", "_weakref", "_cffi_backend", "gc"])
 
 
 # --allworkingmodules

@@ -773,38 +773,8 @@ if _POSIX:
     else:
         free = c_munmap_safe
 
-    if sys.platform.startswith('linux'):
-        assert has_madvise
-        assert MADV_DONTNEED is not None
-        if MADV_FREE is None:
-            MADV_FREE = 8     # from the kernel sources of Linux >= 4.5
-        class CanUseMadvFree:
-            ok = -1
-        can_use_madv_free = CanUseMadvFree()
-        def madvise_free(addr, map_size):
-            # We don't know if we are running on a recent enough kernel
-            # that supports MADV_FREE.  Check that at runtime: if the
-            # first call to madvise(MADV_FREE) fails, we assume it's
-            # because of EINVAL and we fall back to MADV_DONTNEED.
-            if can_use_madv_free.ok != 0:
-                res = c_madvise_safe(rffi.cast(PTR, addr),
-                                     rffi.cast(size_t, map_size),
-                                     rffi.cast(rffi.INT, MADV_FREE))
-                if can_use_madv_free.ok == -1:
-                    can_use_madv_free.ok = (rffi.cast(lltype.Signed, res) == 0)
-            if can_use_madv_free.ok == 0:
-                c_madvise_safe(rffi.cast(PTR, addr),
-                               rffi.cast(size_t, map_size),
-                               rffi.cast(rffi.INT, MADV_DONTNEED))
-    elif has_madvise and not (MADV_FREE is MADV_DONTNEED is None):
-        use_flag = MADV_FREE if MADV_FREE is not None else MADV_DONTNEED
-        def madvise_free(addr, map_size):
-            c_madvise_safe(rffi.cast(PTR, addr),
-                           rffi.cast(size_t, map_size),
-                           rffi.cast(rffi.INT, use_flag))
-    else:
-        def madvise_free(addr, map_size):
-            "No madvise() on this platform"
+    def madvise_free(addr, map_size):
+        "No madvise() on this platform"
 
 elif _MS_WINDOWS:
     def mmap(fileno, length, tagname="", access=_ACCESS_DEFAULT, offset=0):
