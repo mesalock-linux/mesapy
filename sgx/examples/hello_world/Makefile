@@ -220,15 +220,15 @@ Enclave/Enclave_t.o: Enclave/Enclave_t.c
 	@$(CC) $(Enclave_C_Flags) -c $< -o $@
 	@echo "CC   <=  $<"
 
-Enclave/src/python_enclave.o: Enclave/src/python_enclave.py
-	@export PYTHONPATH=$(MESAPY_SGX) && cd Enclave/src && pypy python_enclave.py
-	@cd Enclave/src && $(CC) -O2 -UWITH_THREAD -DSGX -fPIC -Wimplicit -I/usr/lib/pypy/include -c python_enclave.c -o python_enclave.o
+Enclave/src/ffi.o: Enclave/src/ffi.py
+	@export PYTHONPATH=$(MESAPY_SGX) && cd Enclave/src && pypy ffi.py
+	@cd Enclave/src && $(CC) -O2 -UWITH_THREAD -DSGX -fPIC -Wimplicit -I/usr/lib/pypy/include -c ffi.c -o ffi.o
 
 Enclave/%.o: Enclave/%.cpp
 	@$(CXX) $(Enclave_Cpp_Flags) -c $< -o $@
 	@echo "CXX  <=  $<"
 
-$(Enclave_Name): Enclave/Enclave_t.o Enclave/src/python_enclave.o $(LIBSGX_TLIBC_A)
+$(Enclave_Name): Enclave/Enclave_t.o Enclave/src/ffi.o $(LIBSGX_TLIBC_A)
 	@$(CXX) $^ $(LIBPYPY_C_A) $(LIBFFI_A) -o $@ $(Enclave_Link_Flags)
 	@echo "LINK =>  $@"
 
@@ -245,4 +245,4 @@ $(LIBSGX_TLIBC_A): ../../sgx_tlibc
 .PHONY: clean
 
 clean:
-	@rm -f .config_* $(App_Name) $(Enclave_Name) $(Signed_Enclave_Name) $(App_Cpp_Objects) App/Enclave_u.* $(Enclave_Cpp_Objects) Enclave/Enclave_t.* Enclave/src/python_enclave.o Enclave/src/python_enclave.c
+	@rm -f .config_* $(App_Name) $(Enclave_Name) $(Signed_Enclave_Name) $(App_Cpp_Objects) App/Enclave_u.* $(Enclave_Cpp_Objects) Enclave/Enclave_t.* Enclave/src/ffi.o Enclave/src/ffi.c
