@@ -3,6 +3,28 @@
 MesaPy for SGX aims at helping developers to write memory-safe Intel SGX apps in
 Python with minimal TCB.
 
+## Design
+
+The design of MesaPy for SGX can be illustrated in the following figure.
+
+<p align="center">
+<img src="img/mesapy_for_sgx_design.png" width="600"/>
+</p>
+
+Untrusted part:
+- application: contains application's untrusted logic (`App.cpp`)
+- `libsgx_ulibc`: defines ocall functions for SGX enclave
+- Intel SGX SDK
+
+Trusted part:
+- FFI (`ffi.py`): an FFI middleware to call real python function
+- Python enclave (`enclave.py`): defines some Python functions executed in SGX
+- `libpypy`: the MesaPy library to support the Python interpreter and also
+  contains some useful modules
+- `libsgx_tlibc`: defines helper functions and ocall shim functions
+- `libffi`: provides foreign function interface (FFI) support
+- Intel SGX SDK
+
 ## Getting Started
 
 ### Prerequisites
