@@ -19,6 +19,7 @@ class BaseLinux(BasePosix):
     standalone_only = ()
     shared_only = ('-fPIC',)
     so_ext = 'so'
+    a_ext = 'a'
 
     if platform.machine() == 's390x':
         from rpython.translator.platform.arch import s390x

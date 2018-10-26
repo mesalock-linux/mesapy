@@ -125,7 +125,7 @@ class BasePosix(Platform):
 
         if shared:
             libname = exe_name.new(ext='').basename
-            target_name = 'lib' + exe_name.new(ext=self.so_ext).basename
+            target_name = 'lib' + exe_name.new(ext=self.a_ext).basename
         else:
             target_name = exe_name.basename
 
@@ -174,8 +174,7 @@ class BasePosix(Platform):
         definitions = [
             ('RPYDIR', '"%s"' % rpydir),
             ('TARGET', target_name),
-            ('DEFAULT_TARGET', exe_name.basename),
-            ('PYPY_A', 'libpypy-c.a'),
+            ('DEFAULT_SGX_TARGET', exe_name.basename),
             ('AR', 'ar rcs'),
             ('SOURCES', rel_cfiles),
             ('OBJECTS', rel_ofiles),
@@ -208,9 +207,8 @@ class BasePosix(Platform):
             postcompile_rule[2].append('attr -q -s pax.flags -V m $(BIN)')
 
         rules = [
-            ('all', '$(PYPY_A)', []),
-            ('$(TARGET)', '$(OBJECTS)', ['$(CC_LINK) $(LDFLAGSEXTRA) -o $@ $(OBJECTS) $(LIBDIRS) $(LIBS) $(LINKFILES) $(LDFLAGS)', '$(MAKE) postcompile BIN=$(TARGET)']),
-            ('$(PYPY_A)', '$(OBJECTS)', ['$(AR) $@ $(OBJECTS)']),
+            ('all', '$(DEFAULT_SGX_TARGET)', []),
+            ('$(TARGET)', '$(OBJECTS)', ['$(AR) $@ $(OBJECTS)']),
             ('%.o', '%.c', '$(CC) $(CFLAGS) $(CFLAGSEXTRA) -o $@ -c $< $(INCLUDEDIRS)'),
             ('%.o', '%.s', '$(CC) $(CFLAGS) $(CFLAGSEXTRA) -o $@ -c $< $(INCLUDEDIRS)'),
             ('%.o', '%.cxx', '$(CXX) $(CFLAGS) $(CFLAGSEXTRA) -o $@ -c $< $(INCLUDEDIRS)'),
@@ -229,8 +227,8 @@ class BasePosix(Platform):
                    'int $(PYPY_MAIN_FUNCTION)(int, char*[]); '
                    'int main(int argc, char* argv[]) '
                    '{ return $(PYPY_MAIN_FUNCTION)(argc, argv); }" > $@')
-            m.rule('$(DEFAULT_TARGET)', ['$(TARGET)', 'main.o'],
-                   ['$(CC_LINK) $(LDFLAGS_LINK) main.o -L. -l$(SHARED_IMPORT_LIB) -o $@ $(RPATH_FLAGS)', '$(MAKE) postcompile BIN=$(DEFAULT_TARGET)'])
+            m.rule('$(DEFAULT_SGX_TARGET)', ['$(TARGET)', 'main.o'],
+                   ['$(AR) $@ $(OBJECTS)'])
 
         return m
 

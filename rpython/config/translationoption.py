@@ -57,8 +57,8 @@ translation_optiondescription = OptionDescription(
                      },
                  cmdline="-b --backend"),
 
-    BoolOption("shared", "Build as a shared library",
-               default=False, cmdline="--shared"),
+    BoolOption("shared", "Build as a SGX library",
+               default=True, cmdline="--sgx"),
 
     BoolOption("log", "Include debug prints in the translation (PYPYLOG=...)",
                default=True, cmdline="--log"),

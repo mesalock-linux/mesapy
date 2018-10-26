@@ -513,8 +513,8 @@ class TranslationDriver(SimpleTaskEngine):
         soname = self.cbuilder.shared_library_name
         newexename = mkexename(self.compute_exe_name())
         newarname = newexename.new(basename=soname.basename)
-        shutil_copy(str(soname).replace("libpypy-c.so", "libpypy-c.a"),
-                    str(newarname).replace("libpypy-c.so", "libpypy-c.a"))
+        shutil_copy(str(soname).replace(".so", ".a"),
+                    str(newarname).replace(".so", ".a"))
 
     @taskdef(['source_c'], "Compiling c source")
     def task_compile_c(self):
