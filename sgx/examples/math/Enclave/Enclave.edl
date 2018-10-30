@@ -1,0 +1,10 @@
+enclave {
+
+    trusted {
+        public void math_example();
+    };
+
+    // import untrusted functions from sgx_ulibc
+    from "sgx_u_unistd.edl" import *;
+
+};
