@@ -30,7 +30,7 @@ default_modules.update([
 # --allworkingmodules
 working_modules = default_modules.copy()
 working_modules.update([
-    "_cffi_backend"
+    "micronumpy", "_cffi_backend"
 ])
 
 
