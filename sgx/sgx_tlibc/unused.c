@@ -19,6 +19,7 @@ int stderr = 3;
 #define socklen_t int
 #define off_t int
 #define off64_t int
+#define time_t long
 
 struct sockaddr {
 };
@@ -33,6 +34,11 @@ struct timespec {
 };
 
 struct timeval {
+};
+
+struct timezone {
+    int tz_minuteswest;
+    int tz_dsttime;
 };
 
 void *dlopen(const char *filename, int flag) { abort(); }
@@ -145,3 +151,7 @@ int __lxstat64(int vers, const char *name, struct stat64 *buf) { abort(); }
 int __xstat64(int vers, const char *name, struct stat64 *buf) { abort(); }
 
 int __fxstat64(int vers, int fd, struct stat64 *buf) { abort(); }
+
+int gettimeofday(struct timeval *tv, struct timezone *tz) { abort(); };
+
+time_t time(time_t *tloc) { abort(); };
