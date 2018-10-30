@@ -220,7 +220,7 @@ Enclave/Enclave_t.o: Enclave/Enclave_t.c
 	@$(CC) $(Enclave_C_Flags) -c $< -o $@
 	@echo "CC   <=  $<"
 
-Enclave/src/ffi.o: Enclave/src/ffi.py
+Enclave/src/ffi.o: Enclave/src/ffi.py Enclave/src/enclave.py
 	@export PYTHONPATH=$(MESAPY_SGX) && cd Enclave/src && pypy ffi.py
 	@cd Enclave/src && $(CC) -O2 -UWITH_THREAD -DSGX -fPIC -Wimplicit -I/usr/lib/pypy/include -c ffi.c -o ffi.o
 
