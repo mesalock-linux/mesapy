@@ -6,6 +6,6 @@ test: $(TESTDIRS)
 
 $(TESTDIRS):
 	@$(MAKE) -C $@ > /dev/null 2>&1
-	@cd $@ && ./test
+	@cd $@ && ./app
 
 .PHONY: all $(TESTDIRS)

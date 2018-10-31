@@ -86,7 +86,7 @@ App_Link_Flags += -L../../sgx_ulibc -lsgx_ulibc
 
 App_Cpp_Objects := $(App_Cpp_Files:.cpp=.o)
 
-App_Name := test
+App_Name := app
 
 ######## Enclave Settings ########
 
