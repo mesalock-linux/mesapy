@@ -3,7 +3,9 @@ BUILDDIRS = $(DIRS:%=build-%)
 TESTDIRS = $(DIRS:%=test-%)
 CLEANDIRS = $(DIRS:%=clean-%)
 
-all: $(BUILDDIRS)
+all: build test
+
+build: $(BUILDDIRS)
 $(DIRS): $(BUILDDIRS)
 $(BUILDDIRS):
 	$(MAKE) -C $(@:build-%=%)
