@@ -5,11 +5,7 @@ from rpython.rlib.unroll import unrolling_iterable
 
 app = gateway.applevel("""
 def syntax_warning(msg, fn, lineno, offset):
-    import warnings
-    try:
-        warnings.warn_explicit(msg, SyntaxWarning, fn, lineno)
-    except SyntaxWarning:
-        raise SyntaxError(msg, (fn, lineno, offset, msg))
+    print "[?] message:", msg
 """, filename=__file__)
 _emit_syntax_warning = app.interphook("syntax_warning")
 del app
