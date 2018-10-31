@@ -20,16 +20,17 @@ essential_modules = set([
 ])
 
 default_modules = essential_modules.copy()
-default_modules.update([
-    "_codecs", "gc", "_weakref", "marshal", "errno", "imp", "math", "cmath",
-    "_pickle_support", "operator", "parser", "symbol", "token", "_ast",
-    "_io", "_random", "__pypy__", "_testing"
-])
-
+default_modules.update(["__pypy__", "marshal", "operator", "_ast", "_weakref", "_cffi_backend"])
 
 # --allworkingmodules
 working_modules = default_modules.copy()
 working_modules.update([
+    # default modules in normal platform
+    "_codecs", "gc", "_weakref", "marshal", "errno", "imp", "math", "cmath",
+    "_pickle_support", "operator", "parser", "symbol", "token", "_ast",
+    "_io", "_random", "__pypy__", "_testing",
+
+    # working modules
     "binascii",
     "micronumpy", "_cffi_backend"
 ])
