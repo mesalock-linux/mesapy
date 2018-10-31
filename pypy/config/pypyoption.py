@@ -30,6 +30,7 @@ default_modules.update([
 # --allworkingmodules
 working_modules = default_modules.copy()
 working_modules.update([
+    "binascii",
     "micronumpy", "_cffi_backend"
 ])
 
