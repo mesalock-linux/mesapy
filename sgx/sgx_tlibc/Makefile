@@ -2,7 +2,7 @@ SGX_SDK ?= /opt/intel/sgxsdk
 CFLAGS := -O2 -fPIC -Wno-attributes
 INCLUDEDIRS := -I$(SGX_SDK)/include/tlibc -I$(SGX_SDK)/include
 
-SRCS := $(wildcard *.c)
+SRCS := $(wildcard *.c) $(wildcard */*.c)
 OBJS := $(sort $(SRCS:.c=.o))
 
 TARGET  := libsgx_tlibc.a
