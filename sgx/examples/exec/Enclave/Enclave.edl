@@ -1,7 +1,7 @@
 enclave {
 
     trusted {
-        public void python_exec([in, string] const char* python_code);
+        public void exec_example([in, string] const char* python_code);
     };
 
     // import untrusted functions from sgx_ulibc

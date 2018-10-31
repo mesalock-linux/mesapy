@@ -153,7 +153,7 @@ int SGX_CDECL main(int argc, char *argv[])
     }
 
     if (argc > 1) {
-        python_exec(global_eid, argv[1]);
+        exec_example(global_eid, argv[1]);
     } else {
         printf("You can execute python code by ./app \"print 'Hello, World!'\"\n");
         sgx_destroy_enclave(global_eid);
@@ -163,7 +163,7 @@ int SGX_CDECL main(int argc, char *argv[])
     /* Destroy the enclave */
     sgx_destroy_enclave(global_eid);
 
-    printf("\nInfo: python_exec successfully returned.\n");
+    printf("\nInfo: exec_example successfully returned.\n");
 
     printf("Enter a character before exit ...\n");
     getchar();
