@@ -40,5 +40,5 @@ sgx/**/App/Enclave_u.c
 sgx/**/App/Enclave_u.h
 sgx/**/Enclave/Enclave_t.c
 sgx/**/Enclave/Enclave_t.h
-sgx/**/Enclave/src/python_enclave.c
+sgx/**/Enclave/src/ffi.c
 sgx/**/app
