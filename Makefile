@@ -47,6 +47,9 @@ cffi_imports: pypy-c
 sgx: libffi
 	cd pypy/goal && $(RUNINTERP) ../../rpython/bin/rpython -O2 --make-jobs=$(shell nproc) targetpypystandalone.py
 
+sgx_minimal: libffi
+	cd pypy/goal && $(RUNINTERP) ../../rpython/bin/rpython -O2 --make-jobs=$(shell nproc) targetpypystandalone.py --no-allworkingmodules
+
 libffi:
 	cd $(LIBFFI) && ./autogen.sh
 	mkdir -p $(LIBFFI_BUILD_DIR)
