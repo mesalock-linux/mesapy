@@ -3,33 +3,10 @@ from ffi import ffi
 @ffi.def_extern()
 def test_exec():
     t = AppTestExecStmt()
-    t.test_string()
-    t.test_localfill()
-    t.test_builtinsupply()
-    t.test_invalidglobal()
-    t.test_codeobject()
-    t.test_implicit()
-    t.test_tuplelocals()
-    t.test_tupleglobals()
-    t.test_exceptionfallthrough()
-    t.test_global_stmt()
-    t.test_specialcase_free_load()
-    t.test_specialcase_free_load2()
-    t.test_specialcase_globals_and_exec()
-    t.test_nested_names_are_not_confused()
-    t.test_import_star_shadows_global()
-    t.test_import_global_takes_precendence()
-    t.test_exec_load_name()
-    t.test_space_bug()
-    t.test_synerr()
-    t.test_mapping_as_locals()
-    t.test_filename()
-    t.test_exec_and_name_lookups()
-    t.test_exec_unicode()
-    t.test_eval_unicode()
-    t.test_compile_unicode()
-    t.test_nested_qualified_exec()
-    t.test_exec_tuple()
+    for k, v in AppTestExecStmt.__dict__.items():
+        if k.startswith("test_"):
+            print "[+] testing", k
+            v(t)
 
 class AppTestExecStmt:
     def test_string(self):
@@ -283,6 +260,7 @@ def g():
         x = ("a = 42", d)
         exec x
         assert d['a'] == 42
+
 def raises(expected_exception, *args, **kwargs):
     func = args[0]
     try:

@@ -2,10 +2,11 @@ from ffi import ffi
 
 @ffi.def_extern()
 def test_raise():
-    app_test_raise = AppTestRaise()
-    app_test_raise.test_arg_as_string()
-    app_test_raise.test_control_flow()
-    app_test_raise.test_1arg()
+    t = AppTestRaise()
+    for k, v in AppTestRaise.__dict__.items():
+        if k.startswith("test_"):
+            print "[+] testing", k
+            v(t)
 
 class AppTestRaise:
     def test_arg_as_string(self):
