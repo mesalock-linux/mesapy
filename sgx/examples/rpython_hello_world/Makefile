@@ -39,6 +39,7 @@ endif
 
 PY ?= pypy
 
+LIBSGX_TLIBC_PATH ?= ../../sgx_tlibc
 LIBSGX_TLIBC_A ?= ../../sgx_tlibc/libsgx_tlibc.a
 LIBSGX_ULIBC_A ?= ../../sgx_ulibc/libsgx_ulibc.a
 
@@ -126,7 +127,8 @@ Enclave_Link_Flags := $(SGX_COMMON_CFLAGS) -Wl,--no-undefined -nostdlib -nodefau
 	-Wl,-Bstatic -Wl,-Bsymbolic -Wl,--no-undefined \
 	-Wl,-pie,-eenclave_entry -Wl,--export-dynamic  \
 	-Wl,--defsym,__ImageBase=0 -Wl,--gc-sections   \
-	-Wl,--version-script=Enclave/Enclave.lds
+	-Wl,--version-script=Enclave/Enclave.lds       \
+	-L$(LIBSGX_TLIBC_PATH) -lsgx_tlibc
 
 Enclave_Cpp_Objects := $(Enclave_Cpp_Files:.cpp=.o)
 
