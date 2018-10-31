@@ -1,11 +1,22 @@
-TESTDIRS := $(wildcard */.)
-MAKE ?= make
+DIRS := $(wildcard */.)
+BUILDDIRS = $(DIRS:%=build-%)
+TESTDIRS = $(DIRS:%=test-%)
+CLEANDIRS = $(DIRS:%=clean-%)
 
-all: test
+all: $(BUILDDIRS)
+$(DIRS): $(BUILDDIRS)
+$(BUILDDIRS):
+	$(MAKE) -C $(@:build-%=%)
+
 test: $(TESTDIRS)
-
 $(TESTDIRS):
-	@$(MAKE) -C $@ > /dev/null 2>&1
-	@cd $@ && ./app
+	@cd $(@:test-%=%) && ./app
 
-.PHONY: all $(TESTDIRS)
+clean: $(CLEANDIRS)
+$(CLEANDIRS):
+	$(MAKE) -C $(@:clean-%=%) clean
+
+.PHONY: subdirs $(DIRS)
+.PHONY: subdirs $(TESTDIRS)
+.PHONY: subdirs $(CLEANDIRS)
+.PHONY: all clean test
