@@ -156,7 +156,7 @@ int SGX_CDECL main(int argc, char *argv[])
     /* Destroy the enclave */
     sgx_destroy_enclave(global_eid);
 
-    printf("[+]: test_math successfully returned\n");
+    printf("[+] test_math successfully returned\n");
 
     return 0;
 }
