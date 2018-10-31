@@ -66,7 +66,7 @@ def pypy_init_embedded_cffi_module(version, init_struct):
             from pypy.module._cffi_backend import errorbox
             ecap = errorbox.start_error_capture(space)
             operr.write_unraisable(space, "initialization of '%s'" % name,
-                                   with_traceback=True)
+                                   with_traceback=False)
             space.appexec([], r"""():
                 import sys
                 sys.stderr.write('pypy version: %s.%s.%s\n' %

@@ -170,7 +170,7 @@ class W_ExternPython(W_CData):
     def print_error(self, operr, extra_line):
         space = self.space
         operr.write_unraisable(space, "cffi callback ", self.w_callable,
-                               with_traceback=True, extra_line=extra_line)
+                               with_traceback=False, extra_line=extra_line)
 
     @jit.dont_look_inside
     def handle_applevel_exception(self, e, ll_res, extra_line):
@@ -194,7 +194,7 @@ class W_ExternPython(W_CData):
                 # double exception! print a double-traceback...
                 ecap = errorbox.start_error_capture(space)
                 self.print_error(e, extra_line)    # original traceback
-                e2.write_unraisable(space, '', with_traceback=True,
+                e2.write_unraisable(space, '', with_traceback=False,
                             extra_line="\nDuring the call to 'onerror', "
                                        "another exception occurred:\n\n")
                 errorbox.stop_error_capture(space, ecap)
