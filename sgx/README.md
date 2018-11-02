@@ -21,7 +21,7 @@ Trusted part:
 - Python enclave (`enclave.py`): defines some Python functions executed in SGX
 - `libpypy`: the MesaPy library to support the Python interpreter and also
   contains some useful modules
-- `libsgx_tlibc`: defines helper functions and ocall shim functions
+- `libsgx_tlibc_ext`: defines helper functions and ocall shim functions
 - `libffi`: provides foreign function interface (FFI) support
 - Intel SGX SDK
 

@@ -5,7 +5,7 @@ INCLUDEDIRS := -I$(SGX_SDK)/include/tlibc -I$(SGX_SDK)/include
 SRCS := $(wildcard *.c) $(wildcard */*.c)
 OBJS := $(sort $(SRCS:.c=.o))
 
-TARGET  := libsgx_tlibc.a
+TARGET  := libsgx_tlibc_ext.a
 
 .PHONY: all
 all: $(TARGET)

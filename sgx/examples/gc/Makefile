@@ -39,8 +39,8 @@ endif
 
 LIBPYPY_C_A ?= ../../../pypy/goal/libpypy-c.a
 LIBFFI_A ?= ../../libffi/build_dir/lib/libffi.a
-LIBSGX_TLIBC_PATH ?= ../../sgx_tlibc
-LIBSGX_TLIBC_A ?= ../../sgx_tlibc/libsgx_tlibc.a
+LIBSGX_TLIBC_PATH ?= ../../sgx_tlibc_ext
+LIBSGX_TLIBC_A ?= ../../sgx_tlibc_ext/libsgx_tlibc_ext.a
 LIBSGX_ULIBC_A ?= ../../sgx_ulibc/libsgx_ulibc.a
 
 MESAPY_SGX ?= $(shell pwd)/../../
@@ -127,7 +127,7 @@ Enclave_Link_Flags := $(SGX_COMMON_CFLAGS) -Wl,--no-undefined -nostdlib -nodefau
 	-Wl,-pie,-eenclave_entry -Wl,--export-dynamic  \
 	-Wl,--defsym,__ImageBase=0 -Wl,--gc-sections   \
 	-Wl,--version-script=Enclave/Enclave.lds       \
-	-L$(LIBSGX_TLIBC_PATH) -lsgx_tlibc
+	-L$(LIBSGX_TLIBC_PATH) -lsgx_tlibc_ext
 
 Enclave_Cpp_Objects := $(Enclave_Cpp_Files:.cpp=.o)
 
@@ -240,7 +240,7 @@ $(Signed_Enclave_Name): $(Enclave_Name)
 
 .PHONY: $(LIBSGX_TLIBC_A)
 
-$(LIBSGX_TLIBC_A): ../../sgx_tlibc
+$(LIBSGX_TLIBC_A): ../../sgx_tlibc_ext
 	@$(MAKE) -C $< > /dev/null
 	@echo "MAKE <=  $<"
 
