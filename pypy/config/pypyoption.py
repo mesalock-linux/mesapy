@@ -31,6 +31,7 @@ working_modules.update([
     "_io", "_random", "__pypy__", "_testing",
 
     # working modules
+    "cStringIO",
     "struct", "array", "binascii", "itertools", "_md5", "_sha", "_collections",
     "micronumpy", "_cffi_backend"
 ])
