@@ -1,14 +1,23 @@
-pipeline:
-  build:
-    image: mesalocklinux/build-mesalock-linux
-    pull: true
-    commands:
-      - git checkout -b temp-branch-name # make a temp branch name to work around a issue in building process
-      - export PYPY_USESSION_DIR=$(pwd)/pypy-usession-dir
-      - mkdir pypy-usession-dir
-      - make pypy-c
-  package:
-    image: mesalocklinux/build-mesalock-linux
-    commands:
-      - export PYPY_USESSION_DIR=$(pwd)/pypy-usession-dir
-      - pypy pypy/tool/release/package.py --archive-name mesapy --targetdir . --without-cffi
+kind: pipeline
+name: default
+
+steps:
+- name: submodules
+  image: docker:git
+  commands:
+  - git submodule update --recursive --remote --init
+
+- name: build
+  image: mesalocklinux/build-mesalock-linux
+  pull: always
+  commands:
+  - git checkout -b temp-branch-name # make a temp branch name to work around a issue in building process
+  - export PYPY_USESSION_DIR=$(pwd)/pypy-usession-dir
+  - mkdir pypy-usession-dir
+  - make pypy-c
+
+- name: package
+  image: mesalocklinux/build-mesalock-linux
+  commands:
+  - export PYPY_USESSION_DIR=$(pwd)/pypy-usession-dir
+  - pypy pypy/tool/release/package.py --archive-name mesapy --targetdir . --without-cffi
