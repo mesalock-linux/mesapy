@@ -33,7 +33,8 @@ working_modules.update([
     # working modules
     "cStringIO",
     "struct", "array", "binascii", "itertools", "_md5", "_sha", "_collections",
-    "micronumpy", "_cffi_backend"
+    "micronumpy", "_cffi_backend",
+    "_pypyjson"
 ])
 
 
