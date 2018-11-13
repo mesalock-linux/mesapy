@@ -6,6 +6,9 @@
 #include <unistd.h>
 #define MAX_PATH FILENAME_MAX
 
+#define PY_SCRIPT_MAX 1024
+#define PY_RETURN_MAX 1024
+
 #include "App.h"
 #include "Enclave_u.h"
 #include "sgx_urts.h"
@@ -152,13 +155,46 @@ int SGX_CDECL main(int argc, char *argv[])
         return -1;
     }
 
-    if (argc > 1) {
-        exec_example(global_eid, argv[1]);
-    } else {
-        printf("You can execute python code by ./app \"print 'Hello, World!'\"\n");
-        sgx_destroy_enclave(global_eid);
-        return 0;
+    char py_script[PY_SCRIPT_MAX];
+    char py_ret[PY_RETURN_MAX];
+    memset(py_script, 0, PY_SCRIPT_MAX);
+    memset(py_ret, 0, PY_RETURN_MAX);
+    int64_t py_ret_len = 0;
+
+    FILE *fp = fopen("./App/app.py", "r");
+    if (fp == NULL) {
+        printf("[-] Cannot open ./App/app.py");
+        return -1;
     }
+
+    fread(py_script, sizeof(char), PY_SCRIPT_MAX-1, fp);
+    printf("%s\n", py_script);
+
+    sgx_status_t sgx_status =
+        mesapy_exec(global_eid, &py_ret_len, py_script, py_ret, PY_RETURN_MAX);
+
+    if (sgx_status != SGX_SUCCESS) {
+        print_error_message(sgx_status);
+        return -1;
+    }
+
+    if (py_ret_len < 0) {
+        if (py_ret_len == -1) {
+            printf("[-] Error: MESAPY_ERROR_BUFFER_TOO_SHORT\n");
+        } else if (py_ret_len == -2) {
+            printf("[-] Error: MESAPY_EXEC_ERROR\n");
+        } else {
+            printf("[-] Error: unknown error\n");
+        }
+        return -1;
+    }
+
+    printf("[+] py_ret_len: %ld\n", py_ret_len);
+    printf("[+] py_ret: ");
+    for (int i = 0; i < py_ret_len; i++) {
+        printf("\\x%02x", py_ret[i]);
+    }
+    printf("\n");
 
     /* Destroy the enclave */
     sgx_destroy_enclave(global_eid);
