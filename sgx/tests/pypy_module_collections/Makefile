@@ -40,7 +40,7 @@ endif
 LIBPYPY_C_A ?= ../../../pypy/goal/libpypy-c.a
 LIBFFI_A ?= ../../libffi/build_dir/lib/libffi.a
 LIBSGX_TLIBC_PATH ?= ../../sgx_tlibc_ext
-LIBSGX_TLIBC_A ?= ../../sgx_tlibc_ext/libsgx_tlibc_ext.a
+LIBSGX_TLIBC_EXT_A ?= ../../sgx_tlibc_ext/libsgx_tlibc_ext.a
 LIBSGX_ULIBC_A ?= ../../sgx_ulibc/libsgx_ulibc.a
 
 MESAPY_SGX ?= $(shell pwd)/../../
@@ -230,7 +230,7 @@ Enclave/%.o: Enclave/%.cpp
 	@$(CXX) $(Enclave_Cpp_Flags) -c $< -o $@
 	@echo "CXX  <=  $<"
 
-$(Enclave_Name): Enclave/Enclave_t.o Enclave/src/ffi.o $(LIBSGX_TLIBC_A)
+$(Enclave_Name): Enclave/Enclave_t.o Enclave/src/ffi.o $(LIBSGX_TLIBC_EXT_A)
 	@$(CXX) $^ $(LIBPYPY_C_A) $(LIBFFI_A) -o $@ $(Enclave_Link_Flags)
 	@echo "LINK =>  $@"
 
@@ -238,9 +238,9 @@ $(Signed_Enclave_Name): $(Enclave_Name)
 	@$(SGX_ENCLAVE_SIGNER) sign -key Enclave/Enclave_private.pem -enclave $(Enclave_Name) -out $@ -config $(Enclave_Config_File)
 	@echo "SIGN =>  $@"
 
-.PHONY: $(LIBSGX_TLIBC_A)
+.PHONY: $(LIBSGX_TLIBC_EXT_A)
 
-$(LIBSGX_TLIBC_A): ../../sgx_tlibc_ext
+$(LIBSGX_TLIBC_EXT_A): ../../sgx_tlibc_ext
 	@$(MAKE) -C $< > /dev/null
 	@echo "MAKE <=  $<"
 
