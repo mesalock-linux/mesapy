@@ -93,7 +93,7 @@ like x86 and arm in MesaPy). Right now, the MesaPy for SGX is under the `sgx`
 checkout the branch first. You can follow the instruction in its
 [README](https://github.com/mesalock-linux/mesapy/blob/sgx/sgx/README.md) to
 start using MesaPy for SGX. Note that this is a work-in-progress feature,
-current version only has limited functions and packages. Contributions are very
+current version has limited functions and packages. Contributions are very
 welcome.
 
 To run Python app in SGX is very simple:
@@ -173,9 +173,12 @@ high-quality open source projects.
 Thanks to our maintainers to contribute this projects. Feel free to submit issues
 on GitHub or send us email. We are very glad to help out.
 
-  - **Memory-safety, security hardening, and all about MesaPy**: Mingshen Sun (`@mssun`)
+The projects are maintained by:
+
+  - **Memory-safety, security hardening, SGX, and all about MesaPy**: Mingshen Sun (`@mssun`)
   - **Formal verification**: Qian Feng (`@qian-feng`)
-  - **SGX support**: Huibo Wang (`@MelodyHuibo`)and Yu Ding (`@dingelish`)
+
+Also, thanks to our contributors: Huibo Wang (`@MelodyHuibo`)and Yu Ding (`@dingelish`)
 
 ## Steering Committee
 
