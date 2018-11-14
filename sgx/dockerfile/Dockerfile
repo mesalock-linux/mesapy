@@ -1,29 +1,23 @@
 FROM ubuntu:16.04
 MAINTAINER Mingshen Sun <mssun@baidu.com>
 
-ARG UID=1000
-ARG GID=1000
-
 RUN apt-get update
 
 # Install dependencies of MesaPy for SGX:
 RUN apt-get install -q -y --no-install-recommends \
-        sudo \
         pypy \
         pypy-dev \
         gcc \
         make \
+        automake \
+        libltdl-dev \
+        libtool \
+        texinfo \
         libffi-dev \
         pkg-config \
         libgdbm-dev \
         libgc-dev \
         python-cffi
-
-RUN groupadd -g ${GID} user && \
-    useradd --create-home -u ${UID} -g ${GID} -s /bin/bash user && \
-    adduser user sudo && \
-    echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
-
 
 # Install dependencies of Intel SGX PSW:
 RUN apt-get install -q -y --no-install-recommends \
@@ -51,7 +45,7 @@ RUN mkdir /root/sgx && \
     dpkg -i psw.deb && \
     chmod +x /root/sgx/sdk.bin && \
     echo -e 'no\n/opt' | /root/sgx/sdk.bin && \
-    echo 'source /opt/sgxsdk/environment' >> /home/user/.bashrc && \
+    echo 'source /opt/sgxsdk/environment' >> /root/.bashrc && \
     rm -rf /root/sgx
 
 # A script to run the AESM service
@@ -59,8 +53,3 @@ RUN echo "#!/bin/bash\n" >> /start_aesm_service.sh && \
     echo "source /opt/sgxsdk/environment" >> /start_aesm_service.sh && \
     echo "/opt/intel/libsgx-enclave-common/aesm/aesm_service &" >> /start_aesm_service.sh && \
     chmod u+x /start_aesm_service.sh
-
-USER user
-ENV USER=user
-
-ENTRYPOINT sudo /start_aesm_service.sh && /bin/bash
