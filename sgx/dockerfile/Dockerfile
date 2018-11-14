@@ -45,11 +45,10 @@ RUN apt-get install -q -y --no-install-recommends \
 
 # Install Intel SGX PSW/SDK
 RUN mkdir /root/sgx && \
-    wget -O /root/sgx/psw.bin https://download.01.org/intel-sgx/linux-2.2/ubuntu64-desktop/sgx_linux_x64_psw_2.2.100.45311.bin && \
-    wget -O /root/sgx/sdk.bin https://download.01.org/intel-sgx/linux-2.2/ubuntu64-desktop/sgx_linux_x64_sdk_2.2.100.45311.bin && \
+    wget -O /root/sgx/psw.deb https://download.01.org/intel-sgx/linux-2.3.1/ubuntu16.04/libsgx-enclave-common_2.3.101.46683-1_amd64.deb && \
+    wget -O /root/sgx/sdk.bin https://download.01.org/intel-sgx/linux-2.3.1/ubuntu16.04/sgx_linux_x64_sdk_2.3.101.46683.bin && \
     cd /root/sgx && \
-    chmod +x /root/sgx/psw.bin && \
-    /root/sgx/psw.bin && \
+    dpkg -i psw.deb && \
     chmod +x /root/sgx/sdk.bin && \
     echo -e 'no\n/opt' | /root/sgx/sdk.bin && \
     echo 'source /opt/sgxsdk/environment' >> /home/user/.bashrc && \
@@ -58,7 +57,7 @@ RUN mkdir /root/sgx && \
 # A script to run the AESM service
 RUN echo "#!/bin/bash\n" >> /start_aesm_service.sh && \
     echo "source /opt/sgxsdk/environment" >> /start_aesm_service.sh && \
-    echo "/opt/intel/sgxpsw/aesm/aesm_service &" >> /start_aesm_service.sh && \
+    echo "/opt/intel/libsgx-enclave-common/aesm/aesm_service &" >> /start_aesm_service.sh && \
     chmod u+x /start_aesm_service.sh
 
 USER user
