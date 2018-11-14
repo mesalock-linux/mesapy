@@ -1,25 +1,33 @@
 kind: pipeline
-name: default
+name: sgx_minimal
 
 steps:
 - name: submodules
   image: docker:git
   commands:
   - git submodule update --recursive --init
+  - git checkout -b temp-branch-name # make a temp branch name to work around a issue in building process
 
 - name: build-minimal
-  image: mesalocklinux/build-mesalock-linux
+  image: mesapy/build-mesapy:sgx
   pull: always
   commands:
-  - apt-get update && apt-get install -q -y libltdl-dev texinfo
-  - git checkout -b temp-branch-name # make a temp branch name to work around a issue in building process
-  - export PYPY_USESSION_DIR=$(pwd)/pypy-usession-dir
-  - mkdir pypy-usession-dir
   - make sgx_minimal
 
+---
+
+kind: pipeline
+name: sgx
+
+steps:
+- name: submodules
+  image: docker:git
+  commands:
+  - git submodule update --recursive --init
+  - git checkout -b temp-branch-name # make a temp branch name to work around a issue in building process
+
 - name: build
-  image: mesalocklinux/build-mesalock-linux
+  image: mesapy/build-mesapy:sgx
   pull: always
   commands:
-  - apt-get update && apt-get install -q -y libltdl-dev texinfo
   - make sgx
