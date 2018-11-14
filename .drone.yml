@@ -1,25 +1,61 @@
 kind: pipeline
-name: default
+name: sgx-minimal
 
 steps:
 - name: submodules
   image: docker:git
   commands:
   - git submodule update --recursive --init
+  - git checkout -b temp-branch-name # make a temp branch name to work around a issue in building process
 
-- name: build-minimal
-  image: mesalocklinux/build-mesalock-linux
+- name: build-mesapy-sgx-minimal
+  image: mesapy/build-mesapy:sgx
   pull: always
   commands:
-  - apt-get update && apt-get install -q -y libltdl-dev texinfo
-  - git checkout -b temp-branch-name # make a temp branch name to work around a issue in building process
-  - export PYPY_USESSION_DIR=$(pwd)/pypy-usession-dir
-  - mkdir pypy-usession-dir
   - make sgx_minimal
 
-- name: build
-  image: mesalocklinux/build-mesalock-linux
+node:
+  instance: sgx
+
+---
+
+kind: pipeline
+name: sgx
+
+steps:
+- name: submodules
+  image: docker:git
+  commands:
+  - git submodule update --recursive --init
+  - git checkout -b temp-branch-name # make a temp branch name to work around a issue in building process
+
+- name: build-mesapy-sgx
+  image: mesapy/build-mesapy:sgx
   pull: always
   commands:
-  - apt-get update && apt-get install -q -y libltdl-dev texinfo
   - make sgx
+
+- name: test
+  image: mesapy/build-mesapy:sgx
+  pull: always
+  commands:
+  - . /opt/sgxsdk/environment
+  - /start_aesm_service.sh
+  - make -C sgx/tests build
+  - make -C sgx/examples
+
+- name: deploy
+  image: mesapy/build-mesapy:sgx
+  commands:
+  - apt-get update
+  - apt-get install -q -y sshpass
+  - sshpass -p "$PASSWORD" scp -o StrictHostKeyChecking=no pypy/goal/libpypy-c.a "$USERNAME"@"$HOSTNAME":"$TARGET_PATH"/"$DRONE_COMMIT_SHA"-libpypy-c.a
+  environment:
+    USERNAME:
+      from_secret: username
+    PASSWORD:
+      from_secret: password
+    HOSTNAME:
+      from_secret: hostname
+    TARGET_PATH:
+      from_secret: target_path
