@@ -1,5 +1,5 @@
 kind: pipeline
-name: sgx_minimal
+name: sgx-minimal
 
 steps:
 - name: submodules
@@ -8,11 +8,14 @@ steps:
   - git submodule update --recursive --init
   - git checkout -b temp-branch-name # make a temp branch name to work around a issue in building process
 
-- name: build-minimal
+- name: build-mesapy-sgx-minimal
   image: mesapy/build-mesapy:sgx
   pull: always
   commands:
   - make sgx_minimal
+
+node:
+  instance: sgx
 
 ---
 
@@ -26,8 +29,33 @@ steps:
   - git submodule update --recursive --init
   - git checkout -b temp-branch-name # make a temp branch name to work around a issue in building process
 
-- name: build
+- name: build-mesapy-sgx
   image: mesapy/build-mesapy:sgx
   pull: always
   commands:
   - make sgx
+
+- name: test
+  image: mesapy/build-mesapy:sgx
+  pull: always
+  commands:
+  - . /opt/sgxsdk/environment
+  - /start_aesm_service.sh
+  - make -C sgx/tests build
+  - make -C sgx/examples
+
+- name: deploy
+  image: mesapy/build-mesapy:sgx
+  commands:
+  - apt-get update
+  - apt-get install -q -y sshpass
+  - sshpass -p "$PASSWORD" scp -o StrictHostKeyChecking=no pypy/goal/libpypy-c.a "$USERNAME"@"$HOSTNAME":"$TARGET_PATH"/"$DRONE_COMMIT_SHA"-libpypy-c.a
+  environment:
+    USERNAME:
+      from_secret: username
+    PASSWORD:
+      from_secret: password
+    HOSTNAME:
+      from_secret: hostname
+    TARGET_PATH:
+      from_secret: target_path
