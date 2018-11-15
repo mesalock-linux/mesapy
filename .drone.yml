@@ -59,3 +59,6 @@ steps:
       from_secret: hostname
     TARGET_PATH:
       from_secret: target_path
+
+node:
+  instance: sgx
