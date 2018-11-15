@@ -37,6 +37,11 @@ steps:
       from_secret: hostname
     TARGET_PATH:
       from_secret: target_path
+  when:
+    event:
+    - push
+    branch:
+    - master
 
 node:
   instance: sgx
