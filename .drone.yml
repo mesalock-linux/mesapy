@@ -21,3 +21,22 @@ steps:
   commands:
   - export PYPY_USESSION_DIR=$(pwd)/pypy-usession-dir
   - pypy pypy/tool/release/package.py --archive-name mesapy --targetdir . --without-cffi
+
+- name: deploy
+  image: mesalocklinux/build-mesalock-linux
+  commands:
+  - apt-get update
+  - apt-get install -q -y sshpass
+  - sshpass -p "$PASSWORD" scp -o StrictHostKeyChecking=no mesapy.tar.bz2 "$USERNAME"@"$HOSTNAME":"$TARGET_PATH"/"$DRONE_COMMIT_SHA"-mesapy.tar.bz2
+  environment:
+    USERNAME:
+      from_secret: username
+    PASSWORD:
+      from_secret: password
+    HOSTNAME:
+      from_secret: hostname
+    TARGET_PATH:
+      from_secret: target_path
+
+node:
+  instance: sgx
