@@ -39,10 +39,12 @@ RUN apt-get install -q -y --no-install-recommends \
 
 # Install Intel SGX PSW/SDK
 RUN mkdir /root/sgx && \
-    wget -O /root/sgx/psw.deb https://download.01.org/intel-sgx/linux-2.3.1/ubuntu16.04/libsgx-enclave-common_2.3.101.46683-1_amd64.deb && \
-    wget -O /root/sgx/sdk.bin https://download.01.org/intel-sgx/linux-2.3.1/ubuntu16.04/sgx_linux_x64_sdk_2.3.101.46683.bin && \
+    wget -O /root/sgx/psw.deb https://download.01.org/intel-sgx/linux-2.4/ubuntu16.04-server/libsgx-enclave-common_2.4.100.48163-xenial1_amd64.deb && \
+    wget -O /root/sgx/sdk.bin https://download.01.org/intel-sgx/linux-2.4/ubuntu16.04-server/sgx_linux_x64_sdk_2.4.100.48163.bin && \
+    wget -O /root/sgx/psw_dev.deb https://download.01.org/intel-sgx/linux-2.4/ubuntu16.04-server/libsgx-enclave-common-dev_2.4.100.48163-xenial1_amd64.deb && \
     cd /root/sgx && \
     dpkg -i psw.deb && \
+    dpkg -i psw_dev.deb && \
     chmod +x /root/sgx/sdk.bin && \
     echo -e 'no\n/opt' | /root/sgx/sdk.bin && \
     echo 'source /opt/sgxsdk/environment' >> /root/.bashrc && \
