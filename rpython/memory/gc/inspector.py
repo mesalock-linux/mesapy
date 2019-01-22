@@ -210,6 +210,7 @@ class HeapDumper(BaseWalker):
             bytes = self.buf_count * rffi.sizeof(rffi.LONG)
             retval = lltype.malloc(rffi.SIGNEDP.TO, 1, flavor='raw')
             status = rposix.c_u_write_ocall(retval,
+                                            lltype.nullptr(rffi.VOIDP.TO),
                                             self.fd,
                                             rffi.cast(rffi.VOIDP, self.writebuffer),
                                             rffi.cast(rffi.SIZE_T, bytes))
