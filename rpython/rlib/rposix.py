@@ -510,7 +510,7 @@ c_read = external(UNDERSCORE_ON_WIN32 + 'read',
                   [rffi.INT, rffi.VOIDP, rffi.SIZE_T], rffi.SSIZE_T,
                   save_err=rffi.RFFI_SAVE_ERRNO)
 c_write = c_u_write_ocall = external('u_write_ocall',
-                                     [rffi.SIGNEDP, rffi.INT, rffi.VOIDP, rffi.SIZE_T], rffi.INT,
+                                     [rffi.SIGNEDP, rffi.VOIDP, rffi.INT, rffi.VOIDP, rffi.SIZE_T], rffi.INT,
                                      save_err=rffi.RFFI_SAVE_ERRNO)
 c_close = external(UNDERSCORE_ON_WIN32 + 'close', [rffi.INT], rffi.INT,
                    releasegil=False, save_err=rffi.RFFI_SAVE_ERRNO)
@@ -534,7 +534,7 @@ def write(fd, data):
         count = _bound_for_write(fd, count)
         with rffi.scoped_nonmovingbuffer(data) as buf:
             retval = lltype.malloc(rffi.SIGNEDP.TO, 1, flavor='raw')
-            status = c_u_write_ocall(retval, fd, buf, count)
+            status = c_u_write_ocall(retval, lltype.nullptr(rffi.VOIDP.TO), fd, buf, count)
             if status != SGXStatus.SGX_SUCCESS:
                 raise SGXError(status)
             ret = handle_posix_error('write', retval[0])
