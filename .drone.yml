@@ -49,7 +49,9 @@ steps:
   commands:
   - apt-get update
   - apt-get install -q -y sshpass
-  - sshpass -p "$PASSWORD" scp -o StrictHostKeyChecking=no pypy/goal/libpypy-c.a "$USERNAME"@"$HOSTNAME":"$TARGET_PATH"/"$DRONE_COMMIT_SHA"-libpypy-c.a
+  - mkdir release && cp pypy/goal/libpypy-c.a sgx/libffi/build_dir/lib/libffi.a sgx/sgx_tlibc_ext/libsgx_tlibc_ext.a sgx/sgx_ulibc/libsgx_ulibc.a sgx/examples/exec/Enclave/src/ffi.o release/
+  - tar czvf mesapy-sgx.tar.gz -C release .
+  - sshpass -p "$PASSWORD" scp -o StrictHostKeyChecking=no mesapy-sgx.tar.gz "$USERNAME"@"$HOSTNAME":"$TARGET_PATH"/"$DRONE_COMMIT_SHA"-mesapy-sgx.tar.gz
   environment:
     USERNAME:
       from_secret: username
