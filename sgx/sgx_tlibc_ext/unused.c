@@ -138,7 +138,7 @@ void *mmap64(void *addr, size_t length, int prot, int flags, int fd,
     abort();
 }
 
-void __assert_fail(const char *assertion, const char *file, unsigned int line,
+__attribute__((weak)) void __assert_fail(const char *assertion, const char *file, unsigned int line,
                    const char *function)
 {
     abort();
