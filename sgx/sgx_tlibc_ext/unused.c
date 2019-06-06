@@ -9,7 +9,7 @@
 #include <stdlib.h>
 #include <sys/types.h>
 
-int stderr = 3;
+__attribute__((weak)) int stderr = 3;
 
 #define FILE void
 #define pid_t int
@@ -21,118 +21,118 @@ int stderr = 3;
 #define off64_t int
 #define time_t long
 
-struct sockaddr {
+__attribute__((weak)) struct sockaddr {
 };
 
-struct stat {
+__attribute__((weak)) struct stat {
 };
 
-struct stat64 {
+__attribute__((weak)) struct stat64 {
 };
 
-struct timespec {
+__attribute__((weak)) struct timespec {
 };
 
-struct timeval {
+__attribute__((weak)) struct timeval {
 };
 
-struct timezone {
+__attribute__((weak)) struct timezone {
     int tz_minuteswest;
     int tz_dsttime;
 };
 
-void *dlopen(const char *filename, int flag) { abort(); }
+__attribute__((weak)) void *dlopen(const char *filename, int flag) { abort(); }
 
-int dlclose(void *handle) { abort(); }
+__attribute__((weak)) int dlclose(void *handle) { abort(); }
 
-char *dlerror(void) { abort(); }
+__attribute__((weak)) char *dlerror(void) { abort(); }
 
-void *dlsym(void *handle, const char *symbol) { abort(); }
+__attribute__((weak)) void *dlsym(void *handle, const char *symbol) { abort(); }
 
-int isatty(int fd) { abort(); }
+__attribute__((weak)) int isatty(int fd) { abort(); }
 
-int ftruncate(int fd, off_t length) { abort(); }
+__attribute__((weak)) int ftruncate(int fd, off_t length) { abort(); }
 
-int ftruncate64(int fd, off64_t length) { abort(); }
+__attribute__((weak)) int ftruncate64(int fd, off64_t length) { abort(); }
 
-int madvise(void *addr, size_t length, int advice) { abort(); }
+__attribute__((weak)) int madvise(void *addr, size_t length, int advice) { abort(); }
 
-char *setlocale(int category, const char *locale) { abort(); }
+__attribute__((weak)) char *setlocale(int category, const char *locale) { abort(); }
 
-char *nl_langinfo(int item) { abort(); }
+__attribute__((weak)) char *nl_langinfo(int item) { abort(); }
 
-struct lconv *localeconv(void) { abort(); }
+__attribute__((weak)) struct lconv *localeconv(void) { abort(); }
 
-int execv(const char *path, char *const argv[]) { abort(); }
+__attribute__((weak)) int execv(const char *path, char *const argv[]) { abort(); }
 
-char *getenv(const char *name) { abort(); }
+__attribute__((weak)) char *getenv(const char *name) { abort(); }
 
-int fork(void) { abort(); }
+__attribute__((weak)) int fork(void) { abort(); }
 
-pid_t getpid(void) { abort(); }
+__attribute__((weak)) pid_t getpid(void) { abort(); }
 
-int mprotect(void *addr, size_t len, int prot) { abort(); }
+__attribute__((weak)) int mprotect(void *addr, size_t len, int prot) { abort(); }
 
-int prctl(int option, unsigned long arg2, unsigned long arg3,
+__attribute__((weak)) int prctl(int option, unsigned long arg2, unsigned long arg3,
           unsigned long arg4, unsigned long arg5)
 {
     abort();
 }
 
-void _exit(int status) { abort(); }
+__attribute__((weak)) void _exit(int status) { abort(); }
 
-void setbuf(void *stream, char *buf) { abort(); }
+__attribute__((weak)) void setbuf(void *stream, char *buf) { abort(); }
 
-int fclose(void *stream) { abort(); }
+__attribute__((weak)) int fclose(void *stream) { abort(); }
 
-void *fdopen(int fd, const char *mode) { abort(); }
+__attribute__((weak)) void *fdopen(int fd, const char *mode) { abort(); }
 
-int open(const char *pathname, int flags, mode_t mode) { abort(); }
+__attribute__((weak)) int open(const char *pathname, int flags, mode_t mode) { abort(); }
 
-int open64(const char *pathname, int flags, mode_t mode) { abort(); }
+__attribute__((weak)) int open64(const char *pathname, int flags, mode_t mode) { abort(); }
 
-int close(int fd) { abort(); }
+__attribute__((weak)) int close(int fd) { abort(); }
 
-int unlink(const char *pathname) { abort(); }
+__attribute__((weak)) int unlink(const char *pathname) { abort(); }
 
-ssize_t readlink(const char *pathname, char *buf, size_t bufsiz) { abort(); }
+__attribute__((weak)) ssize_t readlink(const char *pathname, char *buf, size_t bufsiz) { abort(); }
 
-int access(const char *pathname, int mode) { abort(); }
+__attribute__((weak)) int access(const char *pathname, int mode) { abort(); }
 
-int clock_gettime(clockid_t clk_id, struct timespec *tp) { abort(); }
+__attribute__((weak)) int clock_gettime(clockid_t clk_id, struct timespec *tp) { abort(); }
 
-int clock_getres(clockid_t clk_id, struct timespec *res) { abort(); }
+__attribute__((weak)) int clock_getres(clockid_t clk_id, struct timespec *res) { abort(); }
 
-ssize_t read(int fd, void *buf, size_t count) { abort(); }
+__attribute__((weak)) ssize_t read(int fd, void *buf, size_t count) { abort(); }
 
-int fcntl(int fd, int cmd, ... /* arg */) { abort(); }
+__attribute__((weak)) int fcntl(int fd, int cmd, ... /* arg */) { abort(); }
 
-int select(int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds,
+__attribute__((weak)) int select(int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds,
            struct timeval *timeout)
 {
     abort();
 }
 
-int accept(int sockfd, struct sockaddr *addr, socklen_t *addrlen) { abort(); }
+__attribute__((weak)) int accept(int sockfd, struct sockaddr *addr, socklen_t *addrlen) { abort(); }
 
-off_t lseek(int fd, off_t offset, int whence) { abort(); }
+__attribute__((weak)) off_t lseek(int fd, off_t offset, int whence) { abort(); }
 
-off64_t lseek64(int fd, off64_t offset, int whence) { abort(); }
+__attribute__((weak)) off64_t lseek64(int fd, off64_t offset, int whence) { abort(); }
 
-int lstat64(const char *pathname, struct stat *buf) { abort(); }
+__attribute__((weak)) int lstat64(const char *pathname, struct stat *buf) { abort(); }
 
-int stat(const char *pathname, struct stat *buf) { abort(); }
+__attribute__((weak)) int stat(const char *pathname, struct stat *buf) { abort(); }
 
-int fstat(int fd, struct stat *buf) { abort(); }
+__attribute__((weak)) int fstat(int fd, struct stat *buf) { abort(); }
 
-char *getcwd(char *buf, size_t size) { abort(); }
+__attribute__((weak)) char *getcwd(char *buf, size_t size) { abort(); }
 
-void *mmap(void *addr, size_t length, int prot, int flags, int fd, off_t offset)
+__attribute__((weak)) void *mmap(void *addr, size_t length, int prot, int flags, int fd, off_t offset)
 {
     abort();
 }
 
-void *mmap64(void *addr, size_t length, int prot, int flags, int fd,
+__attribute__((weak)) void *mmap64(void *addr, size_t length, int prot, int flags, int fd,
              off_t offset)
 {
     abort();
@@ -144,14 +144,14 @@ __attribute__((weak)) void __assert_fail(const char *assertion, const char *file
     abort();
 }
 
-int __fprintf_chk(FILE *stream, int flag, const char *fmt, ...) { abort(); }
+__attribute__((weak)) int __fprintf_chk(FILE *stream, int flag, const char *fmt, ...) { abort(); }
 
-int __lxstat64(int vers, const char *name, struct stat64 *buf) { abort(); }
+__attribute__((weak)) int __lxstat64(int vers, const char *name, struct stat64 *buf) { abort(); }
 
-int __xstat64(int vers, const char *name, struct stat64 *buf) { abort(); }
+__attribute__((weak)) int __xstat64(int vers, const char *name, struct stat64 *buf) { abort(); }
 
-int __fxstat64(int vers, int fd, struct stat64 *buf) { abort(); }
+__attribute__((weak)) int __fxstat64(int vers, int fd, struct stat64 *buf) { abort(); }
 
-int gettimeofday(struct timeval *tv, struct timezone *tz) { abort(); };
+__attribute__((weak)) int gettimeofday(struct timeval *tv, struct timezone *tz) { abort(); };
 
-time_t time(time_t *tloc) { abort(); };
+__attribute__((weak)) time_t time(time_t *tloc) { abort(); };
