@@ -1173,6 +1173,14 @@ class TestDiskFile:
         pytest.raises(OSError, x.readall)
         x.close()
 
+class TestBytesIO:
+    def test_init(self):
+        b = bytes("123")
+        bio = streamio.BytesIO(b)
+        assert bio.read(1) == b'1'
+        assert bio.read(1) == b'2'
+        bio.seek(0)
+        assert bio.read(1) == b'1'
 
 # Speed test
 

@@ -357,27 +357,31 @@ class W_ZipImporter(W_Root):
         space = self.space
         return space.newtext(self.filename)
 
-@unwrap_spec(name='text0')
-def descr_new_zipimporter(space, w_type, name):
+@unwrap_spec(name='text0', data='bytes')
+def descr_new_zipimporter(space, w_type, name, data=""):
     ok = False
     parts_ends = [i for i in range(0, len(name))
                     if name[i] == os.path.sep or name[i] == ZIPSEP]
     parts_ends.append(len(name))
     filename = "" # make annotator happy
-    for i in parts_ends:
-        filename = name[:i]
-        if not filename:
-            filename = os.path.sep
-        try:
-            s = os.stat(filename)
-        except OSError:
-            raise oefmt(get_error(space), "Cannot find name %s", filename)
-        if not stat.S_ISDIR(s.st_mode):
-            ok = True
-            break
-    if not ok:
-        raise oefmt(get_error(space), "Did not find %s to be a valid zippath",
-                    name)
+
+    if not data:
+        for i in parts_ends:
+            filename = name[:i]
+            if not filename:
+                filename = os.path.sep
+            try:
+                s = os.stat(filename)
+            except OSError:
+                raise oefmt(get_error(space), "Cannot find name %s", filename)
+            if not stat.S_ISDIR(s.st_mode):
+                ok = True
+                break
+        if not ok:
+            raise oefmt(get_error(space), "Did not find %s to be a valid zippath",
+                        name)
+    else:
+        filename = name
     try:
         w_result = zip_cache.get(filename)
         if w_result is None:
@@ -387,7 +391,10 @@ def descr_new_zipimporter(space, w_type, name):
     except KeyError:
         zip_cache.cache[filename] = None
     try:
-        zip_file = RZipFile(filename, 'r')
+        if data:
+            zip_file = RZipFile(filename, data=data, mode='r')
+        else:
+            zip_file = RZipFile(filename, 'r')
     except (BadZipfile, OSError):
         raise oefmt(get_error(space), "%s seems not to be a zipfile", filename)
     except RZlibError as e:

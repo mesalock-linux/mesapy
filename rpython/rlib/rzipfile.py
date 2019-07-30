@@ -1,6 +1,6 @@
 
 from zipfile import ZIP_STORED, ZIP_DEFLATED
-from rpython.rlib.streamio import open_file_as_stream
+from rpython.rlib.streamio import open_file_as_stream, BytesIO
 from rpython.rlib.rstruct.runpack import runpack
 from rpython.rlib.rarithmetic import r_uint, intmask
 from rpython.rtyper.tool.rffi_platform import CompilationError
@@ -192,7 +192,7 @@ class RZipInfo(object):
         # file_size             Size of the uncompressed file
 
 class RZipFile(object):
-    def __init__(self, zipname, mode='r', compression=ZIP_STORED):
+    def __init__(self, zipname, data=None, mode='r', compression=ZIP_STORED):
         if mode != 'r':
             raise TypeError("Read only support by now")
         self.compression = compression
@@ -202,11 +202,18 @@ class RZipFile(object):
         if 'b' not in mode:
             mode += 'b'
         self.mode = mode
-        fp = self.get_fp()
+        if data:
+            fp = self.get_bytesio(data)
+        else:
+            fp = self.get_fp()
         try:
             self._GetContents(fp)
         finally:
             fp.close()
+        self.fp = fp
+
+    def get_bytesio(self, data):
+        return BytesIO(data)
 
     def get_fp(self):
         return open_file_as_stream(self.filename, self.mode, 1024)
@@ -275,8 +282,9 @@ class RZipFile(object):
         return self.NameToInfo[filename]
 
     def read(self, filename):
+        print "ZipFile:", filename
         zinfo = self.getinfo(filename)
-        fp = self.get_fp()
+        fp = self.fp
         try:
             filepos = fp.tell()
             fp.seek(zinfo.file_offset, 0)

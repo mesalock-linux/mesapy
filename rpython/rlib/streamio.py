@@ -389,6 +389,54 @@ class DiskFile(Stream):
     def try_to_find_file_descriptor(self):
         return self.fd
 
+class BytesIO(Stream):
+    """BytesIO"""
+
+    def __init__(self, initial_bytes, pos=0):
+        self.data = initial_bytes
+        self.pos = pos
+
+    def seek(self, offset, whence=0):
+        if whence == 0:
+            self.pos = max(0, offset)
+        elif whence == 1:
+            self.pos = max(0, self.pos + offset)
+        elif whence == 2:
+            self.pos = max(0, len(self.data) + offset)
+        else:
+            raise StreamError("seek(): whence must be 0, 1 or 2")
+
+    def tell(self):
+        return self.pos
+
+    def read(self, n):
+        start = self.pos
+        available = len(self.data) - start
+        if available <= 0:
+            return b''
+        if n >= 0 and n <= available:
+            end = start + n
+        else:
+            end = len(self.data)
+        assert 0 <= start <= end
+        self.pos = end
+        return self.data[start:end]
+
+    def readline(self):
+        raise MyNotImplementedError
+
+    def write(self, data):
+        raise MyNotImplementedError
+
+    def close1(self, closefileno):
+        pass
+
+    def truncate(self, size):
+        raise MyNotImplementedError
+
+    def try_to_find_file_descriptor(self):
+        raise MyNotImplementedError
+
 # next class is not RPython
 
 class MMapFile(Stream):

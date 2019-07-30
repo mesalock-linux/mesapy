@@ -155,3 +155,8 @@ int __fxstat64(int vers, int fd, struct stat64 *buf) { abort(); }
 int gettimeofday(struct timeval *tv, struct timezone *tz) { abort(); };
 
 time_t time(time_t *tloc) { abort(); };
+
+struct z_streamp {};
+int inflateInit2_ (struct z_streamp strm, int windowBits, char * version, int stream_size) { abort(); };
+int inflateEnd(struct z_streamp stream) { abort(); };
+int inflate(struct z_streamp stream, int flush) { abort(); };
