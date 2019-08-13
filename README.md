@@ -47,7 +47,7 @@ More details about each features, roadmap, and building process can be found her
 
 ## Design
 
-MesaPy enhances PyPy in security. Compared to CPython (as known as Python),
+MesaPy enhances PyPy in security. Compared to CPython (also known as Python),
 MesaPy provides a comprehensive security protection. Following figure illustrates
 MesaPy's design and implementation. Blocks highlighted in red means unsafe
 components, while blue blocks represent safe components. MesaPy aims to
