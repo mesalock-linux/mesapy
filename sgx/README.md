@@ -195,6 +195,35 @@ enclave {
 At last, you can write your own application (e.g., the `App/App.cpp` file in the
 example) to call the trusted python function.
 
+## Current Status
+
+Because of security concerns, MesaPy for SGX is not designed as a general
+purpose Python interpreter for SGX. That is, some full-fledged libraries and
+modules can not be used in MesaPy for SGX without any modifications.
+
+Currently, MesaPy for SGX supports Python 2 syntax and most built-in
+functions. For the standard library, it supports these modules (because
+dynamic module importing is an ongoing feature, more modules will be supported
+when it's done):
+
+- essential modules: `exceptions`, `_file`, `sys`, `__builtin__`, `_warnings`,
+  `itertools`,
+- default modules: `__pypy__`, `marshal`, `operator`, `_ast`, `_weakref`,
+  `_cffi_backend`
+- additional working modules: `_codecs`, `gc`, `_weakref`, `marshal`, `errno`,
+  `imp`, `math`, `cmath`, `_sre`, `_pickle_support`, `operator`, `parser`,
+  `symbol`, `token`, `_ast`, `_io`, `_random`, `__pypy__`, `_testing`,
+  `cStringIO`, `struct`, `array`, `binascii`, `itertools`, `_md5`, `_sha`,
+  `_collections`, `micronumpy`, `_cffi_backend`, `_pypyjson`.
+
+The modules may be updated in the future, and the full list can be found
+at the
+[`pypy/config/pypyoption.py`](https://github.com/mesalock-linux/mesapy/blob/sgx/pypy/config/pypyoption.py#L17-L38)
+file.
+We also test these modules in SGX in the
+[`sgx/tests`](https://github.com/mesalock-linux/mesapy/tree/sgx/sgx/tests)
+directory.
+
 ## Roadmap
 
 MesaPy for SGX is still a work-in-progress project. Right now, it supports simple
