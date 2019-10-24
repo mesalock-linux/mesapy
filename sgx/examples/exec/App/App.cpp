@@ -170,8 +170,17 @@ int SGX_CDECL main(int argc, char *argv[])
     fread(py_script, sizeof(char), PY_SCRIPT_MAX-1, fp);
     printf("%s\n", py_script);
 
+    const char *py_argv[] = {"arg0", "arg1", "arg2", 0};
+    int py_argc = 0;
+    for (int i = 0;; i++) {
+        if (py_argv[i] == 0)
+            break;
+        py_argc++;
+    }
+
     sgx_status_t sgx_status =
-        mesapy_exec(global_eid, &py_ret_len, py_script, py_ret, PY_RETURN_MAX);
+        mesapy_exec(global_eid, &py_ret_len, py_script, py_argc, py_argv,
+                    py_ret, PY_RETURN_MAX);
 
     if (sgx_status != SGX_SUCCESS) {
         print_error_message(sgx_status);

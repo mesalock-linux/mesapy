@@ -3,7 +3,11 @@ enclave {
     include "stdint.h"
 
     trusted {
-        public int64_t mesapy_exec([in, string] const char *py_script, [out,size=buflen] char *py_return, uint64_t buflen);
+        public int64_t mesapy_exec([in, string] const char *py_script,
+                                   int py_argc,
+                                   [in] const char **py_argv,
+                                   [out,size=buflen] char *py_return,
+                                   uint64_t buflen);
     };
 
     // import untrusted functions from sgx_ulibc
