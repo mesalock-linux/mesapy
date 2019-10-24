@@ -160,8 +160,5 @@ int SGX_CDECL main(int argc, char *argv[])
     sgx_destroy_enclave(global_eid);
 
     printf("\nInfo: rpython_hello_world successfully returned.\n");
-
-    printf("Enter a character before exit ...\n");
-    getchar();
     return 0;
 }

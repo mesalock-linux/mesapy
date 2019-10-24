@@ -37,12 +37,19 @@ steps:
 
 - name: test
   image: mesapy/build-mesapy:sgx
+  privileged: true
+  volumes:
+  - name: isgx
+    path: /dev/isgx
+  - name: aesmd
+    path: /var/run/aesmd/aesm.socket
   pull: always
   commands:
   - . /opt/sgxsdk/environment
   - /start_aesm_service.sh
   - make -C sgx/tests build
   - make -C sgx/examples
+  - make -C sgx/examples run
 
 - name: deploy
   image: mesapy/build-mesapy:sgx
