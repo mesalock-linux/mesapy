@@ -5,7 +5,7 @@ enclave {
     trusted {
         public int64_t mesapy_exec([in, string] const char *py_script,
                                    int py_argc,
-                                   [in] const char **py_argv,
+                                   [in,count=py_argc] const char **py_argv,
                                    [out,size=buflen] char *py_return,
                                    uint64_t buflen);
     };

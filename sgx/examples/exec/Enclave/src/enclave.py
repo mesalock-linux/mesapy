@@ -16,9 +16,7 @@ def mesapy_exec(py_script, py_argc, py_argv, py_ret, py_ret_max_len):
         l = 0
         entrypoint_argv = []
         for i in range(py_argc):
-            entrypoint_argv.append(ffi.string(py_argv[0] + l))
-            l += len(entrypoint_argv[i])
-            l += 1    # skip '\0'
+            entrypoint_argv.append(ffi.string(py_argv[i]))
         global_variables["entrypoint_argv"] = entrypoint_argv
         ret = eval("entrypoint(entrypoint_argv)", global_variables)
     except:

@@ -170,7 +170,7 @@ int SGX_CDECL main(int argc, char *argv[])
     fread(py_script, sizeof(char), PY_SCRIPT_MAX-1, fp);
     printf("%s\n", py_script);
 
-    const char *py_argv[] = {"arg0", "arg1", "arg2", 0};
+    const char *py_argv[] = {"arg0", "arg1", "arg2", NULL};
     int py_argc = 0;
     for (int i = 0;; i++) {
         if (py_argv[i] == 0)
