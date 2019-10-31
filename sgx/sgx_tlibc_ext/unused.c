@@ -157,7 +157,7 @@ __attribute__((weak)) int gettimeofday(struct timeval *tv, struct timezone *tz) 
 
 __attribute__((weak)) time_t time(time_t *tloc) { abort(); };
 
-#ifdef TEST_MESATEE_ABI
+__attribute__((weak))
 int c_read_file(char* context_id,
     char* context_token,
     char* file_id,
@@ -171,6 +171,7 @@ int c_read_file(char* context_id,
     return strlen(content);
 }
 
+__attribute__((weak))
 int c_save_file_for_task_creator(char* context_id,
                                  char* context_token,
                                  char* in_buf,
@@ -185,6 +186,7 @@ int c_save_file_for_task_creator(char* context_id,
     return strlen(content);
 }
 
+__attribute__((weak))
 int c_save_file_for_all_participants(char* context_id,
                                      char* context_token,
                                      char* in_buf,
@@ -199,6 +201,7 @@ int c_save_file_for_all_participants(char* context_id,
     return strlen(content);
 }
 
+__attribute__((weak))
 int c_save_file_for_file_owner(char* context_id,
                                char* context_token,
                                char* in_buf,
@@ -213,4 +216,3 @@ int c_save_file_for_file_owner(char* context_id,
     strcpy(out_file_id_buf, content);
     return strlen(content);
 }
-#endif
