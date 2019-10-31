@@ -34,7 +34,8 @@ working_modules.update([
     "cStringIO",
     "struct", "array", "binascii", "itertools", "_md5", "_sha", "_collections",
     "micronumpy", "_cffi_backend",
-    "_pypyjson"
+    "_pypyjson",
+    "mesatee"
 ])
 
 

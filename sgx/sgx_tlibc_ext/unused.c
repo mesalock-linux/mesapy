@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/types.h>
+#include <string.h>
 
 __attribute__((weak)) int stderr = 3;
 
@@ -155,3 +156,61 @@ __attribute__((weak)) int __fxstat64(int vers, int fd, struct stat64 *buf) { abo
 __attribute__((weak)) int gettimeofday(struct timeval *tv, struct timezone *tz) { abort(); };
 
 __attribute__((weak)) time_t time(time_t *tloc) { abort(); };
+
+#ifdef TEST_MESATEE_ABI
+int c_read_file(char* context_id,
+    char* context_token,
+    char* file_id,
+    char* out_buf,
+    size_t out_buf_size) {
+    char *content = "1234567890123456\0";
+    int content_len = strlen(content);
+    if (out_buf_size < content_len) return out_buf_size - content_len;
+
+    strcpy(out_buf, content);
+    return strlen(content);
+}
+
+int c_save_file_for_task_creator(char* context_id,
+                                 char* context_token,
+                                 char* in_buf,
+                                 size_t in_buf_size,
+                                 char* out_file_id_buf,
+                                 size_t out_file_id_buf_size) {
+    char *content = "1234567890123456\0";
+    int content_len = strlen(content);
+    if (out_file_id_buf_size < content_len) return out_file_id_buf_size - content_len;
+
+    strcpy(out_file_id_buf, content);
+    return strlen(content);
+}
+
+int c_save_file_for_all_participants(char* context_id,
+                                     char* context_token,
+                                     char* in_buf,
+                                     size_t in_buf_size,
+                                     char* out_file_id_buf,
+                                     size_t out_file_id_buf_size) {
+    char *content = "1234567890123456\0";
+    int content_len = strlen(content);
+    if (out_file_id_buf_size < content_len) return out_file_id_buf_size - content_len;
+
+    strcpy(out_file_id_buf, content);
+    return strlen(content);
+}
+
+int c_save_file_for_file_owner(char* context_id,
+                               char* context_token,
+                               char* in_buf,
+                               size_t in_buf_size,
+                               char* file_id,
+                               char* out_file_id_buf,
+                               size_t out_file_id_buf_size) {
+    char *content = "1234567890123456\0";
+    int content_len = strlen(content);
+    if (out_file_id_buf_size < content_len) return out_file_id_buf_size - content_len;
+
+    strcpy(out_file_id_buf, content);
+    return strlen(content);
+}
+#endif
