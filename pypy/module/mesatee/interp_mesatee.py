@@ -1,4 +1,3 @@
-from rpython.rlib import rmesatee
 from rpython.translator.tool.cbuild import ExternalCompilationInfo
 from rpython.rlib.rstring import StringBuilder
 from rpython.rtyper.lltypesystem import rffi, lltype
