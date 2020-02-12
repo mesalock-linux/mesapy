@@ -157,62 +157,34 @@ __attribute__((weak)) int gettimeofday(struct timeval *tv, struct timezone *tz) 
 
 __attribute__((weak)) time_t time(time_t *tloc) { abort(); };
 
-__attribute__((weak))
-int c_read_file(char* context_id,
-    char* context_token,
-    char* file_id,
-    char* out_buf,
-    size_t out_buf_size) {
-    char *content = "1234567890123456\0";
-    int content_len = strlen(content);
-    if (out_buf_size < content_len) return out_buf_size - content_len;
+const int FD = 1;
 
-    strcpy(out_buf, content);
-    return strlen(content);
+__attribute__((weak))
+unsigned int c_open_input(char* file_id, int* out_fd) {
+    *out_fd = FD;
+    return 0;
 }
 
 __attribute__((weak))
-int c_save_file_for_task_creator(char* context_id,
-                                 char* context_token,
-                                 char* in_buf,
-                                 size_t in_buf_size,
-                                 char* out_file_id_buf,
-                                 size_t out_file_id_buf_size) {
-    char *content = "1234567890123456\0";
-    int content_len = strlen(content);
-    if (out_file_id_buf_size < content_len) return out_file_id_buf_size - content_len;
-
-    strcpy(out_file_id_buf, content);
-    return strlen(content);
+unsigned int c_create_output(char* file_id, int* out_fd) {
+    *out_fd = FD;
+    return 0;
 }
 
 __attribute__((weak))
-int c_save_file_for_all_participants(char* context_id,
-                                     char* context_token,
-                                     char* in_buf,
-                                     size_t in_buf_size,
-                                     char* out_file_id_buf,
-                                     size_t out_file_id_buf_size) {
-    char *content = "1234567890123456\0";
-    int content_len = strlen(content);
-    if (out_file_id_buf_size < content_len) return out_file_id_buf_size - content_len;
-
-    strcpy(out_file_id_buf, content);
-    return strlen(content);
+unsigned int c_read_file(int fd, void* out_buf, size_t buf_size, size_t* out_size_read) {
+    *out_size_read = 0;
+    return 0;
 }
 
 __attribute__((weak))
-int c_save_file_for_file_owner(char* context_id,
-                               char* context_token,
-                               char* in_buf,
-                               size_t in_buf_size,
-                               char* file_id,
-                               char* out_file_id_buf,
-                               size_t out_file_id_buf_size) {
-    char *content = "1234567890123456\0";
-    int content_len = strlen(content);
-    if (out_file_id_buf_size < content_len) return out_file_id_buf_size - content_len;
-
-    strcpy(out_file_id_buf, content);
-    return strlen(content);
+unsigned int c_write_file(int fd, void* buf, size_t buf_size, size_t* out_size_written) {
+    *out_size_written = buf_size;
+    return 0;
 }
+
+__attribute__((weak))
+unsigned int c_close_file(int fd) {
+    return 0;
+}
+

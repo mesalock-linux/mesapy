@@ -2,6 +2,7 @@ from pypy.interpreter.error import OperationError
 from pypy.interpreter import module
 from pypy.interpreter.mixedmodule import MixedModule
 import pypy.module.imp.importing
+import pypy.module._io.interp_io
 
 # put builtins here that should be optimized somehow
 
@@ -39,7 +40,7 @@ class Module(MixedModule):
         'bytes'         : '(space.w_bytes)',
 
         'file'          : 'state.get(space).w_file',
-        'open'          : 'state.get(space).w_file',
+        'teaclave_open' : 'pypy.module._io.interp_io.open',
 
         # default __metaclass__: old-style class
         '__metaclass__' : 'interp_classobj.W_ClassObject',

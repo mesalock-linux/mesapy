@@ -1,4 +1,4 @@
-import os
+#import os
 
 from pypy.interpreter.error import OperationError, oefmt
 from pypy.interpreter.gateway import interp2app, unwrap_spec
@@ -7,9 +7,9 @@ from pypy.interpreter.typedef import (
 from pypy.module.exceptions.interp_exceptions import W_IOError
 from pypy.module._io.interp_fileio import W_FileIO
 from pypy.module._io.interp_textio import W_TextIOWrapper
-from rpython.rlib.rposix_stat import STAT_FIELD_TYPES
+#from rpython.rlib.rposix_stat import STAT_FIELD_TYPES
 
-HAS_BLKSIZE = 'st_blksize' in STAT_FIELD_TYPES
+#HAS_BLKSIZE = 'st_blksize' in STAT_FIELD_TYPES
 
 
 class Cache:
@@ -65,10 +65,10 @@ def open(space, w_file, mode="r", buffering=-1, encoding=None, errors=None,
             reading = True
         elif flag == "w":
             writing = True
-        elif flag == "a":
-            appending = True
-        elif flag == "+":
-            updating = True
+        #elif flag == "a":
+        #    appending = True
+        #elif flag == "+":
+        #    updating = True
         elif flag == "t":
             text = True
         elif flag == "b":
@@ -84,10 +84,10 @@ def open(space, w_file, mode="r", buffering=-1, encoding=None, errors=None,
         rawmode += "r"
     if writing:
         rawmode += "w"
-    if appending:
-        rawmode += "a"
-    if updating:
-        rawmode += "+"
+    #if appending:
+    #    rawmode += "a"
+    #if updating:
+    #    rawmode += "+"
 
     if universal and (writing or appending):
         raise oefmt(space.w_ValueError, "can't use U and writing mode at once")
@@ -103,11 +103,13 @@ def open(space, w_file, mode="r", buffering=-1, encoding=None, errors=None,
     if binary and newline is not None:
         raise oefmt(space.w_ValueError,
                     "binary mode doesn't take a newline argument")
+
     w_raw = space.call_function(
         space.gettypefor(W_FileIO), w_file, space.newtext(rawmode), space.newbool(closefd)
     )
 
-    isatty = space.is_true(space.call_method(w_raw, "isatty"))
+    #isatty = space.is_true(space.call_method(w_raw, "isatty"))
+    isatty = False
     line_buffering = buffering == 1 or (buffering < 0 and isatty)
     if line_buffering:
         buffering = -1
@@ -115,16 +117,16 @@ def open(space, w_file, mode="r", buffering=-1, encoding=None, errors=None,
     if buffering < 0:
         buffering = DEFAULT_BUFFER_SIZE
 
-        if HAS_BLKSIZE:
-            fileno = space.c_int_w(space.call_method(w_raw, "fileno"))
-            try:
-                st = os.fstat(fileno)
-            except OSError:
-                # Errors should never pass silently, except this one time.
-                pass
-            else:
-                if st.st_blksize > 1:
-                    buffering = st.st_blksize
+        #if HAS_BLKSIZE:
+        #    fileno = space.c_int_w(space.call_method(w_raw, "fileno"))       
+        #    try:
+        #        st = os.fstat(fileno)
+        #    except OSError:
+        #        # Errors should never pass silently, except this one time.
+        #        pass
+        #    else:
+        #        if st.st_blksize > 1:
+        #            buffering = st.st_blksize
 
     if buffering < 0:
         raise oefmt(space.w_ValueError, "invalid buffering size")

@@ -35,7 +35,7 @@ working_modules.update([
     "struct", "array", "binascii", "itertools", "_md5", "_sha", "_collections",
     "micronumpy", "_cffi_backend",
     "_pypyjson",
-    "mesatee"
+    "teaclave"
 ])
 
 
