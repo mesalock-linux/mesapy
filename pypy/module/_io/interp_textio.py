@@ -244,7 +244,7 @@ def _determine_encoding(space, encoding):
     else:
         if space.isinstance_w(w_encoding, space.w_text):
             return w_encoding
-
+    
     raise oefmt(space.w_IOError, "could not determine default encoding")
 
 class PositionCookie(object):

@@ -179,10 +179,11 @@ class AppTestOpen:
         with io.open(self.tmpfile, "rt") as f:
             assert f.mode == "rt"
 
-    def test_open_writable(self):
-        import io
-        f = io.open(self.tmpfile, "w+b")
-        f.close()
+    # Not supported: append
+    #def test_open_writable(self):
+    #    import io
+    #    f = io.open(self.tmpfile, "w+b")
+    #    f.close()
 
     def test_valid_mode(self):
         import io
@@ -217,64 +218,67 @@ class AppTestOpen:
             assert f.buffer.mode == "rb"
             assert f.buffer.raw.mode == "rb"
 
-        with _io.open(self.tmpfile, "w+") as f:
-            assert f.mode == "w+"
-            assert f.buffer.mode == "rb+"
-            assert f.buffer.raw.mode == "rb+"
+        # Not supported: append
+        #with _io.open(self.tmpfile, "w+") as f:
+        #    assert f.mode == "w+"
+        #    assert f.buffer.mode == "rb+"
+        #    assert f.buffer.raw.mode == "rb+"
 
-            with _io.open(f.fileno(), "wb", closefd=False) as g:
-                assert g.mode == "wb"
-                assert g.raw.mode == "wb"
-                assert g.name == f.fileno()
-                assert g.raw.name == f.fileno()
+        #    with _io.open(f.fileno(), "wb", closefd=False) as g:
+        #        assert g.mode == "wb"
+        #        assert g.raw.mode == "wb"
+        #        assert g.name == f.fileno()
+        #        assert g.raw.name == f.fileno()
 
-    def test_seek_and_tell(self):
-        import _io
+    # Not supported: seek, tell
+    #def test_seek_and_tell(self):
+    #    import _io
 
-        with _io.open(self.tmpfile, "wb") as f:
-            f.write("abcd")
+    #    with _io.open(self.tmpfile, "wb") as f:
+    #        f.write("abcd")
 
-        with _io.open(self.tmpfile) as f:
-            decoded = f.read()
+    #    with _io.open(self.tmpfile) as f:
+    #        decoded = f.read()
 
-        # seek positions
-        for i in xrange(len(decoded) + 1):
-            # read lenghts
-            for j in [1, 5, len(decoded) - i]:
-                with _io.open(self.tmpfile) as f:
-                    res = f.read(i)
-                    assert res == decoded[:i]
-                    cookie = f.tell()
-                    res = f.read(j)
-                    assert res == decoded[i:i + j]
-                    f.seek(cookie)
-                    res = f.read()
-                    assert res == decoded[i:]
+    #    # seek positions
+    #    for i in xrange(len(decoded) + 1):
+    #        # read lenghts
+    #        for j in [1, 5, len(decoded) - i]:
+    #            with _io.open(self.tmpfile) as f:
+    #                res = f.read(i)
+    #                assert res == decoded[:i]
+    #                cookie = f.tell()
+    #                res = f.read(j)
+    #                assert res == decoded[i:i + j]
+    #                f.seek(cookie)
+    #                res = f.read()
+    #                assert res == decoded[i:]
 
-    def test_telling(self):
-        import _io
+    # Not supported:
+    #def test_telling(self):
+    #    import _io
 
-        with _io.open(self.tmpfile, "w+", encoding="utf8") as f:
-            p0 = f.tell()
-            f.write(u"\xff\n")
-            p1 = f.tell()
-            f.write(u"\xff\n")
-            p2 = f.tell()
-            f.seek(0)
+    #    with _io.open(self.tmpfile, "w+", encoding="utf8") as f:
+    #        p0 = f.tell()
+    #        f.write(u"\xff\n")
+    #        p1 = f.tell()
+    #        f.write(u"\xff\n")
+    #        p2 = f.tell()
+    #        f.seek(0)
 
-            assert f.tell() == p0
-            res = f.readline()
-            assert res == u"\xff\n"
-            assert f.tell() == p1
-            res = f.readline()
-            assert res == u"\xff\n"
-            assert f.tell() == p2
-            f.seek(0)
+    #        assert f.tell() == p0
+    #        res = f.readline()
+    #        assert res == u"\xff\n"
+    #        assert f.tell() == p1
+    #        res = f.readline()
+    #        assert res == u"\xff\n"
+    #        assert f.tell() == p2
+    #        f.seek(0)
 
-            for line in f:
-                assert line == u"\xff\n"
-                raises(IOError, f.tell)
-            assert f.tell() == p2
+    #        for line in f:
+    #            assert line == u"\xff\n"
+    #            raises(IOError, f.tell)
+    #        assert f.tell() == p2
 
     def test_chunk_size(self):
         import _io
@@ -285,18 +289,19 @@ class AppTestOpen:
             assert f._CHUNK_SIZE == 4096
             raises(ValueError, setattr, f, "_CHUNK_SIZE", 0)
 
-    def test_truncate(self):
-        import _io
+    # Not supported: append
+    #def test_truncate(self):
+    #    import _io
 
-        with _io.open(self.tmpfile, "w+") as f:
-            f.write(u"abc")
+    #    with _io.open(self.tmpfile, "w+") as f:
+    #        f.write(u"abc")
 
-        with _io.open(self.tmpfile, "w+") as f:
-            f.truncate()
+    #    with _io.open(self.tmpfile, "w+") as f:
+    #        f.truncate()
 
-        with _io.open(self.tmpfile, "r+") as f:
-            res = f.read()
-            assert res == ""
+    #    with _io.open(self.tmpfile, "r+") as f:
+    #        res = f.read()
+    #        assert res == ""
 
     def test_errors_property(self):
         import _io
@@ -306,22 +311,23 @@ class AppTestOpen:
         with _io.open(self.tmpfile, "w", errors="replace") as f:
             assert f.errors == "replace"
 
-    def test_append_bom(self):
-        import _io
+    # Not supported: append
+    #def test_append_bom(self):
+    #    import _io
 
-        # The BOM is not written again when appending to a non-empty file
-        for charset in ["utf-8-sig", "utf-16", "utf-32"]:
-            with _io.open(self.tmpfile, "w", encoding=charset) as f:
-                f.write(u"aaa")
-                pos = f.tell()
-            with _io.open(self.tmpfile, "rb") as f:
-                res = f.read()
-                assert res == "aaa".encode(charset)
-            with _io.open(self.tmpfile, "a", encoding=charset) as f:
-                f.write(u"xxx")
-            with _io.open(self.tmpfile, "rb") as f:
-                res = f.read()
-                assert res == "aaaxxx".encode(charset)
+    #    # The BOM is not written again when appending to a non-empty file
+    #    for charset in ["utf-8-sig", "utf-16", "utf-32"]:
+    #        with _io.open(self.tmpfile, "w", encoding=charset) as f:
+    #            f.write(u"aaa")
+    #            pos = f.tell()
+    #        with _io.open(self.tmpfile, "rb") as f:
+    #            res = f.read()
+    #            assert res == "aaa".encode(charset)
+    #        with _io.open(self.tmpfile, "a", encoding=charset) as f:
+    #            f.write(u"xxx")
+    #        with _io.open(self.tmpfile, "rb") as f:
+    #            res = f.read()
+    #            assert res == "aaaxxx".encode(charset)
 
     def test_newlines_attr(self):
         import _io
@@ -352,44 +358,47 @@ class AppTestOpen:
             else:
                 assert mod == '_io'
 
-    def test_issue1902(self):
-        import _io
-        with _io.open(self.tmpfile, 'w+b', 4096) as f:
-            f.write(b'\xff' * 13569)
-            f.flush()
-            f.seek(0, 0)
-            f.read(1)
-            f.seek(-1, 1)
-            f.write(b'')
+    # Not supported: append
+    #def test_issue1902(self):
+    #    import _io
+    #    with _io.open(self.tmpfile, 'w+b', 4096) as f:
+    #        f.write(b'\xff' * 13569)
+    #        f.flush()
+    #        f.seek(0, 0)
+    #        f.read(1)
+    #        f.seek(-1, 1)
+    #        f.write(b'')
 
-    def test_issue1902_2(self):
-        import _io
-        with _io.open(self.tmpfile, 'w+b', 4096) as f:
-            f.write(b'\xff' * 13569)
-            f.flush()
-            f.seek(0, 0)
+    # Not supported: append
+    #def test_issue1902_2(self):
+    #    import _io
+    #    with _io.open(self.tmpfile, 'w+b', 4096) as f:
+    #        f.write(b'\xff' * 13569)
+    #        f.flush()
+    #        f.seek(0, 0)
 
-            f.read(1)
-            f.seek(-1, 1)
-            f.write(b'\xff')
-            f.seek(1, 0)
-            f.read(4123)
-            f.seek(-4123, 1)
+    #        f.read(1)
+    #        f.seek(-1, 1)
+    #        f.write(b'\xff')
+    #        f.seek(1, 0)
+    #        f.read(4123)
+    #        f.seek(-4123, 1)
 
-    def test_issue1902_3(self):
-        import _io
-        buffer_size = 4096
-        with _io.open(self.tmpfile, 'w+b', buffer_size) as f:
-            f.write(b'\xff' * buffer_size * 3)
-            f.flush()
-            f.seek(0, 0)
+    # Not supported: append
+    #def test_issue1902_3(self):
+    #    import _io
+    #    buffer_size = 4096
+    #    with _io.open(self.tmpfile, 'w+b', buffer_size) as f:
+    #        f.write(b'\xff' * buffer_size * 3)
+    #        f.flush()
+    #        f.seek(0, 0)
 
-            f.read(1)
-            f.seek(-1, 1)
-            f.write(b'\xff')
-            f.seek(1, 0)
-            f.read(buffer_size * 2)
-            assert f.tell() == 1 + buffer_size * 2
+    #        f.read(1)
+    #        f.seek(-1, 1)
+    #        f.write(b'\xff')
+    #        f.seek(1, 0)
+    #        f.read(buffer_size * 2)
+    #        assert f.tell() == 1 + buffer_size * 2
 
 
 class AppTestIoAferClose:
@@ -399,6 +408,7 @@ class AppTestIoAferClose:
         tmpfile = udir.join('tmpfile').ensure()
         cls.w_tmpfile = cls.space.wrap(str(tmpfile))
 
+    # Not supported: append, seek, tell
     def test_io_after_close(self):
         import _io
         for kwargs in [
@@ -412,11 +422,11 @@ class AppTestIoAferClose:
                 {"mode": "r", "buffering": 1},
                 {"mode": "r", "buffering": 2},
                 {"mode": "rb", "buffering": 0},
-                {"mode": "w+"},
-                {"mode": "w+b"},
-                {"mode": "w+", "buffering": 1},
-                {"mode": "w+", "buffering": 2},
-                {"mode": "w+b", "buffering": 0},
+                #{"mode": "w+"},
+                #{"mode": "w+b"},
+                #{"mode": "w+", "buffering": 1},
+                #{"mode": "w+", "buffering": 2},
+                #{"mode": "w+b", "buffering": 0},
             ]:
             print kwargs
             if "b" not in kwargs["mode"]:
@@ -438,8 +448,8 @@ class AppTestIoAferClose:
                 raises(ValueError, f.readinto, bytearray(1024))
             raises(ValueError, f.readline)
             raises(ValueError, f.readlines)
-            raises(ValueError, f.seek, 0)
-            raises(ValueError, f.tell)
+            #raises(ValueError, f.seek, 0)
+            #raises(ValueError, f.tell)
             raises(ValueError, f.truncate)
             raises(ValueError, f.write, b"" if "b" in kwargs['mode'] else u"")
             raises(ValueError, f.writelines, [])

@@ -571,6 +571,9 @@ def find_module(space, modulename, w_modulename, partname, w_path,
                 if w_loader:
                     return FindInfo.fromLoader(w_loader)
 
+            if we_are_translated():
+                raise oefmt(space.w_RuntimeError, "Teaclave Not Supported")
+
             path = space.fsencode_w(w_pathitem)
             filepart = os.path.join(path, partname)
             log_pyverbose(space, 2, "# trying %s\n" % (filepart,))
