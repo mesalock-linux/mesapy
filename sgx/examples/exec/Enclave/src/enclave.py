@@ -20,8 +20,11 @@ def mesapy_exec(py_script, py_argc, py_argv, py_ret, py_ret_max_len):
         global_variables["entrypoint_argv"] = entrypoint_argv
         ret = eval("entrypoint(entrypoint_argv)", global_variables)
 
+        ret_bytes = []
         # Assert ret value is utf-8 encoded
-        ret_bytes = ret.encode("utf-8")
+        if ret is not None:
+            ret_bytes = ret.encode("utf-8")
+
     except:
         return MESAPY_EXEC_ERROR
 
@@ -29,6 +32,6 @@ def mesapy_exec(py_script, py_argc, py_argv, py_ret, py_ret_max_len):
         return MESAPY_ERROR_BUFFER_TOO_SHORT
 
     for i in range(len(ret_bytes)):
-        py_ret[i] = s[i]
+        py_ret[i] = ret_bytes[i]
 
-    return len(s)
+    return len(ret_bytes)
