@@ -1,4 +1,4 @@
 def entrypoint(argv):
     print(argv)
     print("Hello, World!")
-    return 0
+    return "Hello, World!"
