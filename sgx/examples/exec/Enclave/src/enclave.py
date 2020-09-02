@@ -1,5 +1,6 @@
 from ffi import ffi
 import marshal
+import gc
 
 MESAPY_ERROR_BUFFER_TOO_SHORT = -1
 MESAPY_EXEC_ERROR = -2
@@ -19,6 +20,7 @@ def mesapy_exec(py_script, py_argc, py_argv, py_ret, py_ret_max_len):
             entrypoint_argv.append(ffi.string(py_argv[i]))
         global_variables["entrypoint_argv"] = entrypoint_argv
         ret = eval("entrypoint(entrypoint_argv)", global_variables)
+        gc.collect()
 
         ret_bytes = []
         # Assert ret value is utf-8 encoded
