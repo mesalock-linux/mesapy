@@ -2,7 +2,7 @@
 all: pypy-c cffi_imports
 
 PYPY_EXECUTABLE := $(shell which pypy)
-URAM := $(shell python -c "import sys; print 4.5 if sys.maxint>1<<32 else 2.5")
+URAM := $(shell python2 -c "import sys; print 4.5 if sys.maxint>1<<32 else 2.5")
 LIBFFI := $(shell pwd)/sgx/libffi
 LIBFFI_BUILD_DIR := $(LIBFFI)/build_dir
 
