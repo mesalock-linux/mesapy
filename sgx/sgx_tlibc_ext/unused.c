@@ -8,11 +8,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/types.h>
-<<<<<<< HEAD
 #include <string.h>
-=======
 #include <limits.h>
->>>>>>> Support compiling with GCC 7.5
 
 __attribute__((weak)) int stderr = 3;
 
